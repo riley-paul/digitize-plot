@@ -1,1 +1,1 @@
-export type drawFunction = (ctx: CanvasRenderingContext2D, frameCount: number) => void
+export type drawFunction = (ctx: CanvasRenderingContext2D) => void

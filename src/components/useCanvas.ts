@@ -1,22 +1,6 @@
 import { useRef, useEffect } from "react";
 import { drawFunction } from "../types/functions";
 
-function resizeCanvasToDisplaySize(
-  canvas: HTMLCanvasElement,
-  context: CanvasRenderingContext2D
-): boolean {
-  const { width, height } = canvas.getBoundingClientRect();
-
-  if (canvas.width !== width || canvas.height !== height) {
-    const { devicePixelRatio: ratio = 1 } = window;
-    canvas.width = width * ratio;
-    canvas.height = height * ratio;
-    context?.scale(ratio, ratio);
-    return true;
-  }
-
-  return false;
-}
 
 export default function useCanvas(draw: drawFunction) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -24,19 +8,17 @@ export default function useCanvas(draw: drawFunction) {
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas!.getContext("2d") as CanvasRenderingContext2D;
-    let frameCount = 0;
     let animationFrameId: number;
 
     const render = () => {
       context.save();
-      resizeCanvasToDisplaySize(canvas!, context);
+      // resizeCanvasToDisplaySize(canvas!, context);
       const { width, height } = context.canvas;
       context.clearRect(0, 0, width, height);
 
-      draw(context, frameCount);
+      draw(context);
       animationFrameId = window.requestAnimationFrame(render);
 
-      frameCount++;
       context.restore();
     };
     render();
@@ -45,6 +27,34 @@ export default function useCanvas(draw: drawFunction) {
       window.cancelAnimationFrame(animationFrameId);
     };
   }, [draw]);
+
+  useEffect(() => {
+    // Get the canvas element and its parent container
+    const canvas = canvasRef.current;
+    const container = canvas!.parentNode;
+
+    // Set the initial size of the canvas to match its container
+    // @ts-ignore
+    canvas.width = container.clientWidth;
+    // @ts-ignore
+    canvas.height = container.clientHeight;
+
+    // Function to update canvas size when the window is resized
+    const handleResize = () => {
+      // @ts-ignore
+      canvas.width = container.clientWidth;
+      // @ts-ignore
+      canvas.height = container.clientHeight;
+    };
+
+    // Attach the resize event listener
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup: remove the resize event listener when the component is unmounted
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return canvasRef;
 }
