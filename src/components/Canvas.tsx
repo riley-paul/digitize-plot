@@ -1,5 +1,5 @@
 import type { drawFunction } from "../types/functions";
-import useCanvas from "./useCanvas";
+import useCanvas from "../hooks/useCanvas";
 
 export type Props = {
   draw: drawFunction;

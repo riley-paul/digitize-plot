@@ -3,13 +3,17 @@ type PointDrawOptions = {
   radius?: number;
 };
 
+import { v4 as uuidv4 } from "uuid";
+
 export default class Point {
   x: number;
   y: number;
+  id: string;
 
-  constructor(x: number, y: number) {
+  constructor(x: number, y: number, id = uuidv4()) {
     this.x = x;
     this.y = y;
+    this.id = id;
   }
 
   get coordinates(): number[] {
