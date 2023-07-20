@@ -107,7 +107,7 @@ export default function useCanvas() {
     canvas.width = width;
     canvas.height = height;
 
-    updateQuadtree();
+    setPoints((prev) => [...prev]); // bit of a hack
   };
 
   const handleMouseDown = (event: MouseEvent) => {
