@@ -1,38 +1,19 @@
-import { useEffect, useRef, useState } from "react";
+import { MouseEventHandler, useEffect, useRef, useState } from "react";
 import Point from "../geometry/Point";
 import { QuadTree, Rect } from "../geometry/QuadTree";
+
+const MAX_ZOOM = 5;
+const MIN_ZOOM = 0.1;
+const SCROLL_SENSITIVITY = 0.0005;
 
 export default function useCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const quadtree = useRef<QuadTree | null>(null);
 
   const [points, setPoints] = useState<Point[]>([]);
-  // const pointsRef = useRef(points);
-  // const setPoints = (data: Point[]) => {
-  //   pointsRef.current = data;
-  //   _setPoints(data);
-  // };
-
-  const [mousePoint, _setMousePoint] = useState<Point | undefined>(undefined);
-  const mousePointRef = useRef(mousePoint);
-  const setMousePoint = (data: Point) => {
-    mousePointRef.current = data;
-    _setMousePoint(data);
-  };
-
-  const [currentPointId, _setCurrentPointId] = useState<string>("");
-  const currentPointIdRef = useRef(currentPointId);
-  const setCurrentPointId = (data: string) => {
-    currentPointIdRef.current = data;
-    _setCurrentPointId(data);
-  };
-
-  const [draggingId, _setDraggingId] = useState<string>("");
-  const draggingIdRef = useRef(draggingId);
-  const setDraggingId = (data: string) => {
-    draggingIdRef.current = data;
-    _setDraggingId(data);
-  };
+  const [mousePoint, setMousePoint] = useState<Point | undefined>(undefined);
+  const [currentPointId, setCurrentPointId] = useState<string>("");
+  const [draggingId, setDraggingId] = useState<string>("");
 
   const updateQuadtree = () => {
     const canvas = canvasRef.current;
@@ -43,19 +24,19 @@ export default function useCanvas() {
     quadtree.current = new QuadTree(boundary);
     for (let pt of points) quadtree.current.insert(pt);
 
-    console.log("quadtree built");
+    // console.log("quadtree built");
   };
 
   // Manage points
   const createPoint = (coords: Point) => {
     const point = new Point(coords.x, coords.y);
     setPoints((prev) => [...prev, point]);
-    console.log("point created");
+    // console.log("point created");
   };
 
   const deletePoint = (id: string) => {
     setPoints((prev) => [...prev.filter((pt) => pt.id !== id)]);
-    console.log("point removed");
+    // console.log("point removed");
   };
 
   const movePoint = (id: string, coords: Point) => {
@@ -88,7 +69,7 @@ export default function useCanvas() {
   };
 
   // Event handlers
-  const handleMouseMove = (event: MouseEvent) => {
+  const handleMouseMove: MouseEventHandler<HTMLCanvasElement> = (event) => {
     if (!canvasRef.current) return;
     const rect = canvasRef.current.getBoundingClientRect();
     const mouseX = event.clientX - rect.left;
@@ -110,31 +91,26 @@ export default function useCanvas() {
     setPoints((prev) => [...prev]); // bit of a hack
   };
 
-  const handleMouseDown = (event: MouseEvent) => {
-    if (currentPointIdRef.current && event.button === 2)
-      deletePoint(currentPointIdRef.current);
-    else if (currentPointIdRef.current && event.button === 0)
-      setDraggingId(currentPointIdRef.current);
-    else if (
-      !currentPointIdRef.current &&
-      event.button === 0 &&
-      mousePointRef.current
-    )
-      createPoint(mousePointRef.current);
+  const handleMouseDown: MouseEventHandler<HTMLCanvasElement> = (event) => {
+    if (currentPointId && event.button === 2) deletePoint(currentPointId);
+    else if (currentPointId && event.button === 0)
+      setDraggingId(currentPointId);
+    else if (!currentPointId && event.button === 0 && mousePoint)
+      createPoint(mousePoint);
   };
 
-  const handleMouseUp = (event: MouseEvent) => {
+  const handleMouseUp: MouseEventHandler<HTMLCanvasElement> = (event) => {
     if (event.button !== 0) return;
 
-    if (draggingIdRef.current) {
-      const id = draggingIdRef.current;
+    if (draggingId) {
+      const id = draggingId;
       setDraggingId("");
-      if (!mousePointRef.current) return;
-      movePoint(id, mousePointRef.current);
+      if (!mousePoint) return;
+      movePoint(id, mousePoint);
     }
   };
 
-  const handleContextMenu = (event: MouseEvent) => {
+  const handleContextMenu: MouseEventHandler<HTMLCanvasElement> = (event) => {
     event.preventDefault();
   };
 
@@ -175,22 +151,15 @@ export default function useCanvas() {
   useEffect(() => {
     handleResize();
     window.addEventListener("resize", handleResize);
-    canvasRef.current?.addEventListener("mousedown", handleMouseDown);
-    canvasRef.current?.addEventListener("mouseup", handleMouseUp);
-    canvasRef.current?.addEventListener("mousemove", handleMouseMove);
-    canvasRef.current?.addEventListener("contextmenu", handleContextMenu);
-    // canvasRef.current?.addEventListener("click", handleClick);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-      canvasRef.current?.removeEventListener("mousedown", handleMouseDown);
-      canvasRef.current?.removeEventListener("mouseup", handleMouseUp);
-      canvasRef.current?.removeEventListener("mousemove", handleMouseMove);
-      canvasRef.current?.removeEventListener("contextmenu", handleContextMenu);
-      // canvasRef.current?.removeEventListener("click", handleClick);
-    };
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  useEffect(() => console.log(points), [points]);
-  return canvasRef;
+  // useEffect(() => console.log(points), [points]);
+  return {
+    ref: canvasRef,
+    onMouseDown: handleMouseDown,
+    onMouseUp: handleMouseUp,
+    onMouseMove: handleMouseMove,
+    onContextMenu: handleContextMenu,
+  };
 }

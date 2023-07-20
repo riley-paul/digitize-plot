@@ -1,11 +1,11 @@
 import useCanvas from "./hooks/useCanvas";
 
 function App() {
-  const canvasRef = useCanvas();
+  const canvasProps = useCanvas();
 
   return (
     <main className="w-full h-screen">
-      <canvas ref={canvasRef} />
+      <canvas {...canvasProps} />
     </main>
   );
 }
