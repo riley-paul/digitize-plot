@@ -7,10 +7,32 @@ export default function useCanvas() {
   const quadtree = useRef<QuadTree | null>(null);
 
   const [points, setPoints] = useState<Point[]>([]);
-  const [mousePoint, setMousePoint] = useState<Point | undefined>(undefined);
+  // const pointsRef = useRef(points);
+  // const setPoints = (data: Point[]) => {
+  //   pointsRef.current = data;
+  //   _setPoints(data);
+  // };
 
-  const [currentPointId, setCurrentPointId] = useState<string>("");
-  const [draggingId, setDraggingId] = useState<string>("");
+  const [mousePoint, _setMousePoint] = useState<Point | undefined>(undefined);
+  const mousePointRef = useRef(mousePoint);
+  const setMousePoint = (data: Point) => {
+    mousePointRef.current = data;
+    _setMousePoint(data);
+  };
+
+  const [currentPointId, _setCurrentPointId] = useState<string>("");
+  const currentPointIdRef = useRef(currentPointId);
+  const setCurrentPointId = (data: string) => {
+    currentPointIdRef.current = data;
+    _setCurrentPointId(data);
+  };
+
+  const [draggingId, _setDraggingId] = useState<string>("");
+  const draggingIdRef = useRef(draggingId);
+  const setDraggingId = (data: string) => {
+    draggingIdRef.current = data;
+    _setDraggingId(data);
+  };
 
   const updateQuadtree = () => {
     const canvas = canvasRef.current;
@@ -24,18 +46,15 @@ export default function useCanvas() {
     console.log("quadtree built");
   };
 
+  // Manage points
   const createPoint = (coords: Point) => {
     const point = new Point(coords.x, coords.y);
     setPoints((prev) => [...prev, point]);
-    quadtree.current?.insert(point);
-
     console.log("point created");
   };
 
   const deletePoint = (id: string) => {
     setPoints((prev) => [...prev.filter((pt) => pt.id !== id)]);
-    updateQuadtree();
-
     console.log("point removed");
   };
 
@@ -43,11 +62,10 @@ export default function useCanvas() {
     setPoints((prev) =>
       prev.map((pt) => (pt.id === id ? new Point(coords.x, coords.y, id) : pt))
     );
-    updateQuadtree();
-
     console.log("point updated");
   };
 
+  // Draw everything to canvas
   const draw = (ctx: CanvasRenderingContext2D): void => {
     for (let pt of points) {
       if (pt.id === draggingId) continue;
@@ -58,12 +76,80 @@ export default function useCanvas() {
       pt.draw(ctx);
     }
 
+    ctx.font = "12px Courier";
+    ctx.fillStyle = "red";
+    ctx.fillText(`dragging ID: ${draggingId}`, 10, 20);
+    ctx.fillText(`current ID: ${currentPointId}`, 10, 35);
+
     quadtree.current?.draw(ctx);
     mousePoint?.draw(ctx, { color: "blue" });
 
     if (draggingId) mousePoint?.draw(ctx, { color: "green", radius: 5 });
   };
 
+  // Event handlers
+  const handleMouseMove = (event: MouseEvent) => {
+    if (!canvasRef.current) return;
+    const rect = canvasRef.current.getBoundingClientRect();
+    const mouseX = event.clientX - rect.left;
+    const mouseY = event.clientY - rect.top;
+    setMousePoint(new Point(mouseX, mouseY, "mouse"));
+  };
+
+  const handleResize = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const width = canvas.offsetWidth;
+    const height = canvas.offsetHeight;
+
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    canvas.width = width;
+    canvas.height = height;
+
+    updateQuadtree();
+  };
+
+  const handleMouseDown = (event: MouseEvent) => {
+    if (currentPointIdRef.current && event.button === 2)
+      deletePoint(currentPointIdRef.current);
+    else if (currentPointIdRef.current && event.button === 0)
+      setDraggingId(currentPointIdRef.current);
+    else if (
+      !currentPointIdRef.current &&
+      event.button === 0 &&
+      mousePointRef.current
+    )
+      createPoint(mousePointRef.current);
+  };
+
+  const handleMouseUp = (event: MouseEvent) => {
+    if (event.button !== 0) return;
+
+    if (draggingIdRef.current) {
+      const id = draggingIdRef.current;
+      setDraggingId("");
+      if (!mousePointRef.current) return;
+      movePoint(id, mousePointRef.current);
+    }
+  };
+
+  const handleContextMenu = (event: MouseEvent) => {
+    event.preventDefault();
+  };
+
+  useEffect(() => {
+    updateQuadtree();
+  }, [points]);
+
+  // determine current point
+  useEffect(() => {
+    if (!mousePoint || !quadtree.current) return;
+    const nearPoints = quadtree.current.queryRadius(mousePoint, 5);
+    setCurrentPointId(mousePoint.nearest(nearPoints)?.id || "");
+  }, [mousePoint, points]);
+
+  // draw loop
   useEffect(() => {
     const canvas = canvasRef.current;
     const context = canvas!.getContext("2d") as CanvasRenderingContext2D;
@@ -85,71 +171,10 @@ export default function useCanvas() {
     };
   }, [draw]);
 
+  // add and remove event listeners
   useEffect(() => {
-    const canvas = canvasRef.current;
-
-    const handleResize = () => {
-      if (!canvas) return;
-      const width = canvas.offsetWidth;
-      const height = canvas.offsetHeight;
-
-      canvas.style.width = "100%";
-      canvas.style.height = "100%";
-      canvas.width = width;
-      canvas.height = height;
-
-      updateQuadtree();
-    };
     handleResize();
     window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
-  const handleMouseMove = (event: MouseEvent) => {
-    if (!canvasRef.current) return;
-    const rect = canvasRef.current.getBoundingClientRect();
-    const mouseX = event.clientX - rect.left;
-    const mouseY = event.clientY - rect.top;
-    setMousePoint(new Point(mouseX, mouseY, "mouse"));
-  };
-
-  useEffect(() => {
-    if (!mousePoint || !quadtree.current) return;
-    const nearPoints = quadtree.current.queryRadius(mousePoint, 5);
-    setCurrentPointId(mousePoint.nearest(nearPoints)?.id || "");
-  }, [mousePoint]);
-
-  const handleMouseDown = (event: MouseEvent) => {
-    if (currentPointId) {
-      if (event.button === 2) {
-        deletePoint(currentPointId);
-      } else if (event.button === 0) {
-        setDraggingId(currentPointId);
-      }
-    }
-
-    if (event.button === 0 && mousePoint) createPoint(mousePoint);
-  };
-
-  const handleMouseUp = (event: MouseEvent) => {
-    if (event.button === 2) return;
-
-    if (draggingId) {
-      const id = draggingId;
-      setDraggingId("");
-      if (!mousePoint) return;
-      movePoint(id, mousePoint);
-    }
-  };
-
-  const handleContextMenu = (event: MouseEvent) => {
-    event.preventDefault();
-  };
-
-  useEffect(() => {
     canvasRef.current?.addEventListener("mousedown", handleMouseDown);
     canvasRef.current?.addEventListener("mouseup", handleMouseUp);
     canvasRef.current?.addEventListener("mousemove", handleMouseMove);
@@ -157,6 +182,7 @@ export default function useCanvas() {
     // canvasRef.current?.addEventListener("click", handleClick);
 
     return () => {
+      window.removeEventListener("resize", handleResize);
       canvasRef.current?.removeEventListener("mousedown", handleMouseDown);
       canvasRef.current?.removeEventListener("mouseup", handleMouseUp);
       canvasRef.current?.removeEventListener("mousemove", handleMouseMove);
