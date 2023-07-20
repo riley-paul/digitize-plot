@@ -148,6 +148,7 @@ export class QuadTree {
   remove(point: Point): void {
     if (!this.boundary.contains(point)) return;
 
+    console.log("removing point")
     this.points = this.points.filter(
       (pt) => pt.x !== point.x && pt.y !== point.y
     );

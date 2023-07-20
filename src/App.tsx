@@ -6,7 +6,9 @@ function App() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const quadtree = useRef<QuadTree | null>(null);
   const [points, setPoints] = useState<Point[]>([]);
-  const [mousePoint, setMousePoint] = useState<Point | undefined>(undefined);
+  const [currentPoint, setCurrentPoint] = useState<Point | undefined>(
+    undefined
+  );
 
   const getMousePoint = (event: MouseEvent): Point | undefined => {
     if (!canvasRef.current) return;
@@ -18,13 +20,10 @@ function App() {
   };
 
   const draw = (ctx: CanvasRenderingContext2D): void => {
-    ctx.fillStyle = "LightCoral";
-    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
     points.forEach((pt) => pt.draw(ctx));
     quadtree.current?.draw(ctx);
 
-    mousePoint?.draw(ctx, { color: "blue" });
+    currentPoint?.draw(ctx, { color: "green", radius: 5 });
   };
 
   useEffect(() => {
@@ -67,6 +66,11 @@ function App() {
     };
   }, [draw]);
 
+  useEffect(() => {
+
+  })
+
+
   const placePoints: MouseEventHandler<HTMLCanvasElement> = (event) => {
     const point = getMousePoint(event.nativeEvent);
     if (!point) return;
@@ -76,7 +80,29 @@ function App() {
 
   const handleMouseMove: MouseEventHandler<HTMLCanvasElement> = (event) => {
     const point = getMousePoint(event.nativeEvent);
-    setMousePoint(point);
+
+    if (!point || !quadtree.current) return;
+    const nearPoints = quadtree.current.queryRadius(point, 5);
+    setCurrentPoint(point.nearest(nearPoints));
+  };
+
+  const deletePoint: MouseEventHandler<HTMLCanvasElement> = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (!currentPoint) return;
+    setPoints((prev) => [
+      ...prev.filter(
+        (pt) => pt.x !== currentPoint.x && pt.y !== currentPoint.y
+      ),
+    ]);
+  };
+
+  const handleClick: MouseEventHandler<HTMLCanvasElement> = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (event.nativeEvent.button === 0) placePoints(event);
+    else if (event.nativeEvent.button === 2) deletePoint(event);
   };
 
   useEffect(() => console.log(points), [points]);
@@ -85,7 +111,8 @@ function App() {
     <main className="w-full h-screen bg-red-500">
       <canvas
         ref={canvasRef}
-        onClick={placePoints}
+        onClick={handleClick}
+        onContextMenu={handleClick}
         onMouseMove={handleMouseMove}
       />
     </main>
