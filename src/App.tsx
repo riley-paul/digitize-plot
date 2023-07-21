@@ -5,7 +5,7 @@ function App() {
 
   return (
     <main className="w-full h-screen">
-      <canvas {...canvasProps} />
+      <canvas {...canvasProps} className="w-full h-full"/>
     </main>
   );
 }

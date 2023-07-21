@@ -1,14 +1,12 @@
 import {
   MouseEventHandler,
-  TouchEventHandler,
-  UIEventHandler,
   WheelEventHandler,
   useEffect,
   useRef,
   useState,
 } from "react";
 import Point from "../geometry/Point";
-import { QuadTree, Rect } from "../geometry/QuadTree";
+import { QuadTree, createQuadTree } from "../geometry/QuadTree";
 
 const MAX_ZOOM = 5;
 const MIN_ZOOM = 0.1;
@@ -20,6 +18,9 @@ export default function useCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const quadtree = useRef<QuadTree | null>(null);
 
+  const [context, setContext] = useState<
+    CanvasRenderingContext2D | undefined | null
+  >(undefined);
   const [points, setPoints] = useState<Point[]>([]);
   const [mousePoint, setMousePoint] = useState<Point | undefined>(undefined);
   const [currentPointId, setCurrentPointId] = useState<string>("");
@@ -30,20 +31,24 @@ export default function useCanvas() {
   const [isPanning, setIsPanning] = useState<boolean>(false);
   const [panStart, setPanStart] = useState<Coords>({ x: 0, y: 0 });
 
+  useEffect(
+    () => setContext(canvasRef.current?.getContext("2d")),
+    [canvasRef.current]
+  );
+
   useEffect(() => console.log(cameraOffset), [cameraOffset]);
+  // useEffect(() => console.log(panStart), [panStart]);
   useEffect(() => console.log(cameraZoom), [cameraZoom]);
 
-  const updateQuadtree = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const { width, height } = canvas;
-    const boundary = new Rect(width / 2, height / 2, width, height);
-
-    quadtree.current = new QuadTree(boundary);
-    for (let pt of points) quadtree.current.insert(pt);
-
-    // console.log("quadtree built");
-  };
+  function getTransformedPoint(x: number, y: number): Point | undefined {
+    if (!context) return;
+    const originalPoint = new DOMPoint(x, y);
+    const transformed = context
+      .getTransform()
+      .invertSelf()
+      .transformPoint(originalPoint);
+    return new Point(transformed.x, transformed.y);
+  }
 
   // Manage points
   const createPoint = (coords: Point) => {
@@ -65,85 +70,83 @@ export default function useCanvas() {
   };
 
   // Draw everything to canvas
-  const draw = (ctx: CanvasRenderingContext2D): void => {
-    const { width, height } = ctx.canvas;
-    if (cameraOffset) {
-      ctx.translate(width / 2, height / 2);
-      ctx.scale(cameraZoom, cameraZoom);
-      ctx.translate(-width / 2 + cameraOffset.x, -height / 2 + cameraOffset.y);
-    }
+  const draw = (context: CanvasRenderingContext2D): void => {
+    // const { width, height } = context.canvas;
+    // if (cameraOffset) {
+    //   context.translate(width / 2, height / 2);
+    //   context.scale(cameraZoom, cameraZoom);
+    //   context.translate(-width / 2 + cameraOffset.x, -height / 2 + cameraOffset.y);
+    // }
 
     for (let pt of points) {
       if (pt.id === draggingId) continue;
       if (pt.id === currentPointId) {
-        pt.draw(ctx, { color: "green", radius: 5 });
+        pt.draw(context, { color: "green", radius: 5 / cameraZoom });
         continue;
       }
-      pt.draw(ctx);
+      pt.draw(context, { radius: 3 / cameraZoom });
     }
 
-    ctx.font = "12px Courier";
-    ctx.fillStyle = "red";
-    ctx.fillText(`dragging ID: ${draggingId}`, 10, 20);
-    ctx.fillText(`current ID: ${currentPointId}`, 10, 35);
+    context.font = "12px Courier";
+    context.fillStyle = "red";
+    context.fillText(`dragging ID: ${draggingId}`, 10, 20);
+    context.fillText(`current ID: ${currentPointId}`, 10, 35);
 
-    quadtree.current?.draw(ctx);
-    mousePoint?.draw(ctx, { color: "blue" });
+    quadtree.current?.draw(context);
+    mousePoint?.draw(context, { color: "blue", radius: 3 / cameraZoom });
 
-    if (draggingId) mousePoint?.draw(ctx, { color: "green", radius: 5 });
+    if (draggingId)
+      mousePoint?.draw(context, { color: "green", radius: 5 / cameraZoom });
   };
 
   const getEventLocation = (event: MouseEvent): Coords => {
-    return { x: event.clientX, y: event.clientY };
+    return {
+      x: event.offsetX / cameraZoom,
+      y: event.offsetY / cameraZoom,
+    };
   };
 
   // Event handlers
   const handleMouseMove: MouseEventHandler<HTMLCanvasElement> = (event) => {
-    if (!canvasRef.current) return;
-    const mouseX = event.clientX - cameraOffset.x;
-    const mouseY = event.clientY - cameraOffset.y;
-    setMousePoint(new Point(mouseX, mouseY, "mouse"));
+    // if (!canvasRef.current) return;
+    // const canvas = canvasRef.current;
+    // const rect = canvas.getBoundingClientRect();
+
+    // getTransformedPoint({
+    //   x: event.nativeEvent.offsetX,
+    //   y: event.nativeEvent.offsetY,
+    // });
+    // const mouseX = getEventLocation(event.nativeEvent).x - cameraOffset.x;
+    // const mouseY = getEventLocation(event.nativeEvent).y - cameraOffset.y;
+
+    // const mouseX = event.clientX;
+    // const mouseY = event.clientY - cameraOffset.y;
+    setMousePoint(
+      getTransformedPoint(event.nativeEvent.offsetX, event.nativeEvent.offsetY)
+    );
 
     if (isPanning) {
       setCameraOffset({
-        x: getEventLocation(event.nativeEvent).x / cameraZoom - panStart.x,
-        y: getEventLocation(event.nativeEvent).y / cameraZoom - panStart.y,
+        x: getEventLocation(event.nativeEvent).x - panStart.x,
+        y: getEventLocation(event.nativeEvent).y - panStart.y,
       });
     }
-  };
-
-  const handleResize = () => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const width = canvas.offsetWidth;
-    const height = canvas.offsetHeight;
-
-    canvas.style.width = "100%";
-    canvas.style.height = "100%";
-    canvas.width = width;
-    canvas.height = height;
-
-    setCameraOffset((prev) => (prev ? prev : { x: width / 2, y: height / 2 }));
-    setPoints((prev) => [...prev]); // bit of a hack
   };
 
   const handleMouseDown: MouseEventHandler<HTMLCanvasElement> = (event) => {
     if (event.button === 1) {
       setIsPanning(true);
       setPanStart({
-        x: getEventLocation(event.nativeEvent).x / cameraZoom - cameraOffset.x,
-        y: getEventLocation(event.nativeEvent).y / cameraZoom - cameraOffset.y,
+        x: getEventLocation(event.nativeEvent).x - cameraOffset.x,
+        y: getEventLocation(event.nativeEvent).y - cameraOffset.y,
       });
     }
 
-    if (currentPointId && event.button === 2) {
-      deletePoint(currentPointId);
+    if (currentPointId) {
+      if (event.button === 2) deletePoint(currentPointId);
+      else if (event.button === 0) setDraggingId(currentPointId);
+    } else {
     }
-
-    if (currentPointId && event.button === 0) {
-      setDraggingId(currentPointId);
-    }
-
     if (!currentPointId && event.button === 0 && mousePoint) {
       createPoint(mousePoint);
     }
@@ -182,12 +185,24 @@ export default function useCanvas() {
     console.log("scrolling");
     event.preventDefault();
     event.stopPropagation();
-    adjustZoom(event.deltaY * SCROLL_SENSITIVITY);
+    adjustZoom(-event.deltaY * SCROLL_SENSITIVITY);
+  };
+
+  const onWheel: WheelEventHandler<HTMLCanvasElement> = (event) => {
+    if (!context || !mousePoint) return;
+    const zoom = event.deltaY < 0 ? 1.1 : 0.9;
+
+    context.translate(mousePoint.x, mousePoint.y);
+    context.scale(zoom, zoom);
+    context.translate(-mousePoint.x, -mousePoint.y);
+
+    // drawImageToCanvas();
+    event.preventDefault();
   };
 
   // rebuild quadtree whenever points update
   useEffect(() => {
-    updateQuadtree();
+    quadtree.current = createQuadTree(points);
   }, [points]);
 
   // determine current point
@@ -199,18 +214,18 @@ export default function useCanvas() {
 
   // draw loop
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const context = canvas!.getContext("2d") as CanvasRenderingContext2D;
+    if (!context) return;
     let animationFrameId: number;
 
+    
     const render = () => {
-      context.save();
-      const { width, height } = context.canvas;
-      context.clearRect(0, 0, width, height);
+      // context.save();
+      context.setTransform(1, 0, 0, 1, 0, 0);
+      context.clearRect(0, 0, context.canvas.width, context.canvas.height);
 
       draw(context);
+      // context.restore();
       animationFrameId = window.requestAnimationFrame(render);
-      context.restore();
     };
     render();
 
@@ -221,6 +236,12 @@ export default function useCanvas() {
 
   // add and remove event listener for resize
   useEffect(() => {
+    const handleResize = () => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      canvas.width = canvas.offsetWidth;
+      canvas.height = canvas.offsetHeight;
+    };
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -233,6 +254,6 @@ export default function useCanvas() {
     onMouseUp: handleMouseUp,
     onMouseMove: handleMouseMove,
     onContextMenu: handleContextMenu,
-    onWheel: handleScroll,
+    onWheel: onWheel,
   };
 }
