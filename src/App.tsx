@@ -12,7 +12,7 @@ function App() {
 
   return (
     <div className="w-full h-screen flex">
-      <aside className="w-60 bg-white shadow overflow-y-scroll">
+      <aside className="w-60 bg-white shadow overflow-y-scroll p-4">
         <Download data={points} {...{ coordsConverter }} />
         <DataTable data={points} {...{ coordsConverter }} />
       </aside>

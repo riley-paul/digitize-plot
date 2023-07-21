@@ -13,7 +13,7 @@ export default function Download({
     .map((marker) => ({ X: marker.x, Y: marker.y }));
 
   return (
-    <div className="w-full p-4">
+    <div className="w-full hover:bg-gray-200 hover:text-gray-800 transition-colors ">
       <CSVLink data={csvData} filename="digitize-plot.csv">
         <button className="py-1 px-2 border-2 flex items-center justify-center w-full">
           Download CSV

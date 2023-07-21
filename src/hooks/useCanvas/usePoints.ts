@@ -18,8 +18,8 @@ export default function usePoints(canvasRef: RefObject<HTMLCanvasElement>) {
   const [currentPointId, setCurrentPointId] = useState<string>("");
   const [draggingId, setDraggingId] = useState<string>("");
 
-  function getTransformedPoint(x: number, y: number): Point | undefined {
-    if (!context) return;
+  function getTransformedPoint(x: number, y: number): Point {
+    if (!context) return new Point(0, 0);
     const originalPoint = new DOMPoint(x, y);
     const transformed = context
       .getTransform()
@@ -71,13 +71,13 @@ export default function usePoints(canvasRef: RefObject<HTMLCanvasElement>) {
   };
 
   // Event handlers
-  const mouseMovePoints: MouseEventHandler = (event) => {
+  const mouseMovePoints: MouseEventHandler<HTMLCanvasElement> = (event) => {
     setMousePoint(
       getTransformedPoint(event.nativeEvent.offsetX, event.nativeEvent.offsetY)
     );
   };
 
-  const mouseDownPoints: MouseEventHandler = (event) => {
+  const mouseDownPoints: MouseEventHandler<HTMLCanvasElement> = (event) => {
     if (currentPointId) {
       if (event.button === 2) deletePoint(currentPointId);
       else if (event.button === 0) setDraggingId(currentPointId);
@@ -88,7 +88,7 @@ export default function usePoints(canvasRef: RefObject<HTMLCanvasElement>) {
     }
   };
 
-  const mouseUpPoints: MouseEventHandler = (event) => {
+  const mouseUpPoints: MouseEventHandler<HTMLCanvasElement> = (event) => {
     if (event.button !== 0) return;
 
     if (draggingId) {
@@ -97,6 +97,10 @@ export default function usePoints(canvasRef: RefObject<HTMLCanvasElement>) {
       if (!mousePoint) return;
       movePoint(id, mousePoint);
     }
+  };
+
+  const mouseLeavePoints: MouseEventHandler<HTMLCanvasElement> = (_) => {
+    setMousePoint(undefined);
   };
 
   // rebuild quadtree whenever points update
@@ -119,6 +123,7 @@ export default function usePoints(canvasRef: RefObject<HTMLCanvasElement>) {
     mouseDownPoints,
     mouseUpPoints,
     mouseMovePoints,
+    mouseLeavePoints,
     points,
     mousePoint,
   };

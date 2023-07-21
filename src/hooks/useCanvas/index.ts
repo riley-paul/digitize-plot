@@ -12,6 +12,7 @@ export default function useCanvas() {
     mouseDownPoints,
     mouseUpPoints,
     mouseMovePoints,
+    mouseLeavePoints,
     points,
     mousePoint,
   } = usePoints(canvasRef);
@@ -33,22 +34,22 @@ export default function useCanvas() {
   };
 
   // Event handlers
-  const onMouseMove: MouseEventHandler = (event) => {
+  const onMouseMove: MouseEventHandler<HTMLCanvasElement> = (event) => {
     mouseMovePanZoom(event);
     mouseMovePoints(event);
   };
 
-  const onMouseDown: MouseEventHandler = (event) => {
+  const onMouseDown: MouseEventHandler<HTMLCanvasElement> = (event) => {
     mouseDownPanZoom(event);
     mouseDownPoints(event);
   };
 
-  const onMouseUp: MouseEventHandler = (event) => {
+  const onMouseUp: MouseEventHandler<HTMLCanvasElement> = (event) => {
     mouseUpPanZoom(event);
     mouseUpPoints(event);
   };
 
-  const onContextMenu: MouseEventHandler = (event) => {
+  const onContextMenu: MouseEventHandler<HTMLCanvasElement> = (event) => {
     event.preventDefault();
     event.stopPropagation();
   };
@@ -56,6 +57,10 @@ export default function useCanvas() {
   const onWheel: WheelEventHandler<HTMLCanvasElement> = (event) => {
     wheelPanZoom(event);
   };
+
+  const onMouseLeave: WheelEventHandler<HTMLCanvasElement> = (event) => {
+    mouseLeavePoints(event)
+  }
 
   // draw loop
   useEffect(() => {
@@ -99,6 +104,7 @@ export default function useCanvas() {
     onMouseDown,
     onMouseUp,
     onMouseMove,
+    onMouseLeave,
     onContextMenu,
     onWheel,
     points,
