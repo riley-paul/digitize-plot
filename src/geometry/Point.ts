@@ -61,6 +61,9 @@ export default class Point {
           ctx.fillText(this.label, this.x, this.y - textOffset);
           break;
       }
+
+      ctx.textAlign = "start";
+      ctx.textBaseline = "alphabetic";
     }
   }
 

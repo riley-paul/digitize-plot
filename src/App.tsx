@@ -4,9 +4,12 @@ function App() {
   const canvasProps = useCanvas();
 
   return (
-    <main className="w-full h-screen">
-      <canvas {...canvasProps} className="w-full h-full"/>
-    </main>
+    <div className="w-full h-screen flex">
+      <aside className="w-80 bg-white shadow">hello there</aside>
+      <main>
+        <canvas {...canvasProps} className="w-full h-full" />
+      </main>
+    </div>
   );
 }
 

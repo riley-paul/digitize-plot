@@ -5,8 +5,8 @@ import {
   useRef,
   useState,
 } from "react";
-import Point from "../geometry/Point";
-import { QuadTree, createQuadTree } from "../geometry/QuadTree";
+import Point from "../../geometry/Point";
+import { QuadTree, createQuadTree } from "../../geometry/QuadTree";
 import use2dContext from "./use2dContext";
 
 export default function usePoints(canvasRef: RefObject<HTMLCanvasElement>) {
