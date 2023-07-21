@@ -1,15 +1,17 @@
 import {
   MouseEventHandler,
+  RefObject,
   useEffect,
   useRef,
   useState,
 } from "react";
 import Point from "../geometry/Point";
 import { QuadTree, createQuadTree } from "../geometry/QuadTree";
+import use2dContext from "./use2dContext";
 
-export default function usePoints(context: CanvasRenderingContext2D) {
+export default function usePoints(canvasRef: RefObject<HTMLCanvasElement>) {
   const quadtree = useRef<QuadTree | null>(null);
-  const scale = context.getTransform().a;
+  const context = use2dContext(canvasRef);
 
   const [points, setPoints] = useState<Point[]>([]);
   const [mousePoint, setMousePoint] = useState<Point | undefined>(undefined);
@@ -17,6 +19,7 @@ export default function usePoints(context: CanvasRenderingContext2D) {
   const [draggingId, setDraggingId] = useState<string>("");
 
   function getTransformedPoint(x: number, y: number): Point | undefined {
+    if (!context) return;
     const originalPoint = new DOMPoint(x, y);
     const transformed = context
       .getTransform()
@@ -86,7 +89,6 @@ export default function usePoints(context: CanvasRenderingContext2D) {
   };
 
   const mouseUpPoints: MouseEventHandler<HTMLCanvasElement> = (event) => {
-
     if (event.button !== 0) return;
 
     if (draggingId) {
@@ -104,8 +106,11 @@ export default function usePoints(context: CanvasRenderingContext2D) {
 
   // determine current point
   useEffect(() => {
-    if (!mousePoint || !quadtree.current) return;
-    const nearPoints = quadtree.current.queryRadius(mousePoint, 5 / scale);
+    if (!mousePoint || !quadtree.current || !context) return;
+    const nearPoints = quadtree.current.queryRadius(
+      mousePoint,
+      5 / context.getTransform().a
+    );
     setCurrentPointId(mousePoint.nearest(nearPoints)?.id || "");
   }, [mousePoint, points]);
 
