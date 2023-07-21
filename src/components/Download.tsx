@@ -1,24 +1,20 @@
 import { CSVLink } from "react-csv";
 import Point from "../geometry/Point";
+import { Button } from "./ui/button";
 
-export default function Download({
-  data,
-  coordsConverter,
-}: {
-  data: Point[];
+export type Props = {
+  points: Point[];
   coordsConverter: (coords: Point) => Point;
-}) {
-  const csvData = data
+};
+
+export default function Download({ points, coordsConverter }: Props) {
+  const csvData = points
     .map(coordsConverter)
     .map((marker) => ({ X: marker.x, Y: marker.y }));
 
   return (
-    <div className="w-full hover:bg-gray-200 hover:text-gray-800 transition-colors ">
-      <CSVLink data={csvData} filename="digitize-plot.csv">
-        <button className="py-1 px-2 border-2 flex items-center justify-center w-full">
-          Download CSV
-        </button>
-      </CSVLink>
-    </div>
+    <CSVLink data={csvData} filename="digitize-plot.csv">
+      <Button className="w-full">Download CSV</Button>
+    </CSVLink>
   );
 }

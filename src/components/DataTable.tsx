@@ -1,32 +1,42 @@
 import Point from "../geometry/Point";
 
-export default function DataTable(props: {
-  data: Point[];
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+
+export type Props = {
+  points: Point[];
   coordsConverter: (coords: Point) => Point;
-}) {
-  const { data, coordsConverter } = props;
+};
+
+export default function DataTable({ points, coordsConverter }: Props) {
   const toString = (num: number) =>
     num.toLocaleString(undefined, { minimumFractionDigits: 2 });
 
+  points = points.map(coordsConverter);
+
   return (
-    <table className="w-full mt-4">
-      <thead className="border-b-2">
-        <tr>
-          <th>X</th>
-          <th>Y</th>
-        </tr>
-      </thead>
-      <tbody className="text-sm">
-        {data.map((row, index) => {
-          const { x, y } = coordsConverter(row);
-          return (
-            <tr key={index}>
-              <td className="text-center">{toString(x)}</td>
-              <td className="text-center">{toString(y)}</td>
-            </tr>
-          );
-        })}
-      </tbody>
-    </table>
+    <Table className="mt-2">
+      <TableHeader>
+        <TableRow>
+          <TableHead className="text-center w-1/2">X</TableHead>
+          <TableHead className="text-center w-1/2">Y</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {points.map((pt) => (
+          <TableRow key={pt.id}>
+            <TableCell className="text-center">{toString(pt.x)}</TableCell>
+            <TableCell className="text-center">{toString(pt.y)}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   );
 }

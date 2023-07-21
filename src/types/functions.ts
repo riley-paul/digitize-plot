@@ -1,1 +1,0 @@
-export type drawFunction = (ctx: CanvasRenderingContext2D) => void
