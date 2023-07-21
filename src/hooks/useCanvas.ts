@@ -1,208 +1,52 @@
-import {
-  MouseEventHandler,
-  WheelEventHandler,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import Point from "../geometry/Point";
-import { QuadTree, createQuadTree } from "../geometry/QuadTree";
-
-const MAX_ZOOM = 5;
-const MIN_ZOOM = 0.1;
-const SCROLL_SENSITIVITY = 0.0005;
-
-type Coords = { x: number; y: number };
+import { MouseEventHandler, WheelEventHandler, useEffect, useRef } from "react";
+import usePoints from "./usePoints";
+import use2dContext from "./use2dContext";
+import usePanZoom from "./usePanZoom";
 
 export default function useCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const quadtree = useRef<QuadTree | null>(null);
+  const context = use2dContext(canvasRef);
 
-  const [context, setContext] = useState<
-    CanvasRenderingContext2D | undefined | null
-  >(undefined);
+  const { drawPoints, mouseDownPoints, mouseUpPoints, mouseMovePoints } =
+    usePoints(canvasRef);
 
-
-  const [points, setPoints] = useState<Point[]>([]);
-  const [mousePoint, setMousePoint] = useState<Point | undefined>(undefined);
-  const [currentPointId, setCurrentPointId] = useState<string>("");
-  const [draggingId, setDraggingId] = useState<string>("");
-
-  const [cameraOffset, setCameraOffset] = useState<Coords>({ x: 0, y: 0 });
-  const [cameraZoom, setCameraZoom] = useState<number>(1);
-  const [isPanning, setIsPanning] = useState<boolean>(false);
-  const [panStart, setPanStart] = useState<Coords>({ x: 0, y: 0 });
-
-  useEffect(
-    () => setContext(canvasRef.current?.getContext("2d")),
-    [canvasRef.current]
-  );
-
-  useEffect(() => console.log(cameraOffset), [cameraOffset]);
-  // useEffect(() => console.log(panStart), [panStart]);
-  useEffect(() => console.log(cameraZoom), [cameraZoom]);
-
-  function getTransformedPoint(x: number, y: number): Point | undefined {
-    if (!context) return;
-    const originalPoint = new DOMPoint(x, y);
-    const transformed = context
-      .getTransform()
-      .invertSelf()
-      .transformPoint(originalPoint);
-    return new Point(transformed.x, transformed.y);
-  }
-
-  // Manage points
-  const createPoint = (coords: Point) => {
-    const point = new Point(coords.x, coords.y);
-    setPoints((prev) => [...prev, point]);
-    // console.log("point created");
-  };
-
-  const deletePoint = (id: string) => {
-    setPoints((prev) => [...prev.filter((pt) => pt.id !== id)]);
-    // console.log("point removed");
-  };
-
-  const movePoint = (id: string, coords: Point) => {
-    setPoints((prev) =>
-      prev.map((pt) => (pt.id === id ? new Point(coords.x, coords.y, id) : pt))
-    );
-    console.log("point updated");
-  };
+  const {
+    drawPanZoom,
+    mouseMovePanZoom,
+    mouseDownPanZoom,
+    mouseUpPanZoom,
+    wheelPanZoom,
+  } = usePanZoom();
 
   // Draw everything to canvas
   const draw = (context: CanvasRenderingContext2D): void => {
-    const { width, height } = context.canvas;
-
-    context.translate(width / 2, height / 2);
-    context.scale(cameraZoom, cameraZoom);
-    context.translate(
-      -width / 2 + cameraOffset.x,
-      -height / 2 + cameraOffset.y
-    );
-
-    for (let pt of points) {
-      pt.label = pt.id.substring(0, 4);
-      if (pt.id === draggingId) continue;
-      if (pt.id === currentPointId) {
-        pt.draw(context, { color: "green", radius: 5 });
-        continue;
-      }
-      pt.draw(context, { radius: 3 });
-    }
-
-    context.font = "12px Courier";
-    context.fillStyle = "red";
-    context.fillText(`dragging ID: ${draggingId}`, 10, 20);
-    context.fillText(`current ID: ${currentPointId}`, 10, 35);
-
-    quadtree.current?.draw(context);
-    mousePoint?.draw(context, { color: "blue", radius: 3 });
-
-    if (draggingId) mousePoint?.draw(context, { color: "green", radius: 5 });
-  };
-
-  const getEventLocation = (event: MouseEvent): Coords => {
-    return {
-      x: event.offsetX / cameraZoom,
-      y: event.offsetY / cameraZoom,
-    };
+    drawPanZoom(context);
+    drawPoints(context);
   };
 
   // Event handlers
-  const handleMouseMove: MouseEventHandler<HTMLCanvasElement> = (event) => {
-    // if (!canvasRef.current) return;
-    // const canvas = canvasRef.current;
-    // const rect = canvas.getBoundingClientRect();
-
-    // getTransformedPoint({
-    //   x: event.nativeEvent.offsetX,
-    //   y: event.nativeEvent.offsetY,
-    // });
-    // const mouseX = getEventLocation(event.nativeEvent).x - cameraOffset.x;
-    // const mouseY = getEventLocation(event.nativeEvent).y - cameraOffset.y;
-
-    // const mouseX = event.clientX;
-    // const mouseY = event.clientY - cameraOffset.y;
-    setMousePoint(
-      getTransformedPoint(event.nativeEvent.offsetX, event.nativeEvent.offsetY)
-    );
-
-    if (isPanning) {
-      setCameraOffset({
-        x: getEventLocation(event.nativeEvent).x - panStart.x,
-        y: getEventLocation(event.nativeEvent).y - panStart.y,
-      });
-    }
+  const onMouseMove: MouseEventHandler<HTMLCanvasElement> = (event) => {
+    mouseMovePanZoom(event);
+    mouseMovePoints(event);
   };
 
-  const handleMouseDown: MouseEventHandler<HTMLCanvasElement> = (event) => {
-    if (event.button === 1) {
-      setIsPanning(true);
-      setPanStart({
-        x: getEventLocation(event.nativeEvent).x - cameraOffset.x,
-        y: getEventLocation(event.nativeEvent).y - cameraOffset.y,
-      });
-    }
-
-    if (currentPointId) {
-      if (event.button === 2) deletePoint(currentPointId);
-      else if (event.button === 0) setDraggingId(currentPointId);
-    } else {
-    }
-    if (!currentPointId && event.button === 0 && mousePoint) {
-      createPoint(mousePoint);
-    }
+  const onMouseDown: MouseEventHandler<HTMLCanvasElement> = (event) => {
+    mouseDownPanZoom(event);
+    mouseDownPoints(event);
   };
 
-  const handleMouseUp: MouseEventHandler<HTMLCanvasElement> = (event) => {
-    if (event.button === 1) {
-      setIsPanning(false);
-    }
-
-    if (event.button !== 0) return;
-
-    if (draggingId) {
-      const id = draggingId;
-      setDraggingId("");
-      if (!mousePoint) return;
-      movePoint(id, mousePoint);
-    }
+  const onMouseUp: MouseEventHandler<HTMLCanvasElement> = (event) => {
+    mouseUpPanZoom(event);
+    mouseUpPoints(event);
   };
 
-  const handleContextMenu: MouseEventHandler<HTMLCanvasElement> = (event) => {
+  const onContextMenu: MouseEventHandler<HTMLCanvasElement> = (event) => {
     event.preventDefault();
   };
 
-  const adjustZoom = (amount: number): void => {
-    if (isPanning || draggingId) return;
-    setCameraZoom((prev) => {
-      let zoom = prev + amount;
-      zoom = Math.min(zoom, MAX_ZOOM);
-      zoom = Math.max(zoom, MIN_ZOOM);
-      return zoom;
-    });
+  const onWheel: WheelEventHandler<HTMLCanvasElement> = (event) => {
+    wheelPanZoom(event);
   };
-
-  const handleScroll: WheelEventHandler<HTMLCanvasElement> = (event) => {
-    console.log("scrolling");
-    event.preventDefault();
-    event.stopPropagation();
-    adjustZoom(-event.deltaY * SCROLL_SENSITIVITY);
-  };
-
-  // rebuild quadtree whenever points update
-  useEffect(() => {
-    quadtree.current = createQuadTree(points);
-  }, [points]);
-
-  // determine current point
-  useEffect(() => {
-    if (!mousePoint || !quadtree.current) return;
-    const nearPoints = quadtree.current.queryRadius(mousePoint, 5 / cameraZoom);
-    setCurrentPointId(mousePoint.nearest(nearPoints)?.id || "");
-  }, [mousePoint, points]);
 
   // draw loop
   useEffect(() => {
@@ -241,10 +85,10 @@ export default function useCanvas() {
   // useEffect(() => console.log(points), [points]);
   return {
     ref: canvasRef,
-    onMouseDown: handleMouseDown,
-    onMouseUp: handleMouseUp,
-    onMouseMove: handleMouseMove,
-    onContextMenu: handleContextMenu,
-    onWheel: handleScroll,
+    onMouseDown,
+    onMouseUp,
+    onMouseMove,
+    onContextMenu,
+    onWheel,
   };
 }

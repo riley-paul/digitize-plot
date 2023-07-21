@@ -50,7 +50,7 @@ export default function usePanZoom() {
   };
 
   const mouseDownPanZoom: MouseEventHandler<HTMLCanvasElement> = (event) => {
-    if (event.button === 2) {
+    if (event.button === 2 || event.button === 1) {
       setIsPanning(true);
       setPanStart({
         x: getEventLocation(event.nativeEvent).x - cameraOffset.x,
@@ -60,7 +60,7 @@ export default function usePanZoom() {
   };
 
   const mouseUpPanZoom: MouseEventHandler<HTMLCanvasElement> = (event) => {
-    if (event.button === 1) {
+    if (event.button === 2 || event.button === 1) {
       setIsPanning(false);
     }
   };

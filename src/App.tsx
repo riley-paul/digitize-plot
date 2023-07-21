@@ -1,4 +1,4 @@
-import useCanvas from "./hooks/useCanvasOnly";
+import useCanvas from "./hooks/useCanvas";
 
 function App() {
   const canvasProps = useCanvas();
