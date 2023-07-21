@@ -71,12 +71,12 @@ export default function useCanvas() {
 
   // Draw everything to canvas
   const draw = (context: CanvasRenderingContext2D): void => {
-    // const { width, height } = context.canvas;
-    // if (cameraOffset) {
-    //   context.translate(width / 2, height / 2);
-    //   context.scale(cameraZoom, cameraZoom);
-    //   context.translate(-width / 2 + cameraOffset.x, -height / 2 + cameraOffset.y);
-    // }
+    const { width, height } = context.canvas;
+    if (cameraOffset) {
+      context.translate(width / 2, height / 2);
+      context.scale(cameraZoom, cameraZoom);
+      context.translate(-width / 2 + cameraOffset.x, -height / 2 + cameraOffset.y);
+    }
 
     for (let pt of points) {
       if (pt.id === draggingId) continue;
@@ -254,6 +254,6 @@ export default function useCanvas() {
     onMouseUp: handleMouseUp,
     onMouseMove: handleMouseMove,
     onContextMenu: handleContextMenu,
-    onWheel: onWheel,
+    onWheel: handleScroll,
   };
 }
