@@ -7,8 +7,14 @@ export default function useCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const context = use2dContext(canvasRef);
 
-  const { drawPoints, mouseDownPoints, mouseUpPoints, mouseMovePoints } =
-    usePoints(canvasRef);
+  const {
+    drawPoints,
+    mouseDownPoints,
+    mouseUpPoints,
+    mouseMovePoints,
+    points,
+    mousePoint,
+  } = usePoints(canvasRef);
 
   const {
     drawPanZoom,
@@ -20,28 +26,31 @@ export default function useCanvas() {
 
   // Draw everything to canvas
   const draw = (context: CanvasRenderingContext2D): void => {
+    // context.fillStyle = "darkgray"
+    // context.fillRect(0, 0, context.canvas.width, context.canvas.height);
     drawPanZoom(context);
     drawPoints(context);
   };
 
   // Event handlers
-  const onMouseMove: MouseEventHandler<HTMLCanvasElement> = (event) => {
+  const onMouseMove: MouseEventHandler = (event) => {
     mouseMovePanZoom(event);
     mouseMovePoints(event);
   };
 
-  const onMouseDown: MouseEventHandler<HTMLCanvasElement> = (event) => {
+  const onMouseDown: MouseEventHandler = (event) => {
     mouseDownPanZoom(event);
     mouseDownPoints(event);
   };
 
-  const onMouseUp: MouseEventHandler<HTMLCanvasElement> = (event) => {
+  const onMouseUp: MouseEventHandler = (event) => {
     mouseUpPanZoom(event);
     mouseUpPoints(event);
   };
 
-  const onContextMenu: MouseEventHandler<HTMLCanvasElement> = (event) => {
+  const onContextMenu: MouseEventHandler = (event) => {
     event.preventDefault();
+    event.stopPropagation();
   };
 
   const onWheel: WheelEventHandler<HTMLCanvasElement> = (event) => {
@@ -92,5 +101,7 @@ export default function useCanvas() {
     onMouseMove,
     onContextMenu,
     onWheel,
+    points,
+    mousePoint,
   };
 }

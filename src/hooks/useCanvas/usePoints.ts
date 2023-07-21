@@ -71,13 +71,13 @@ export default function usePoints(canvasRef: RefObject<HTMLCanvasElement>) {
   };
 
   // Event handlers
-  const mouseMovePoints: MouseEventHandler<HTMLCanvasElement> = (event) => {
+  const mouseMovePoints: MouseEventHandler = (event) => {
     setMousePoint(
       getTransformedPoint(event.nativeEvent.offsetX, event.nativeEvent.offsetY)
     );
   };
 
-  const mouseDownPoints: MouseEventHandler<HTMLCanvasElement> = (event) => {
+  const mouseDownPoints: MouseEventHandler = (event) => {
     if (currentPointId) {
       if (event.button === 2) deletePoint(currentPointId);
       else if (event.button === 0) setDraggingId(currentPointId);
@@ -88,7 +88,7 @@ export default function usePoints(canvasRef: RefObject<HTMLCanvasElement>) {
     }
   };
 
-  const mouseUpPoints: MouseEventHandler<HTMLCanvasElement> = (event) => {
+  const mouseUpPoints: MouseEventHandler = (event) => {
     if (event.button !== 0) return;
 
     if (draggingId) {
@@ -119,5 +119,7 @@ export default function usePoints(canvasRef: RefObject<HTMLCanvasElement>) {
     mouseDownPoints,
     mouseUpPoints,
     mouseMovePoints,
+    points,
+    mousePoint,
   };
 }

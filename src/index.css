@@ -4,5 +4,6 @@
 
 html,
 body {
+  font-size: 14px;
   @apply bg-gray-50 font-mono;
 }
