@@ -1,6 +1,9 @@
 type PointDrawOptions = {
   color?: string;
+  stroke?: string;
   radius?: number;
+  labelPos?: "t" | "b" | "l" | "r";
+  showLabel?: boolean;
 };
 
 import { v4 as uuidv4 } from "uuid";
@@ -9,19 +12,18 @@ export default class Point {
   x: number;
   y: number;
   id: string;
+  label: string;
 
-  constructor(x: number, y: number, id = uuidv4()) {
+  constructor(x: number, y: number, id = uuidv4(), label = "") {
     this.x = x;
     this.y = y;
     this.id = id;
-  }
-
-  get coordinates(): number[] {
-    return [this.x, this.y];
+    this.label = label;
   }
 
   draw(ctx: CanvasRenderingContext2D, options: PointDrawOptions = {}) {
-    const radius = options.radius || 3;
+    const scale = ctx.getTransform().a;
+    const radius = (options.radius || 3) / scale;
     const color = options.color || "crimson";
 
     ctx.beginPath();
@@ -29,17 +31,42 @@ export default class Point {
     ctx.fillStyle = color;
     ctx.fill();
     ctx.closePath();
-  }
 
-  toString() {
-    return `POINT (${this.coordinates
-      .map((coord) => Math.round(coord * 1000) / 1000)
-      .join(" ")})`;
+    if (this.label) {
+      const fontHeight = 12 / scale;
+      const textOffset = 10 / scale;
+
+      ctx.font = `${fontHeight}px courier`;
+      ctx.fillStyle = "darkgray";
+
+      switch (options.labelPos) {
+        case "r":
+          ctx.textAlign = "left";
+          ctx.textBaseline = "middle";
+          ctx.fillText(this.label, this.x + textOffset, this.y);
+          break;
+        case "l":
+          ctx.textAlign = "right";
+          ctx.textBaseline = "middle";
+          ctx.fillText(this.label, this.x - textOffset, this.y);
+          break;
+        case "b":
+          ctx.textAlign = "center";
+          ctx.textBaseline = "top";
+          ctx.fillText(this.label, this.x, this.y + textOffset);
+          break;
+        default:
+          ctx.textAlign = "center";
+          ctx.textBaseline = "alphabetic";
+          ctx.fillText(this.label, this.x, this.y - textOffset);
+          break;
+      }
+    }
   }
 
   distOther(other: Point): number {
-    const deltaX = this.coordinates[0] - other.coordinates[0];
-    const deltaY = this.coordinates[1] - other.coordinates[1];
+    const deltaX = this.x - other.x;
+    const deltaY = this.y - other.y;
     return Math.hypot(deltaX, deltaY);
   }
 

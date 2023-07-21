@@ -72,19 +72,22 @@ export default function useCanvas() {
   // Draw everything to canvas
   const draw = (context: CanvasRenderingContext2D): void => {
     const { width, height } = context.canvas;
-    if (cameraOffset) {
-      context.translate(width / 2, height / 2);
-      context.scale(cameraZoom, cameraZoom);
-      context.translate(-width / 2 + cameraOffset.x, -height / 2 + cameraOffset.y);
-    }
+
+    context.translate(width / 2, height / 2);
+    context.scale(cameraZoom, cameraZoom);
+    context.translate(
+      -width / 2 + cameraOffset.x,
+      -height / 2 + cameraOffset.y
+    );
 
     for (let pt of points) {
+      pt.label = pt.id.substring(0, 4);
       if (pt.id === draggingId) continue;
       if (pt.id === currentPointId) {
-        pt.draw(context, { color: "green", radius: 5 / cameraZoom });
+        pt.draw(context, { color: "green", radius: 5 });
         continue;
       }
-      pt.draw(context, { radius: 3 / cameraZoom });
+      pt.draw(context, { radius: 3 });
     }
 
     context.font = "12px Courier";
@@ -93,10 +96,9 @@ export default function useCanvas() {
     context.fillText(`current ID: ${currentPointId}`, 10, 35);
 
     quadtree.current?.draw(context);
-    mousePoint?.draw(context, { color: "blue", radius: 3 / cameraZoom });
+    mousePoint?.draw(context, { color: "blue", radius: 3 });
 
-    if (draggingId)
-      mousePoint?.draw(context, { color: "green", radius: 5 / cameraZoom });
+    if (draggingId) mousePoint?.draw(context, { color: "green", radius: 5 });
   };
 
   const getEventLocation = (event: MouseEvent): Coords => {
@@ -188,18 +190,6 @@ export default function useCanvas() {
     adjustZoom(-event.deltaY * SCROLL_SENSITIVITY);
   };
 
-  const onWheel: WheelEventHandler<HTMLCanvasElement> = (event) => {
-    if (!context || !mousePoint) return;
-    const zoom = event.deltaY < 0 ? 1.1 : 0.9;
-
-    context.translate(mousePoint.x, mousePoint.y);
-    context.scale(zoom, zoom);
-    context.translate(-mousePoint.x, -mousePoint.y);
-
-    // drawImageToCanvas();
-    event.preventDefault();
-  };
-
   // rebuild quadtree whenever points update
   useEffect(() => {
     quadtree.current = createQuadTree(points);
@@ -208,7 +198,7 @@ export default function useCanvas() {
   // determine current point
   useEffect(() => {
     if (!mousePoint || !quadtree.current) return;
-    const nearPoints = quadtree.current.queryRadius(mousePoint, 5);
+    const nearPoints = quadtree.current.queryRadius(mousePoint, 5 / cameraZoom);
     setCurrentPointId(mousePoint.nearest(nearPoints)?.id || "");
   }, [mousePoint, points]);
 
@@ -217,7 +207,6 @@ export default function useCanvas() {
     if (!context) return;
     let animationFrameId: number;
 
-    
     const render = () => {
       // context.save();
       context.setTransform(1, 0, 0, 1, 0, 0);
