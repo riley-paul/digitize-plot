@@ -4,46 +4,34 @@
 // } from "../reducers/calibrationReducer";
 
 import {
-  Card,
-  CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
+import { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { Calibrations } from "@/types/calibrations";
 
-export default function Calibrate(props) {
-  // const { state, onUpdateValue } = props;
+export type Props = {
+  calibrations: Calibrations;
+  setCalibrations: Dispatch<SetStateAction<Calibrations>>;
+};
 
-  // const Input = (id: string, marker: CalibrationMarker) => (
-  //   <label
-  //     key={id}
-  //     htmlFor={id}
-  //     className="flex gap-2 pb-1 items-center"
-  //   >
-  //     {id.toUpperCase()}:
-  //     <input
-  //       id={id}
-  //       type="text"
-  //       className="w-full rounded p-1"
-  //       value={marker.value}
-  //       // onChange={(event) => onUpdateValue(event, id)}
-  //     />
-  //   </label>
-  // );
+export default function Calibrate(props: Props) {
+  const updateValue = (
+    event: ChangeEvent<HTMLInputElement>,
+    id: keyof Calibrations
+  ) => {
+    const actual = event.target.value;
 
-  // return (
-  //   <div className="bg-white flex-grow p-4 flex flex-col gap-2 text-sm">
-  //     <h2 className="text-base font-bold">X-axis</h2>
-  //     {Input("x1", state.x1)}
-  //     {Input("x2", state.x2)}
-  //     <h2 className="text-base font-bold">Y-axis</h2>
-  //     {Input("y1", state.y1)}
-  //     {Input("y2", state.y2)}
-  //   </div>
-  // );
+    props.setCalibrations((prev) => {
+      return {
+        ...prev,
+        [id]: { ...prev[id], actual },
+      };
+    });
+  };
 
   return (
     <form action="">
@@ -52,11 +40,19 @@ export default function Calibrate(props) {
         <CardDescription className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <Label>X1</Label>
-            <Input type="number" />
+            <Input
+              type="number"
+              value={props.calibrations.x1.actual}
+              onChange={(e) => updateValue(e, "x1")}
+            />
           </div>
           <div className="flex items-center gap-2">
             <Label>X2</Label>
-            <Input type="number" />
+            <Input
+              type="number"
+              value={props.calibrations.x2.actual}
+              onChange={(e) => updateValue(e, "x2")}
+            />
           </div>
         </CardDescription>
       </CardHeader>
@@ -65,11 +61,19 @@ export default function Calibrate(props) {
         <CardDescription className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <Label>Y1</Label>
-            <Input type="number" />
+            <Input
+              type="number"
+              value={props.calibrations.y1.actual}
+              onChange={(e) => updateValue(e, "y1")}
+            />
           </div>
           <div className="flex items-center gap-2">
             <Label>Y2</Label>
-            <Input type="number" />
+            <Input
+              type="number"
+              value={props.calibrations.y2.actual}
+              onChange={(e) => updateValue(e, "y2")}
+            />
           </div>
         </CardDescription>
       </CardHeader>

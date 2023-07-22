@@ -13,7 +13,7 @@ export default function Toggle(props: Props) {
   const flip = () => props.setState((prev) => !prev);
 
   return (
-    <div className="flex items-center space-x-2 p-6">
+    <div className="flex items-center space-x-2 p-6 pt-0">
       <Switch id={props.id} checked={props.state} onCheckedChange={flip} />
       <Label htmlFor={props.id}>{props.name}</Label>
     </div>
