@@ -6,6 +6,7 @@ import MouseCoords from "./components/MouseCoords";
 import Point from "./geometry/Point";
 import useCanvas from "./hooks/useCanvas";
 import Dropzone from "./components/Dropzone";
+import Calibrate from "./components/Calibrate";
 
 const coordsConverter = (coords: Point) => coords;
 
@@ -15,7 +16,7 @@ function App() {
 
   return (
     <div className="w-full h-screen flex">
-      <aside className="w-60 bg-white shadow overflow-y-scroll p-4">
+      <aside className="w-60 bg-card shadow border-r overflow-y-auto p-4">
         <Download {...{ coordsConverter, points }} />
         <DataTable {...{ coordsConverter, points }} />
       </aside>
@@ -26,9 +27,10 @@ function App() {
           <Dropzone {...{ setImage }} />
         )}
       </main>
-      <aside className="w-60 bg-white shadow">
+      <aside className="w-60 bg-card shadow border-l overflow-y-auto ">
         <Bullseye canvasRef={canvasProps.ref} mousePoint={mousePoint} />
         <MouseCoords {...{ coordsConverter, mousePoint }} />
+        <Calibrate />
       </aside>
     </div>
   );

@@ -10,7 +10,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "./ui/input";
-import { Label } from "./ui/label";
 import { Button } from "./ui/button";
 
 export type Props = {
@@ -44,9 +43,8 @@ export default function Dropzone({ setImage }: Props) {
     [setImage]
   );
 
-
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center">
+    <div className="w-full h-full flex flex-col items-center justify-center p-4">
       <Card className="max-w-lg">
         <CardHeader>
           <CardTitle>Welcome to Digitize Plot</CardTitle>
@@ -66,12 +64,26 @@ export default function Dropzone({ setImage }: Props) {
               accept="image/*"
               placeholder="Select plot image to digitized"
             />
-            <div className="flex gap-2">
+            <div className="flex flex-col lg:flex-row gap-2">
               <Button className="w-full">Let's go</Button>
-              <Button variant="secondary" className="w-full">Use Sample Image</Button>
+              <Button variant="secondary" className="w-full">
+                Use Sample Image
+              </Button>
             </div>
           </form>
         </CardContent>
+        <CardFooter>
+          <small className="text-muted-foreground">
+            An app by{" "}
+            <a
+              href="https://rileypaul.ca"
+              className="underline hover:no-underline hover:text-foreground"
+              target="blank"
+            >
+              Riley Paul
+            </a>
+          </small>
+        </CardFooter>
       </Card>
     </div>
   );
