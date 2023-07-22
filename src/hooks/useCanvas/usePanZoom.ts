@@ -1,25 +1,45 @@
 import {
   MouseEventHandler,
+  RefObject,
   WheelEventHandler,
   useEffect,
   useState,
 } from "react";
 
-const MAX_ZOOM = 5;
-const MIN_ZOOM = 0.1;
+const MAX_ZOOM = 10;
+const MIN_ZOOM = 0.25;
 const SCROLL_SENSITIVITY = 0.0005;
 
 type Coords = { x: number; y: number };
 
-export default function usePanZoom() {
+export default function usePanZoom(
+  canvasRef: RefObject<HTMLCanvasElement>,
+  image: HTMLImageElement | undefined,
+  debug: boolean
+) {
   const [cameraOffset, setCameraOffset] = useState<Coords>({ x: 0, y: 0 });
   const [cameraZoom, setCameraZoom] = useState<number>(1);
   const [isPanning, setIsPanning] = useState<boolean>(false);
   const [panStart, setPanStart] = useState<Coords>({ x: 0, y: 0 });
 
-  useEffect(() => console.log(cameraOffset), [cameraOffset]);
-  // useEffect(() => console.log(panStart), [panStart]);
-  useEffect(() => console.log(cameraZoom), [cameraZoom]);
+  useEffect(() => {
+    if (debug) console.log("cameraOffset", cameraOffset);
+  }, [cameraOffset]);
+
+  useEffect(() => {
+    if (debug) console.log("cameraZoom", cameraZoom);
+  }, [cameraZoom]);
+
+  useEffect(() => {
+    if (!image || !canvasRef.current) return;
+
+    const scale = canvasRef.current.getContext("2d")?.getTransform().a || 1;
+
+    setCameraOffset({
+      x: (canvasRef.current.width - image.width) / 2 / scale,
+      y: (canvasRef.current.height - image.height) / 2 / scale,
+    });
+  }, [image, canvasRef.current]);
 
   // Draw everything to canvas
   const drawPanZoom = (context: CanvasRenderingContext2D): void => {

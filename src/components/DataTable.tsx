@@ -22,7 +22,7 @@ export default function DataTable({ points, coordsConverter }: Props) {
   points = points.map(coordsConverter);
 
   return (
-    <Table className="mt-2">
+    <Table>
       {points.length === 0 && <TableCaption>Points placed will be listed here</TableCaption>}
       <TableHeader>
         <TableRow>

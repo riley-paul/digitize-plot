@@ -1,5 +1,11 @@
-import React, { Dispatch, useCallback } from "react";
-import { useDropzone } from "react-dropzone";
+import {
+  ChangeEventHandler,
+  Dispatch,
+  FormEventHandler,
+  MouseEventHandler,
+  useCallback,
+  useState,
+} from "react";
 
 import {
   Card,
@@ -17,6 +23,9 @@ export type Props = {
 };
 
 export default function Dropzone({ setImage }: Props) {
+  const [error, setError] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+
   const createImage = (url: string) => {
     const img = new Image();
     img.src = url;
@@ -27,10 +36,28 @@ export default function Dropzone({ setImage }: Props) {
     };
   };
 
-  const useSample = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const onFileChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+    if (!event.target.files) {
+      setFile(null);
+      return;
+    }
+    setFile(event.target.files[0]);
+  };
 
+  const onSubmit: FormEventHandler<HTMLFormElement> = (event) => {
+    event.preventDefault();
+
+    if (!file) {
+      setError("Must select an image file");
+      return;
+    }
+
+    setError("");
+    const url = URL.createObjectURL(file);
+    createImage(url);
+  };
+
+  const useSample: MouseEventHandler = (_) => {
     const url = "/BPL220K 24ft.png";
     createImage(url);
   };
@@ -58,18 +85,27 @@ export default function Dropzone({ setImage }: Props) {
             To get started, choose an image of a plot to be digitized. Or if you
             just want to try out the app, start with a sample image.
           </CardDescription>
-          <form action="" className="mt-2 grid gap-2">
+          <form action="" className="mt-2 grid gap-2" onSubmit={onSubmit}>
             <Input
               type="file"
               accept="image/*"
               placeholder="Select plot image to digitized"
+              onChange={onFileChange}
             />
+            {error && <small className="text-destructive">{error}</small>}
             <div className="flex flex-col lg:flex-row gap-2">
-              <Button className="w-full">Let's go</Button>
-              <Button variant="secondary" className="w-full">
+              <Button className="w-full" type="submit">
+                Let's go
+              </Button>
+              <Button
+                variant="secondary"
+                className="w-full"
+                onClick={useSample}
+              >
                 Use Sample Image
               </Button>
             </div>
+            <input type="submit" hidden />
           </form>
         </CardContent>
         <CardFooter>

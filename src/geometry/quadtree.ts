@@ -35,6 +35,12 @@ export class Rect {
   }
 
   draw(ctx: CanvasRenderingContext2D) {
+    const scale = ctx.getTransform().a;
+    
+    ctx.strokeStyle = "black";
+    ctx.lineCap = "round";
+    ctx.lineWidth = 1 / scale;
+
     ctx.beginPath();
     ctx.rect(this.west_edge, this.south_edge, this.w, this.h);
     ctx.stroke();

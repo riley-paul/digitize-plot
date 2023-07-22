@@ -23,13 +23,15 @@ export default class Point {
 
   draw(ctx: CanvasRenderingContext2D, options: PointDrawOptions = {}) {
     const scale = ctx.getTransform().a;
-    const radius = (options.radius || 3) / scale;
+    const radius = (options.radius || 5) / scale;
     const color = options.color || "crimson";
+    
+    ctx.lineWidth = 2 / scale
 
     ctx.beginPath();
     ctx.arc(this.x, this.y, radius, 0, Math.PI * 2);
-    ctx.fillStyle = color;
-    ctx.fill();
+    ctx.strokeStyle = color;
+    ctx.stroke();
     ctx.closePath();
 
     if (this.label) {

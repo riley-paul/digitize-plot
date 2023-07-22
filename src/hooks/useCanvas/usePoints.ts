@@ -9,7 +9,10 @@ import Point from "../../geometry/Point";
 import { QuadTree, createQuadTree } from "../../geometry/QuadTree";
 import use2dContext from "./use2dContext";
 
-export default function usePoints(canvasRef: RefObject<HTMLCanvasElement>) {
+export default function usePoints(
+  canvasRef: RefObject<HTMLCanvasElement>,
+  debug: boolean
+) {
   const quadtree = useRef<QuadTree | null>(null);
   const context = use2dContext(canvasRef);
 
@@ -56,18 +59,20 @@ export default function usePoints(canvasRef: RefObject<HTMLCanvasElement>) {
         pt.draw(ctx, { color: "green", radius: 5 });
         continue;
       }
-      pt.draw(ctx, { radius: 3 });
+      pt.draw(ctx);
     }
 
-    ctx.font = "12px Courier";
-    ctx.fillStyle = "red";
-    ctx.fillText(`dragging ID: ${draggingId}`, 10, 20);
-    ctx.fillText(`current ID: ${currentPointId}`, 10, 35);
-
-    quadtree.current?.draw(ctx);
-    mousePoint?.draw(ctx, { color: "blue", radius: 3 });
-
     if (draggingId) mousePoint?.draw(ctx, { color: "green", radius: 5 });
+
+    if (debug) {
+      ctx.font = "12px Courier";
+      ctx.fillStyle = "red";
+      ctx.fillText(`dragging ID: ${draggingId}`, 10, 20);
+      ctx.fillText(`current ID: ${currentPointId}`, 10, 35);
+
+      quadtree.current?.draw(ctx);
+      mousePoint?.draw(ctx, { color: "blue", radius: 3 });
+    }
   };
 
   // Event handlers
@@ -126,5 +131,6 @@ export default function usePoints(canvasRef: RefObject<HTMLCanvasElement>) {
     mouseLeavePoints,
     points,
     mousePoint,
+    clearPoints: () => setPoints([]),
   };
 }

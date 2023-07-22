@@ -3,7 +3,10 @@ import usePoints from "./usePoints";
 import use2dContext from "./use2dContext";
 import usePanZoom from "./usePanZoom";
 
-export default function useCanvas() {
+export default function useCanvas(
+  image: HTMLImageElement | undefined,
+  debug: boolean
+) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const context = use2dContext(canvasRef);
 
@@ -15,7 +18,8 @@ export default function useCanvas() {
     mouseLeavePoints,
     points,
     mousePoint,
-  } = usePoints(canvasRef);
+    clearPoints,
+  } = usePoints(canvasRef, debug);
 
   const {
     drawPanZoom,
@@ -23,13 +27,12 @@ export default function useCanvas() {
     mouseDownPanZoom,
     mouseUpPanZoom,
     wheelPanZoom,
-  } = usePanZoom();
+  } = usePanZoom(canvasRef, image, debug);
 
   // Draw everything to canvas
   const draw = (context: CanvasRenderingContext2D): void => {
-    // context.fillStyle = "darkgray"
-    // context.fillRect(0, 0, context.canvas.width, context.canvas.height);
     drawPanZoom(context);
+    if (image) context.drawImage(image, 0, 0, image.width, image.height);
     drawPoints(context);
   };
 
@@ -59,8 +62,8 @@ export default function useCanvas() {
   };
 
   const onMouseLeave: WheelEventHandler<HTMLCanvasElement> = (event) => {
-    mouseLeavePoints(event)
-  }
+    mouseLeavePoints(event);
+  };
 
   // draw loop
   useEffect(() => {
@@ -71,6 +74,7 @@ export default function useCanvas() {
       // context.save();
       context.setTransform(1, 0, 0, 1, 0, 0);
       context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+      // context.imageSmoothingEnabled = false;
 
       draw(context);
       // context.restore();
@@ -96,9 +100,12 @@ export default function useCanvas() {
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [image]);
 
-  // useEffect(() => console.log(points), [points]);
+  useEffect(() => {
+    if (debug) console.log(points);
+  }, [points]);
+
   return {
     ref: canvasRef,
     onMouseDown,
@@ -109,5 +116,6 @@ export default function useCanvas() {
     onWheel,
     points,
     mousePoint,
+    clearPoints,
   };
 }
