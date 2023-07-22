@@ -7,11 +7,14 @@ import Point from "./geometry/Point";
 import useCanvas from "./hooks/useCanvas";
 import Dropzone from "./components/Dropzone";
 import Calibrate from "./components/Calibrate";
+import { Switch } from "./components/ui/switch";
+import Toggle from "./components/Toggle";
 
 const coordsConverter = (coords: Point) => coords;
 
 function App() {
   const [image, setImage] = useState<HTMLImageElement | undefined>();
+  const [debug, setDebug] = useState(true);
   const { points, mousePoint, ...canvasProps } = useCanvas();
 
   return (
@@ -27,10 +30,18 @@ function App() {
           <Dropzone {...{ setImage }} />
         )}
       </main>
-      <aside className="w-60 bg-card shadow border-l overflow-y-auto ">
-        <Bullseye canvasRef={canvasProps.ref} mousePoint={mousePoint} />
-        <MouseCoords {...{ coordsConverter, mousePoint }} />
-        <Calibrate />
+      <aside className="w-60 bg-card shadow border-l overflow-y-auto flex flex-col justify-between">
+        <div>
+          <Bullseye canvasRef={canvasProps.ref} mousePoint={mousePoint} />
+          <MouseCoords {...{ coordsConverter, mousePoint }} />
+          <Calibrate />
+        </div>
+        <Toggle
+          id="debug"
+          name="Debug Mode"
+          state={debug}
+          setState={setDebug}
+        />
       </aside>
     </div>
   );
