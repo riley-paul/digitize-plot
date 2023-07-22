@@ -37,7 +37,7 @@ export class Rect {
   draw(ctx: CanvasRenderingContext2D) {
     const scale = ctx.getTransform().a;
     
-    ctx.strokeStyle = "black";
+    ctx.strokeStyle = "magenta";
     ctx.lineCap = "round";
     ctx.lineWidth = 1 / scale;
 

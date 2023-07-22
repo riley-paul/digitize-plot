@@ -52,17 +52,20 @@ export default function usePoints(
 
   // Draw everything to canvas
   const drawPoints = (ctx: CanvasRenderingContext2D): void => {
+    const DEFAULT_COLOUR = "hsl(224 71.4% 4.1%)";
+    const SELECTED_COLOUR = "hsl(220 8.9% 46.1%)";
+
     for (let pt of points) {
-      pt.label = pt.id.substring(0, 4);
+      if (debug) pt.label = pt.label || pt.id.substring(0, 4);
       if (pt.id === draggingId) continue;
       if (pt.id === currentPointId) {
-        pt.draw(ctx, { color: "green", radius: 5 });
+        pt.draw(ctx, { color: SELECTED_COLOUR });
         continue;
       }
-      pt.draw(ctx);
+      pt.draw(ctx, { color: DEFAULT_COLOUR });
     }
 
-    if (draggingId) mousePoint?.draw(ctx, { color: "green", radius: 5 });
+    if (draggingId) mousePoint?.draw(ctx, { color: SELECTED_COLOUR });
 
     if (debug) {
       ctx.font = "12px Courier";
@@ -118,7 +121,7 @@ export default function usePoints(
     if (!mousePoint || !quadtree.current || !context) return;
     const nearPoints = quadtree.current.queryRadius(
       mousePoint,
-      5 / context.getTransform().a
+      7 / context.getTransform().a
     );
     setCurrentPointId(mousePoint.nearest(nearPoints)?.id || "");
   }, [mousePoint, points]);

@@ -24,22 +24,39 @@ export default class Point {
   draw(ctx: CanvasRenderingContext2D, options: PointDrawOptions = {}) {
     const scale = ctx.getTransform().a;
     const radius = (options.radius || 5) / scale;
-    const color = options.color || "crimson";
-    
-    ctx.lineWidth = 2 / scale
+    const outerRadius = radius * 1.5;
+    const innerRadius = radius * 0.5;
+    const color = options.color || "black";
+
+    const drawLine = (x1: number, y1: number, x2: number, y2: number) => {
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+    };
+
+    ctx.lineCap = "round";
+    ctx.lineWidth = 2 / scale;
 
     ctx.beginPath();
     ctx.arc(this.x, this.y, radius, 0, Math.PI * 2);
     ctx.strokeStyle = color;
+    ctx.fillStyle = "rgba(250,250,250,0.3)";
+    ctx.fill();
     ctx.stroke();
     ctx.closePath();
 
+    drawLine(this.x + innerRadius, this.y, this.x + outerRadius, this.y);
+    drawLine(this.x - innerRadius, this.y, this.x - outerRadius, this.y);
+    drawLine(this.x, this.y + innerRadius, this.x, this.y + outerRadius);
+    drawLine(this.x, this.y - innerRadius, this.x, this.y - outerRadius);
+
     if (this.label) {
       const fontHeight = 12 / scale;
-      const textOffset = 10 / scale;
+      const textOffset = radius * 2.2;
 
       ctx.font = `${fontHeight}px courier`;
-      ctx.fillStyle = "darkgray";
+      ctx.fillStyle = "dimgray";
 
       switch (options.labelPos) {
         case "r":
