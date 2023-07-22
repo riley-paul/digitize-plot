@@ -19,7 +19,9 @@ function App() {
   const { calibrations, setCalibrations, coordsConverter } = useCalibrations();
   const { points, mousePoint, clearPoints, ...canvasProps } = useCanvas(
     image,
-    debug
+    debug,
+    calibrations,
+    setCalibrations
   );
 
   return (

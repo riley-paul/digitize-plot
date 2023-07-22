@@ -1,16 +1,12 @@
+import Calibrator from "@/geometry/Calibrator";
 import Point from "@/geometry/Point";
 import { useState } from "react";
 
-export type Calibration = {
-  screen: number;
-  actual: number;
-};
-
 export type Calibrations = {
-  x1: Calibration;
-  x2: Calibration;
-  y1: Calibration;
-  y2: Calibration;
+  x1: Calibrator;
+  x2: Calibrator;
+  y1: Calibrator;
+  y2: Calibrator;
 };
 
 type LinearInterpValues = {
@@ -29,10 +25,10 @@ function linearInterp(values: LinearInterpValues): number {
 
 export default function useCalibrations() {
   const intialCalibrations: Calibrations = {
-    x1: { screen: 20, actual: 0 },
-    y1: { screen: 20, actual: 0 },
-    x2: { screen: 40, actual: 0 },
-    y2: { screen: 40, actual: 0 },
+    x1: new Calibrator("x1", 20, 0, "x"),
+    x2: new Calibrator("x2", 40, 0, "x"),
+    y1: new Calibrator("y1", 20, 0, "y"),
+    y2: new Calibrator("y2", 40, 0, "y"),
   };
 
   const [calibrations, setCalibrations] =

@@ -1,11 +1,22 @@
-import { MouseEventHandler, WheelEventHandler, useEffect, useRef } from "react";
+import {
+  Dispatch,
+  MouseEventHandler,
+  SetStateAction,
+  WheelEventHandler,
+  useEffect,
+  useRef,
+} from "react";
 import usePoints from "./usePoints";
 import use2dContext from "./use2dContext";
 import usePanZoom from "./usePanZoom";
+import type { Calibrations } from "../useCalibrations";
+import useCalibrators from "./useCalibrators";
 
 export default function useCanvas(
   image: HTMLImageElement | undefined,
-  debug: boolean
+  debug: boolean,
+  calibrations: Calibrations,
+  setCalibrations: Dispatch<SetStateAction<Calibrations>>
 ) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const context = use2dContext(canvasRef);
@@ -29,26 +40,43 @@ export default function useCanvas(
     wheelPanZoom,
   } = usePanZoom(canvasRef, image, debug);
 
+  const {
+    drawCalibrators,
+    mouseMoveCalibrators,
+    mouseDownCalibrators,
+    MouseUpCalibrators,
+  } = useCalibrators(
+    canvasRef,
+    mousePoint,
+    calibrations,
+    setCalibrations,
+    debug
+  );
+
   // Draw everything to canvas
   const draw = (context: CanvasRenderingContext2D): void => {
     drawPanZoom(context);
     if (image) context.drawImage(image, 0, 0, image.width, image.height);
+    drawCalibrators(context);
     drawPoints(context);
   };
 
   // Event handlers
   const onMouseMove: MouseEventHandler<HTMLCanvasElement> = (event) => {
     mouseMovePanZoom(event);
+    mouseMoveCalibrators(event);
     mouseMovePoints(event);
   };
 
   const onMouseDown: MouseEventHandler<HTMLCanvasElement> = (event) => {
     mouseDownPanZoom(event);
+    mouseDownCalibrators(event);
     mouseDownPoints(event);
   };
 
   const onMouseUp: MouseEventHandler<HTMLCanvasElement> = (event) => {
     mouseUpPanZoom(event);
+    MouseUpCalibrators(event);
     mouseUpPoints(event);
   };
 

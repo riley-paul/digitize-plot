@@ -3,15 +3,12 @@
 //   CalibrationState,
 // } from "../reducers/calibrationReducer";
 
-import {
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
-import { Calibrations } from "@/types/calibrations";
+import Calibrator from "@/geometry/Calibrator";
+import { Calibrations } from "@/hooks/useCalibrations";
 
 export type Props = {
   calibrations: Calibrations;
@@ -23,14 +20,12 @@ export default function Calibrate(props: Props) {
     event: ChangeEvent<HTMLInputElement>,
     id: keyof Calibrations
   ) => {
-    const actual = event.target.value;
+    const actual = Number(event.target.value);
 
-    props.setCalibrations((prev) => {
-      return {
-        ...prev,
-        [id]: { ...prev[id], actual },
-      };
-    });
+    props.setCalibrations((prev) => ({
+      ...prev,
+      [id]: new Calibrator(id, prev[id].screen, actual, prev[id].axis),
+    }));
   };
 
   return (
