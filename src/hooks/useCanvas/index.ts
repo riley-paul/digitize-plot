@@ -42,7 +42,6 @@ export default function useCanvas(
 
   const {
     drawCalibrators,
-    mouseMoveCalibrators,
     mouseDownCalibrators,
     MouseUpCalibrators,
   } = useCalibrators(
@@ -64,7 +63,6 @@ export default function useCanvas(
   // Event handlers
   const onMouseMove: MouseEventHandler<HTMLCanvasElement> = (event) => {
     mouseMovePanZoom(event);
-    mouseMoveCalibrators(event);
     mouseMovePoints(event);
   };
 

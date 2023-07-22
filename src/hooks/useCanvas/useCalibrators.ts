@@ -10,6 +10,7 @@ import {
 import Point from "../../geometry/Point";
 import use2dContext from "./use2dContext";
 import { Calibrations } from "../useCalibrations";
+import Calibrator from "@/geometry/Calibrator";
 
 export default function useCalibrators(
   canvasRef: RefObject<HTMLCanvasElement>,
@@ -19,26 +20,61 @@ export default function useCalibrators(
   debug: boolean
 ) {
   const [current, setCurrent] = useState<keyof Calibrations | undefined>();
+  const [dragging, setDragging] = useState<keyof Calibrations | undefined>();
   const context = use2dContext(canvasRef);
 
   const drawCalibrators = (ctx: CanvasRenderingContext2D): void => {
-    Object.values(calibrations).forEach((calibrator) => {
-      calibrator.draw(ctx);
+    for (let calibrator of Object.values(calibrations)) {
+      if (dragging === calibrator.id) continue;
+      calibrator.draw(ctx, {
+        color: calibrator.id === current ? "red" : "black",
+      });
+    }
+
+    if (dragging && mousePoint) {
+      const draggee = calibrations[dragging];
+      new Calibrator(
+        "mouse",
+        draggee.axis === "x" ? mousePoint.x : mousePoint.y,
+        0,
+        draggee.axis
+      ).draw(ctx, { color: "red" });
+    }
+  };
+
+  const updateCalibrator = (id: keyof Calibrations, point: Point) => {
+    setCalibrations((prev) => {
+      const prevCalibrator = prev[id];
+      const newScreen = prevCalibrator.axis === "x" ? point.x : point.y;
+
+      const newCalibrator = new Calibrator(
+        id,
+        newScreen,
+        prevCalibrator.actual,
+        prevCalibrator.axis
+      );
+      return { ...prev, [id]: newCalibrator };
     });
   };
 
-  // Event handlers
-  const mouseMoveCalibrators: MouseEventHandler<HTMLCanvasElement> = (
-    event
-  ) => {};
 
   const mouseDownCalibrators: MouseEventHandler<HTMLCanvasElement> = (
     event
-  ) => {};
+  ) => {
+    if (current && event.button === 0) {
+      event.preventDefault();
+      event.stopPropagation()
+      setDragging(current);
+    }
+  };
 
-  const MouseUpCalibrators: MouseEventHandler<HTMLCanvasElement> = (
-    event
-  ) => {};
+  const MouseUpCalibrators: MouseEventHandler<HTMLCanvasElement> = (event) => {
+    if (dragging && mousePoint) {
+      event.preventDefault();
+      updateCalibrator(dragging, mousePoint);
+      setDragging(undefined);
+    }
+  };
 
   // determine current calibrator
   useEffect(() => {
@@ -49,6 +85,18 @@ export default function useCalibrators(
 
     const scale = context.getTransform().a;
     const distance = 2 / scale;
+
+    const sortNearest = (a: Calibrator, b: Calibrator) =>
+      a.distPoint(mousePoint) - b.distPoint(mousePoint);
+    const nearest = Object.values(calibrations).sort(sortNearest)[0];
+    // console.log(nearest)
+
+    if (nearest.distPoint(mousePoint) <= distance) {
+      setCurrent(nearest.id as keyof Calibrations);
+      return;
+    }
+
+    setCurrent(undefined);
   }, [mousePoint, calibrations]);
 
   useEffect(() => {
@@ -57,7 +105,6 @@ export default function useCalibrators(
 
   return {
     drawCalibrators,
-    mouseMoveCalibrators,
     mouseDownCalibrators,
     MouseUpCalibrators,
   };

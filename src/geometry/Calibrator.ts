@@ -32,9 +32,9 @@ export default class Calibrator {
       ctx.stroke();
     };
 
-    ctx.lineCap = "round"
-    ctx.lineWidth = width
-    ctx.strokeStyle = color
+    ctx.lineCap = "round";
+    ctx.lineWidth = width;
+    ctx.strokeStyle = color;
 
     if (this.axis === "x") {
       drawLine(this.screen, -INFINITE, this.screen, INFINITE);
@@ -44,8 +44,8 @@ export default class Calibrator {
   }
 
   distPoint(point: Point): number {
-    if (this.axis === "x") return Math.abs(point.x - this.actual);
-    if (this.axis === "y") return Math.abs(point.y - this.actual);
+    if (this.axis === "x") return Math.abs(point.x - this.screen);
+    if (this.axis === "y") return Math.abs(point.y - this.screen);
     return INFINITE;
   }
 }
