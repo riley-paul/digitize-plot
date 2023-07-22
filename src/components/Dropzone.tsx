@@ -1,6 +1,18 @@
 import React, { Dispatch, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Button } from "./ui/button";
+
 export type Props = {
   setImage: Dispatch<HTMLImageElement | undefined>;
 };
@@ -32,32 +44,35 @@ export default function Dropzone({ setImage }: Props) {
     [setImage]
   );
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    accept: { "image/*": [] },
-    onDrop,
-  });
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center">
-      <h1 className="font-bold text-xl">Digitize Plot</h1>
-      <p>A tool </p>
-      <div className="bg-white border-2 w-4/5 h-4/5 flex items-center justify-center" {...getRootProps()}>
-        <input {...getInputProps()} />
-        {isDragActive ? (
-          <p>Drop the files here ...</p>
-        ) : (
-          <div className="flex flex-col items-center gap-2">
-            Drop image here
-            <div className="text-sm font-bold">or</div>
-            <button
-              className="py-1 px-2 border-2 flex items-center justify-center"
-              onClick={useSample}
-            >
-              Use Sample Image
-            </button>
-          </div>
-        )}
-      </div>
+      <Card className="max-w-lg">
+        <CardHeader>
+          <CardTitle>Welcome to Digitize Plot</CardTitle>
+          <CardDescription>
+            A tool to quickly and painlessly convert images of plotted data into
+            raw points.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex gap-2 flex-col">
+          <CardDescription>
+            To get started, choose an image of a plot to be digitized. Or if you
+            just want to try out the app, start with a sample image.
+          </CardDescription>
+          <form action="" className="mt-2 grid gap-2">
+            <Input
+              type="file"
+              accept="image/*"
+              placeholder="Select plot image to digitized"
+            />
+            <div className="flex gap-2">
+              <Button className="w-full">Let's go</Button>
+              <Button variant="secondary" className="w-full">Use Sample Image</Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

@@ -23,6 +23,7 @@ export default function DataTable({ points, coordsConverter }: Props) {
 
   return (
     <Table className="mt-2">
+      {points.length === 0 && <TableCaption>Points placed will be listed here</TableCaption>}
       <TableHeader>
         <TableRow>
           <TableHead className="text-center w-1/2">X</TableHead>
