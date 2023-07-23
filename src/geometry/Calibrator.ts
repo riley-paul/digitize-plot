@@ -1,6 +1,6 @@
 import Point from "./Point";
 
-type DrawOptions = {
+export type CalibratorDrawOptions = {
   colorX?: string;
   colorY?: string;
   width?: number;
@@ -19,7 +19,7 @@ export default class Calibrator {
     this.value = value;
   }
 
-  draw(ctx: CanvasRenderingContext2D, options: DrawOptions = {}) {
+  draw(ctx: CanvasRenderingContext2D, options: CalibratorDrawOptions = {}) {
     const origin = ctx
       .getTransform()
       .invertSelf()
@@ -32,7 +32,7 @@ export default class Calibrator {
 
     const scale = ctx.getTransform().a;
     const colorX = options.colorX || "blue";
-    const colorY = options.colorX || "red";
+    const colorY = options.colorY || "red";
     const width = (options.width || 1.5) / scale;
     const buffer = 10 / scale;
     const fontHeight = 12 / scale;
@@ -81,5 +81,14 @@ export default class Calibrator {
   distPoint(point: Point): number {
     if (this.axis === "x") return Math.abs(point.x - this.coord);
     return Math.abs(point.y - this.coord);
+  }
+
+  copyToPoint(point: Point): Calibrator {
+    return new Calibrator(
+      this.id,
+      this.axis === "x" ? point.x : point.y,
+      this.value,
+      this.axis
+    );
   }
 }

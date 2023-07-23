@@ -1,12 +1,7 @@
-import {
-  MouseEventHandler,
-  RefObject,
-  useEffect,
-  useState,
-} from "react";
-import Point from "../../geometry/Point";
+import { MouseEventHandler, RefObject, useEffect, useState } from "react";
+import Point from "@/geometry/Point";
 import use2dContext from "./use2dContext";
-import Calibrator from "@/geometry/Calibrator";
+import Calibrator, { type CalibratorDrawOptions } from "@/geometry/Calibrator";
 
 export type Calibrations = {
   x1: Calibrator;
@@ -25,7 +20,6 @@ type LinearInterpValues = {
 
 function linearInterp(values: LinearInterpValues): number {
   const { x, x0, x1, y0, y1 } = values;
-  // if ([y0, y1].some(isNaN)) return 0;
   return y0 + ((y1 - y0) * (x - x0)) / (x1 - x0);
 }
 
@@ -64,25 +58,31 @@ export default function useCalibrators(
     return new Point(linearInterp(xValues), linearInterp(yValues));
   };
 
-
   const [current, setCurrent] = useState<keyof Calibrations | undefined>();
   const [dragging, setDragging] = useState<keyof Calibrations | undefined>();
   const context = use2dContext(canvasRef);
 
   const drawCalibrators = (ctx: CanvasRenderingContext2D): void => {
+    const defaultDrawOptions: CalibratorDrawOptions = {
+      colorX: "blue",
+      colorY: "red",
+    };
+    const hoverDrawOptions: CalibratorDrawOptions = {
+      colorX: "skyblue",
+      colorY: "coral",
+    };
+
     for (let calibrator of Object.values(calibrations)) {
       if (dragging === calibrator.id) continue;
-      calibrator.draw(ctx, {});
+      const options =
+        current === calibrator.id ? hoverDrawOptions : defaultDrawOptions;
+      calibrator.draw(ctx, options);
     }
 
     if (dragging && mousePoint) {
-      const draggee = calibrations[dragging];
-      new Calibrator(
-        dragging,
-        draggee.axis === "x" ? mousePoint.x : mousePoint.y,
-        0,
-        draggee.axis
-      ).draw(ctx, );
+      calibrations[dragging]
+        .copyToPoint(mousePoint)
+        .draw(ctx, hoverDrawOptions);
     }
 
     if (debug) {
