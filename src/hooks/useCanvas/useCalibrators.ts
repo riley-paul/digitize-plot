@@ -4,7 +4,6 @@ import {
   RefObject,
   SetStateAction,
   useEffect,
-  useRef,
   useState,
 } from "react";
 import Point from "../../geometry/Point";
@@ -32,11 +31,23 @@ export default function useCalibrators(
     if (dragging && mousePoint) {
       const draggee = calibrations[dragging];
       new Calibrator(
-        "mouse",
+        dragging,
         draggee.axis === "x" ? mousePoint.x : mousePoint.y,
         0,
         draggee.axis
       ).draw(ctx, { color: "red" });
+    }
+
+    if (debug) {
+      const origin = ctx
+        .getTransform()
+        .invertSelf()
+        .transformPoint(new DOMPoint(0, 0));
+
+      ctx.font = "12px Courier";
+      ctx.fillStyle = "red";
+      ctx.fillText(`dragging ID: ${dragging}`, origin.x + 10, origin.y + 20);
+      ctx.fillText(`current ID: ${current}`, origin.x + 10, origin.y + 35);
     }
   };
 
@@ -105,5 +116,6 @@ export default function useCalibrators(
     drawCalibrators,
     mouseDownCalibrators,
     MouseUpCalibrators,
+    markerDragging: current,
   };
 }

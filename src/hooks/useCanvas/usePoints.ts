@@ -55,6 +55,16 @@ export default function usePoints(
     const DEFAULT_COLOUR = "hsl(224 71.4% 4.1%)";
     const SELECTED_COLOUR = "hsl(220 8.9% 46.1%)";
 
+    if (debug) {
+      // ctx.font = "12px Courier";
+      // ctx.fillStyle = "red";
+      // ctx.fillText(`dragging ID: ${draggingId}`, 10, 20);
+      // ctx.fillText(`current ID: ${currentPointId}`, 10, 35);
+
+      quadtree.current?.draw(ctx);
+      mousePoint?.draw(ctx, { color: "blue", radius: 3 });
+    }
+    
     for (let pt of points) {
       if (debug) pt.label = pt.label || pt.id.substring(0, 4);
       if (pt.id === draggingId) continue;
@@ -67,15 +77,6 @@ export default function usePoints(
 
     if (draggingId) mousePoint?.draw(ctx, { color: SELECTED_COLOUR });
 
-    if (debug) {
-      // ctx.font = "12px Courier";
-      // ctx.fillStyle = "red";
-      // ctx.fillText(`dragging ID: ${draggingId}`, 10, 20);
-      // ctx.fillText(`current ID: ${currentPointId}`, 10, 35);
-
-      quadtree.current?.draw(ctx);
-      mousePoint?.draw(ctx, { color: "blue", radius: 3 });
-    }
   };
 
   // Event handlers

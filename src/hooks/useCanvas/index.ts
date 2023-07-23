@@ -44,6 +44,7 @@ export default function useCanvas(
     drawCalibrators,
     mouseDownCalibrators,
     MouseUpCalibrators,
+    markerDragging,
   } = useCalibrators(
     canvasRef,
     mousePoint,
@@ -69,7 +70,8 @@ export default function useCanvas(
   const onMouseDown: MouseEventHandler<HTMLCanvasElement> = (event) => {
     mouseDownPanZoom(event);
     mouseDownCalibrators(event);
-    // mouseDownPoints(event);
+    if (markerDragging) return;
+    mouseDownPoints(event);
   };
 
   const onMouseUp: MouseEventHandler<HTMLCanvasElement> = (event) => {
