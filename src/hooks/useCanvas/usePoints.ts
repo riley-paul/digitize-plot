@@ -68,10 +68,10 @@ export default function usePoints(
     if (draggingId) mousePoint?.draw(ctx, { color: SELECTED_COLOUR });
 
     if (debug) {
-      ctx.font = "12px Courier";
-      ctx.fillStyle = "red";
-      ctx.fillText(`dragging ID: ${draggingId}`, 10, 20);
-      ctx.fillText(`current ID: ${currentPointId}`, 10, 35);
+      // ctx.font = "12px Courier";
+      // ctx.fillStyle = "red";
+      // ctx.fillText(`dragging ID: ${draggingId}`, 10, 20);
+      // ctx.fillText(`current ID: ${currentPointId}`, 10, 35);
 
       quadtree.current?.draw(ctx);
       mousePoint?.draw(ctx, { color: "blue", radius: 3 });

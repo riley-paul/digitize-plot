@@ -69,7 +69,7 @@ export default function useCanvas(
   const onMouseDown: MouseEventHandler<HTMLCanvasElement> = (event) => {
     mouseDownPanZoom(event);
     mouseDownCalibrators(event);
-    mouseDownPoints(event);
+    // mouseDownPoints(event);
   };
 
   const onMouseUp: MouseEventHandler<HTMLCanvasElement> = (event) => {

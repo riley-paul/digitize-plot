@@ -22,13 +22,13 @@ export default function usePanZoom(
   const [isPanning, setIsPanning] = useState<boolean>(false);
   const [panStart, setPanStart] = useState<Coords>({ x: 0, y: 0 });
 
-  useEffect(() => {
-    if (debug) console.log("cameraOffset", cameraOffset);
-  }, [cameraOffset]);
+  // useEffect(() => {
+  //   if (debug) console.log("cameraOffset", cameraOffset);
+  // }, [cameraOffset]);
 
-  useEffect(() => {
-    if (debug) console.log("cameraZoom", cameraZoom);
-  }, [cameraZoom]);
+  // useEffect(() => {
+  //   if (debug) console.log("cameraZoom", cameraZoom);
+  // }, [cameraZoom]);
 
   useEffect(() => {
     if (!image || !canvasRef.current) return;

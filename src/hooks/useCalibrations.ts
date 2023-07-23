@@ -37,18 +37,18 @@ export default function useCalibrations() {
   const coordsConverter = (coords: Point): Point => {
     const xValues = {
       x: coords.x,
-      x0: calibrations.x1.screen,
-      x1: calibrations.x2.screen,
-      y0: calibrations.x1.actual,
-      y1: calibrations.x2.actual,
+      x0: calibrations.x1.coord,
+      x1: calibrations.x2.coord,
+      y0: calibrations.x1.value,
+      y1: calibrations.x2.value,
     };
 
     const yValues = {
       x: coords.y,
-      x0: calibrations.y1.screen,
-      x1: calibrations.y2.screen,
-      y0: calibrations.y1.actual,
-      y1: calibrations.y2.actual,
+      x0: calibrations.y1.coord,
+      x1: calibrations.y2.coord,
+      y0: calibrations.y1.value,
+      y1: calibrations.y2.value,
     };
 
     return new Point(linearInterp(xValues), linearInterp(yValues));

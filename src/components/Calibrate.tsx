@@ -20,11 +20,11 @@ export default function Calibrate(props: Props) {
     event: ChangeEvent<HTMLInputElement>,
     id: keyof Calibrations
   ) => {
-    const actual = Number(event.target.value);
+    const value = Number(event.target.value);
 
     props.setCalibrations((prev) => ({
       ...prev,
-      [id]: new Calibrator(id, prev[id].screen, actual, prev[id].axis),
+      [id]: new Calibrator(id, prev[id].coord, value, prev[id].axis),
     }));
   };
 
@@ -37,7 +37,7 @@ export default function Calibrate(props: Props) {
             <Label>X1</Label>
             <Input
               type="number"
-              value={props.calibrations.x1.actual}
+              value={props.calibrations.x1.value}
               onChange={(e) => updateValue(e, "x1")}
             />
           </div>
@@ -45,7 +45,7 @@ export default function Calibrate(props: Props) {
             <Label>X2</Label>
             <Input
               type="number"
-              value={props.calibrations.x2.actual}
+              value={props.calibrations.x2.value}
               onChange={(e) => updateValue(e, "x2")}
             />
           </div>
@@ -58,7 +58,7 @@ export default function Calibrate(props: Props) {
             <Label>Y1</Label>
             <Input
               type="number"
-              value={props.calibrations.y1.actual}
+              value={props.calibrations.y1.value}
               onChange={(e) => updateValue(e, "y1")}
             />
           </div>
@@ -66,7 +66,7 @@ export default function Calibrate(props: Props) {
             <Label>Y2</Label>
             <Input
               type="number"
-              value={props.calibrations.y2.actual}
+              value={props.calibrations.y2.value}
               onChange={(e) => updateValue(e, "y2")}
             />
           </div>

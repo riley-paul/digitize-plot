@@ -26,9 +26,7 @@ export default function useCalibrators(
   const drawCalibrators = (ctx: CanvasRenderingContext2D): void => {
     for (let calibrator of Object.values(calibrations)) {
       if (dragging === calibrator.id) continue;
-      calibrator.draw(ctx, {
-        color: calibrator.id === current ? "red" : "black",
-      });
+      calibrator.draw(ctx, {});
     }
 
     if (dragging && mousePoint) {
@@ -45,25 +43,25 @@ export default function useCalibrators(
   const updateCalibrator = (id: keyof Calibrations, point: Point) => {
     setCalibrations((prev) => {
       const prevCalibrator = prev[id];
-      const newScreen = prevCalibrator.axis === "x" ? point.x : point.y;
+      const newCoord = prevCalibrator.axis === "x" ? point.x : point.y;
 
       const newCalibrator = new Calibrator(
         id,
-        newScreen,
-        prevCalibrator.actual,
+        newCoord,
+        prevCalibrator.value,
         prevCalibrator.axis
       );
       return { ...prev, [id]: newCalibrator };
     });
   };
 
-
   const mouseDownCalibrators: MouseEventHandler<HTMLCanvasElement> = (
     event
   ) => {
     if (current && event.button === 0) {
       event.preventDefault();
-      event.stopPropagation()
+      event.stopPropagation();
+      event.nativeEvent.stopImmediatePropagation();
       setDragging(current);
     }
   };

@@ -1,29 +1,42 @@
 import Point from "./Point";
 
 type DrawOptions = {
-  color?: string;
+  colorX?: string;
+  colorY?: string;
   width?: number;
 };
 
-const INFINITE = 10_000;
-
 export default class Calibrator {
   id: string;
-  screen: number;
-  actual: number;
+  coord: number;
+  value: number;
   axis: "x" | "y";
 
-  constructor(id: string, screen: number, actual = 0, axis: "x" | "y") {
+  constructor(id: string, coord: number, value = 0, axis: "x" | "y") {
     this.id = id;
-    this.screen = screen;
+    this.coord = coord;
     this.axis = axis;
-    this.actual = actual;
+    this.value = value;
   }
 
   draw(ctx: CanvasRenderingContext2D, options: DrawOptions = {}) {
+    const origin = ctx
+      .getTransform()
+      .invertSelf()
+      .transformPoint(new DOMPoint(0, 0));
+
+    const extent = ctx
+      .getTransform()
+      .invertSelf()
+      .transformPoint(new DOMPoint(ctx.canvas.width, ctx.canvas.height));
+
     const scale = ctx.getTransform().a;
-    const color = options.color || "black";
-    const width = (options.width || 2) / scale;
+    const colorX = options.colorX || "blue";
+    const colorY = options.colorX || "red";
+    const width = (options.width || 1.5) / scale;
+    const buffer = 10 / scale;
+    const fontHeight = 12 / scale;
+    const textOffset = 7 / scale;
 
     const drawLine = (x1: number, y1: number, x2: number, y2: number) => {
       ctx.beginPath();
@@ -34,18 +47,39 @@ export default class Calibrator {
 
     ctx.lineCap = "round";
     ctx.lineWidth = width;
-    ctx.strokeStyle = color;
+
+    ctx.font = `${fontHeight}px courier`;
+    ctx.fillStyle = "hsl(220 8.9% 46.1%)";
+
+    ctx.setLineDash([15, 5]);
 
     if (this.axis === "x") {
-      drawLine(this.screen, -INFINITE, this.screen, INFINITE);
+      ctx.save();
+      ctx.translate(this.coord - textOffset, origin.y + buffer);
+      ctx.rotate(-Math.PI / 2);
+      ctx.textAlign = "right";
+      ctx.fillText(`${this.id.toUpperCase()} - ${this.value}`, 0, 0);
+      ctx.restore();
+
+      ctx.strokeStyle = colorX;
+      drawLine(this.coord, origin.y + buffer, this.coord, extent.y - buffer);
     } else {
-      drawLine(-INFINITE, this.screen, INFINITE, this.screen);
+      ctx.textAlign = "left";
+      ctx.fillText(
+        `${this.id.toUpperCase()} - ${this.value}`,
+        origin.x + buffer,
+        this.coord - textOffset
+      );
+
+      ctx.strokeStyle = colorY;
+      drawLine(origin.x + buffer, this.coord, extent.x - buffer, this.coord);
     }
+
+    ctx.setLineDash([]);
   }
 
   distPoint(point: Point): number {
-    if (this.axis === "x") return Math.abs(point.x - this.screen);
-    if (this.axis === "y") return Math.abs(point.y - this.screen);
-    return INFINITE;
+    if (this.axis === "x") return Math.abs(point.x - this.coord);
+    return Math.abs(point.y - this.coord);
   }
 }

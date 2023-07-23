@@ -56,7 +56,7 @@ export default class Point {
       const textOffset = radius * 2.2;
 
       ctx.font = `${fontHeight}px courier`;
-      ctx.fillStyle = "dimgray";
+      ctx.fillStyle = "hsl(220 8.9% 46.1%)";
 
       switch (options.labelPos) {
         case "r":
