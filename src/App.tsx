@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 import useCanvas from "./hooks/useCanvas";
-import useCalibrations from "./hooks/useCalibrations";
 
 import Bullseye from "./components/Bullseye";
 import DataTable from "./components/DataTable";
@@ -16,13 +15,15 @@ function App() {
   const [image, setImage] = useState<HTMLImageElement | undefined>();
   const [debug, setDebug] = useState(true);
 
-  const { calibrations, setCalibrations, coordsConverter } = useCalibrations();
-  const { points, mousePoint, clearPoints, ...canvasProps } = useCanvas(
-    image,
-    debug,
+  const {
+    points,
+    mousePoint,
+    clearPoints,
     calibrations,
-    setCalibrations
-  );
+    setCalibrations,
+    coordsConverter,
+    ...canvasProps
+  } = useCanvas(image, debug);
 
   return (
     <div className="w-full h-screen flex">

@@ -1,7 +1,5 @@
 import {
-  Dispatch,
   MouseEventHandler,
-  SetStateAction,
   WheelEventHandler,
   useEffect,
   useRef,
@@ -9,14 +7,11 @@ import {
 import usePoints from "./usePoints";
 import use2dContext from "./use2dContext";
 import usePanZoom from "./usePanZoom";
-import type { Calibrations } from "../useCalibrations";
 import useCalibrators from "./useCalibrators";
 
 export default function useCanvas(
   image: HTMLImageElement | undefined,
-  debug: boolean,
-  calibrations: Calibrations,
-  setCalibrations: Dispatch<SetStateAction<Calibrations>>
+  debug: boolean
 ) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const context = use2dContext(canvasRef);
@@ -45,13 +40,10 @@ export default function useCanvas(
     mouseDownCalibrators,
     MouseUpCalibrators,
     markerDragging,
-  } = useCalibrators(
-    canvasRef,
-    mousePoint,
     calibrations,
     setCalibrations,
-    debug
-  );
+    coordsConverter,
+  } = useCalibrators(canvasRef, mousePoint, debug);
 
   // Draw everything to canvas
   const draw = (context: CanvasRenderingContext2D): void => {
@@ -136,14 +128,17 @@ export default function useCanvas(
 
   return {
     ref: canvasRef,
+    points,
+    mousePoint,
+    clearPoints,
+    calibrations,
+    setCalibrations,
+    coordsConverter,
     onMouseDown,
     onMouseUp,
     onMouseMove,
     onMouseLeave,
     onContextMenu,
     onWheel,
-    points,
-    mousePoint,
-    clearPoints,
   };
 }

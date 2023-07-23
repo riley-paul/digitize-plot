@@ -8,7 +8,7 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
 import Calibrator from "@/geometry/Calibrator";
-import { Calibrations } from "@/hooks/useCalibrations";
+import { Calibrations } from "@/hooks/useCanvas/useCalibrators";
 
 export type Props = {
   calibrations: Calibrations;

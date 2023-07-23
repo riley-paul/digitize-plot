@@ -1,23 +1,70 @@
 import {
-  Dispatch,
   MouseEventHandler,
   RefObject,
-  SetStateAction,
   useEffect,
   useState,
 } from "react";
 import Point from "../../geometry/Point";
 import use2dContext from "./use2dContext";
-import { Calibrations } from "../useCalibrations";
 import Calibrator from "@/geometry/Calibrator";
+
+export type Calibrations = {
+  x1: Calibrator;
+  x2: Calibrator;
+  y1: Calibrator;
+  y2: Calibrator;
+};
+
+type LinearInterpValues = {
+  x: number;
+  x0: number;
+  x1: number;
+  y0: number;
+  y1: number;
+};
+
+function linearInterp(values: LinearInterpValues): number {
+  const { x, x0, x1, y0, y1 } = values;
+  // if ([y0, y1].some(isNaN)) return 0;
+  return y0 + ((y1 - y0) * (x - x0)) / (x1 - x0);
+}
 
 export default function useCalibrators(
   canvasRef: RefObject<HTMLCanvasElement>,
   mousePoint: Point | undefined,
-  calibrations: Calibrations,
-  setCalibrations: Dispatch<SetStateAction<Calibrations>>,
   debug: boolean
 ) {
+  const intialCalibrations: Calibrations = {
+    x1: new Calibrator("x1", 20, 0, "x"),
+    x2: new Calibrator("x2", 40, 0, "x"),
+    y1: new Calibrator("y1", 20, 0, "y"),
+    y2: new Calibrator("y2", 40, 0, "y"),
+  };
+
+  const [calibrations, setCalibrations] =
+    useState<Calibrations>(intialCalibrations);
+
+  const coordsConverter = (coords: Point): Point => {
+    const xValues = {
+      x: coords.x,
+      x0: calibrations.x1.coord,
+      x1: calibrations.x2.coord,
+      y0: calibrations.x1.value,
+      y1: calibrations.x2.value,
+    };
+
+    const yValues = {
+      x: coords.y,
+      x0: calibrations.y1.coord,
+      x1: calibrations.y2.coord,
+      y0: calibrations.y1.value,
+      y1: calibrations.y2.value,
+    };
+
+    return new Point(linearInterp(xValues), linearInterp(yValues));
+  };
+
+
   const [current, setCurrent] = useState<keyof Calibrations | undefined>();
   const [dragging, setDragging] = useState<keyof Calibrations | undefined>();
   const context = use2dContext(canvasRef);
@@ -35,7 +82,7 @@ export default function useCalibrators(
         draggee.axis === "x" ? mousePoint.x : mousePoint.y,
         0,
         draggee.axis
-      ).draw(ctx, { color: "red" });
+      ).draw(ctx, );
     }
 
     if (debug) {
@@ -71,7 +118,6 @@ export default function useCalibrators(
   ) => {
     if (current && event.button === 0) {
       event.preventDefault();
-      event.stopPropagation();
       event.nativeEvent.stopImmediatePropagation();
       setDragging(current);
     }
@@ -116,6 +162,9 @@ export default function useCalibrators(
     drawCalibrators,
     mouseDownCalibrators,
     MouseUpCalibrators,
+    calibrations,
+    setCalibrations,
+    coordsConverter,
     markerDragging: current,
   };
 }
