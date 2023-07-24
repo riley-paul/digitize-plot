@@ -1,12 +1,5 @@
 import Point from "../geometry/Point";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export type Props = {
   mousePoint: Point | undefined;

@@ -43,7 +43,7 @@ export default function useCanvas(
     calibrations,
     setCalibrations,
     coordsConverter,
-  } = useCalibrators(canvasRef, mousePoint, debug);
+  } = useCalibrators(canvasRef, mousePoint,image, debug);
 
   // Draw everything to canvas
   const draw = (context: CanvasRenderingContext2D): void => {

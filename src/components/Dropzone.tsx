@@ -3,7 +3,6 @@ import {
   Dispatch,
   FormEventHandler,
   MouseEventHandler,
-  useCallback,
   useState,
 } from "react";
 
@@ -61,14 +60,6 @@ export default function Dropzone({ setImage }: Props) {
     const url = "/BPL220K 24ft.png";
     createImage(url);
   };
-
-  const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      const url = URL.createObjectURL(acceptedFiles[0]);
-      createImage(url);
-    },
-    [setImage]
-  );
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center p-4">

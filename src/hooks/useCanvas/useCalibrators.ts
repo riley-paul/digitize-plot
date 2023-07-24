@@ -26,14 +26,25 @@ function linearInterp(values: LinearInterpValues): number {
 export default function useCalibrators(
   canvasRef: RefObject<HTMLCanvasElement>,
   mousePoint: Point | undefined,
+  image: HTMLImageElement | undefined,
   debug: boolean
 ) {
   const intialCalibrations: Calibrations = {
-    x1: new Calibrator("x1", 20, 0, "x"),
-    x2: new Calibrator("x2", 40, 0, "x"),
-    y1: new Calibrator("y1", 20, 0, "y"),
-    y2: new Calibrator("y2", 40, 0, "y"),
+    x1: new Calibrator("x1", 0, 0, "x"),
+    x2: new Calibrator("x2", 50, 0, "x"),
+    y1: new Calibrator("y1", 50, 0, "y"),
+    y2: new Calibrator("y2", 0, 0, "y"),
   };
+
+  useEffect(() => {
+    if (!image) return;
+    setCalibrations({
+      x1: new Calibrator("x1", 0, 0, "x"),
+      x2: new Calibrator("x2", image.width, 0, "x"),
+      y1: new Calibrator("y1", image.height, 0, "y"),
+      y2: new Calibrator("y2", 0, 0, "y"),
+    });
+  }, [image]);
 
   const [calibrations, setCalibrations] =
     useState<Calibrations>(intialCalibrations);

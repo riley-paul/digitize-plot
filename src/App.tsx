@@ -13,7 +13,7 @@ import { Button } from "./components/ui/button";
 
 function App() {
   const [image, setImage] = useState<HTMLImageElement | undefined>();
-  const [debug, setDebug] = useState(true);
+  const [debug, setDebug] = useState(false);
 
   const {
     points,
@@ -43,7 +43,7 @@ function App() {
       </main>
       <aside className="w-60 bg-card shadow border-l overflow-y-auto flex flex-col justify-between">
         <div>
-          {/* <Bullseye canvasRef={canvasProps.ref} mousePoint={mousePoint} /> */}
+          <Bullseye canvasRef={canvasProps.ref} mousePoint={mousePoint} />
           <MouseCoords {...{ coordsConverter, mousePoint }} />
           <Calibrate {...{ calibrations, setCalibrations }} />
         </div>
