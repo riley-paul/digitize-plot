@@ -9,11 +9,12 @@ import MouseCoords from "./components/MouseCoords";
 import Dropzone from "./components/Dropzone";
 import Calibrate from "./components/Calibrate";
 import Toggle from "./components/Toggle";
+
 import { Button } from "./components/ui/button";
 
 function App() {
   const [image, setImage] = useState<HTMLImageElement | undefined>();
-  const [debug, setDebug] = useState(true);
+  const [debug, setDebug] = useState(false);
 
   const {
     points,
@@ -27,12 +28,14 @@ function App() {
 
   return (
     <div className="w-full h-screen flex">
-      <aside className="w-60 bg-card shadow border-r overflow-y-auto p-4 flex flex-col gap-2">
-        <Download {...{ coordsConverter, points }} />
-        <Button className="w-full" variant="secondary" onClick={clearPoints}>
-          Clear Points
-        </Button>
+      <aside className="w-60 bg-card shadow border-r overflow-y-auto p-4 flex flex-col gap-2 justify-between">
         <DataTable {...{ coordsConverter, points }} />
+        <div className="grid gap-2">
+          <Button className="w-full" variant="secondary" onClick={clearPoints}>
+            Clear Points
+          </Button>
+          <Download {...{ coordsConverter, points }} />
+        </div>
       </aside>
       <main className="flex-1">
         {image ? (
@@ -47,12 +50,14 @@ function App() {
           <MouseCoords {...{ coordsConverter, mousePoint }} />
           <Calibrate {...{ calibrations, setCalibrations }} />
         </div>
-        <Toggle
-          id="debug"
-          name="Debug Mode"
-          state={debug}
-          setState={setDebug}
-        />
+        <div className="grid p-6 w-full gap-4">
+          <Toggle
+            id="debug"
+            name="Debug Mode"
+            state={debug}
+            setState={setDebug}
+          />
+        </div>
       </aside>
     </div>
   );
