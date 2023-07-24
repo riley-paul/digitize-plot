@@ -31,18 +31,18 @@ export default function useCalibrators(
 ) {
   const intialCalibrations: Calibrations = {
     x1: new Calibrator("x1", 0, 0, "x"),
-    x2: new Calibrator("x2", 50, 0, "x"),
+    x2: new Calibrator("x2", 50, 1, "x"),
     y1: new Calibrator("y1", 50, 0, "y"),
-    y2: new Calibrator("y2", 0, 0, "y"),
+    y2: new Calibrator("y2", 0, 1, "y"),
   };
 
   useEffect(() => {
     if (!image) return;
     setCalibrations({
       x1: new Calibrator("x1", 0, 0, "x"),
-      x2: new Calibrator("x2", image.width, 0, "x"),
+      x2: new Calibrator("x2", image.width, 1, "x"),
       y1: new Calibrator("y1", image.height, 0, "y"),
-      y2: new Calibrator("y2", 0, 0, "y"),
+      y2: new Calibrator("y2", 0, 1, "y"),
     });
   }, [image]);
 

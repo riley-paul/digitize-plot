@@ -1,5 +1,5 @@
 import Point from "../geometry/Point";
-import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardHeader, CardTitle } from "@/components/ui/card";
 
 export type Props = {
   mousePoint: Point | undefined;
@@ -14,10 +14,10 @@ export default function MouseCoords(props: Props) {
   return (
     <CardHeader>
       <CardTitle>Mouse Coordinates</CardTitle>
-      <CardDescription>
-        <div>X: {x.toLocaleString()}</div>
-        <div>Y: {y.toLocaleString()}</div>
-      </CardDescription>
+      <div className="text-sm text-muted-foreground">
+        <p>X: {x.toLocaleString()}</p>
+        <p>Y: {y.toLocaleString()}</p>
+      </div>
     </CardHeader>
   );
 }

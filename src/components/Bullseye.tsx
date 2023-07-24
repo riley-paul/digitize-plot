@@ -24,12 +24,14 @@ export default function Bullseye(props: Props) {
     );
   }
 
-  const scale = context.getTransform().a;
   const zoom = 3;
-  const x = mousePoint.x;
-  const y = mousePoint.y;
-  const w = ref.current ? ref.current.offsetWidth / 2 : 0;
-  const h = ref.current ? ref.current.offsetHeight / 2 : 0;
+  const { x, y } = context
+    .getTransform()
+    .transformPoint(new DOMPoint(mousePoint.x, mousePoint.y));
+  const w = ref.current ? ref.current.offsetWidth : 0;
+  const h = ref.current ? ref.current.offsetHeight : 0;
+
+  // console.table({ x, y, w, h });
 
   return (
     <div
@@ -38,10 +40,8 @@ export default function Bullseye(props: Props) {
       style={{
         backgroundImage: `url(${imgUrl})`,
         backgroundRepeat: "no-repeat",
-        backgroundSize: `${context.canvas.width * scale * zoom}px auto`,
-        backgroundPosition: `${w - x * zoom * scale}px ${
-          h - y * zoom * scale
-        }px`,
+        backgroundSize: `${context.canvas.width * zoom}px auto`,
+        backgroundPosition: `${w / 2 - x * zoom}px ${h / 2 - y * zoom}px`,
       }}
     >
       <div className="absolute top-1/2 -translate-y-1/2 h-px w-full bg-muted-foreground opacity-50" />

@@ -13,8 +13,14 @@ export default function Download({ points, coordsConverter }: Props) {
     .map((marker) => ({ X: marker.x, Y: marker.y }));
 
   return (
-    <CSVLink data={csvData} filename="digitize-plot.csv">
-      <Button className="w-full">Download CSV</Button>
+    <CSVLink
+      data={csvData}
+      filename="digitize-plot.csv"
+      onClick={() => points.length > 0}
+    >
+      <Button disabled={points.length === 0} className="w-full">
+        Download CSV
+      </Button>
     </CSVLink>
   );
 }

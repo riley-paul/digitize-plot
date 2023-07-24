@@ -1,4 +1,4 @@
-import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
@@ -26,7 +26,7 @@ export default function Calibrate(props: Props) {
     <form action="">
       <CardHeader className="pt-0">
         <CardTitle>Calibrate X-Axis</CardTitle>
-        <CardDescription className="flex flex-col gap-2">
+        <div className="text-sm text-muted-foreground flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <Label>X1</Label>
             <Input
@@ -43,11 +43,11 @@ export default function Calibrate(props: Props) {
               onChange={(e) => updateValue(e, "x2")}
             />
           </div>
-        </CardDescription>
+        </div>
       </CardHeader>
       <CardHeader className="pt-0">
         <CardTitle>Calibrate Y-Axis</CardTitle>
-        <CardDescription className="flex flex-col gap-2">
+        <div className="text-sm text-muted-foreground flex flex-col gap-2">
           <div className="flex items-center gap-2">
             <Label>Y1</Label>
             <Input
@@ -64,7 +64,7 @@ export default function Calibrate(props: Props) {
               onChange={(e) => updateValue(e, "y2")}
             />
           </div>
-        </CardDescription>
+        </div>
       </CardHeader>
       <input type="submit" hidden />
     </form>
