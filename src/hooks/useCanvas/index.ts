@@ -22,13 +22,8 @@ export default function useCanvas(
     clearPoints,
   } = usePoints(canvasRef, debug);
 
-  const {
-    drawPanZoom,
-    mouseMovePanZoom,
-    mouseDownPanZoom,
-    mouseUpPanZoom,
-    wheelPanZoom,
-  } = usePanZoom(canvasRef, mousePoint, image, debug);
+  const { drawPanZoom, mouseDownPanZoom, mouseUpPanZoom, wheelPanZoom } =
+    usePanZoom(canvasRef, mousePoint, image, debug);
 
   const {
     drawCalibrators,
@@ -51,7 +46,6 @@ export default function useCanvas(
   // Event handlers
   const onMouseMove: MouseEventHandler<HTMLCanvasElement> = (event) => {
     mouseMovePoints(event);
-    mouseMovePanZoom(event);
   };
 
   const onMouseDown: MouseEventHandler<HTMLCanvasElement> = (event) => {

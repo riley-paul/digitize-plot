@@ -32,20 +32,20 @@ export default function usePanZoom(
   };
 
   useEffect(() => {
+    if (!isPanning || !mousePoint) return;
+    console.log("panning");
+    setMatrix((prev) =>
+      prev.translate(mousePoint.x - panStart.x, mousePoint.y - panStart.y)
+    );
+  }, [mousePoint]);
+
+  useEffect(() => {
     centerImage();
   }, [image, canvasRef.current]);
 
   const drawPanZoom = (context: CanvasRenderingContext2D): void => {
     const { a, b, c, d, e, f } = matrix;
     context.transform(a, b, c, d, e, f);
-  };
-
-  const mouseMovePanZoom: MouseEventHandler<HTMLCanvasElement> = (event) => {
-    if (!isPanning || !mousePoint) return;
-    console.log("panning");
-    setMatrix((prev) =>
-      prev.translate(mousePoint.x - panStart.x, mousePoint.y - panStart.y)
-    );
   };
 
   const mouseDownPanZoom: MouseEventHandler<HTMLCanvasElement> = (event) => {
@@ -72,15 +72,14 @@ export default function usePanZoom(
 
     setMatrix((prev) =>
       prev
-        .translate(mousePoint.x, mousePoint.y)
-        .scale(zoom, zoom)
-        .translate(-mousePoint.x, -mousePoint.y)
+        .translateSelf(mousePoint.x, mousePoint.y)
+        .scaleSelf(zoom, zoom)
+        .translateSelf(-mousePoint.x, -mousePoint.y)
     );
   };
 
   return {
     drawPanZoom,
-    mouseMovePanZoom,
     mouseDownPanZoom,
     mouseUpPanZoom,
     wheelPanZoom,

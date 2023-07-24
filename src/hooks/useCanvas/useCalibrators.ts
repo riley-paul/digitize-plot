@@ -102,10 +102,19 @@ export default function useCalibrators(
         .invertSelf()
         .transformPoint(new DOMPoint(0, 0));
 
-      ctx.font = "12px Courier";
+      const scale = context!.getTransform().a;
+      ctx.font = `${12 / scale}px Courier`;
       ctx.fillStyle = "red";
-      ctx.fillText(`dragging ID: ${dragging}`, origin.x + 10, origin.y + 20);
-      ctx.fillText(`current ID: ${current}`, origin.x + 10, origin.y + 35);
+      ctx.fillText(
+        `dragging ID: ${dragging}`,
+        origin.x + 10 / scale,
+        origin.y + 20 / scale
+      );
+      ctx.fillText(
+        `current ID: ${current}`,
+        origin.x + 10 / scale,
+        origin.y + 35 / scale
+      );
     }
   };
 
