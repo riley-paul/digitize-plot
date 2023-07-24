@@ -99,18 +99,7 @@ export default function useCalibrators(
   };
 
   const updateCalibrator = (id: keyof Calibrations, point: Point) => {
-    setCalibrations((prev) => {
-      const prevCalibrator = prev[id];
-      const newCoord = prevCalibrator.axis === "x" ? point.x : point.y;
-
-      const newCalibrator = new Calibrator(
-        id,
-        newCoord,
-        prevCalibrator.value,
-        prevCalibrator.axis
-      );
-      return { ...prev, [id]: newCalibrator };
-    });
+    setCalibrations((prev) => ({ ...prev, [id]: prev[id].copyToPoint(point) }));
   };
 
   const mouseDownCalibrators: MouseEventHandler<HTMLCanvasElement> = (

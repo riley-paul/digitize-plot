@@ -21,16 +21,6 @@ export default function usePoints(
   const [currentPointId, setCurrentPointId] = useState<string>("");
   const [draggingId, setDraggingId] = useState<string>("");
 
-  function getTransformedPoint(x: number, y: number): Point {
-    if (!context) return new Point(0, 0);
-    const originalPoint = new DOMPoint(x, y);
-    const transformed = context
-      .getTransform()
-      .invertSelf()
-      .transformPoint(originalPoint);
-    return new Point(transformed.x, transformed.y);
-  }
-
   // Manage points
   const createPoint = (coords: Point) => {
     const point = new Point(coords.x, coords.y);
@@ -64,7 +54,7 @@ export default function usePoints(
       quadtree.current?.draw(ctx);
       mousePoint?.draw(ctx, { color: "blue", radius: 3 });
     }
-    
+
     for (let pt of points) {
       if (debug) pt.label = pt.label || pt.id.substring(0, 4);
       if (pt.id === draggingId) continue;
@@ -76,14 +66,17 @@ export default function usePoints(
     }
 
     if (draggingId) mousePoint?.draw(ctx, { color: SELECTED_COLOUR });
-
   };
 
   // Event handlers
   const mouseMovePoints: MouseEventHandler<HTMLCanvasElement> = (event) => {
-    setMousePoint(
-      getTransformedPoint(event.nativeEvent.offsetX, event.nativeEvent.offsetY)
+    if (!context) return;
+    const pt = new DOMPoint(
+      event.nativeEvent.offsetX,
+      event.nativeEvent.offsetY
     );
+    const transformed = context.getTransform().invertSelf().transformPoint(pt);
+    setMousePoint(new Point(transformed.x, transformed.y, "MOUSE"));
   };
 
   const mouseDownPoints: MouseEventHandler<HTMLCanvasElement> = (event) => {

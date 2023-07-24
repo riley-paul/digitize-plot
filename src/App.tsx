@@ -43,7 +43,7 @@ function App() {
       </main>
       <aside className="w-60 bg-card shadow border-l overflow-y-auto flex flex-col justify-between">
         <div>
-          <Bullseye canvasRef={canvasProps.ref} mousePoint={mousePoint} />
+          {/* <Bullseye canvasRef={canvasProps.ref} mousePoint={mousePoint} /> */}
           <MouseCoords {...{ coordsConverter, mousePoint }} />
           <Calibrate {...{ calibrations, setCalibrations }} />
         </div>

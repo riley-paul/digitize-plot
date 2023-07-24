@@ -91,4 +91,8 @@ export default class Calibrator {
       this.axis
     );
   }
+
+  copyWithValue(value: number): Calibrator {
+    return new Calibrator(this.id, this.coord, value, this.axis);
+  }
 }

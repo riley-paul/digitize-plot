@@ -1,13 +1,7 @@
-// import {
-//   CalibrationMarker,
-//   CalibrationState,
-// } from "../reducers/calibrationReducer";
-
 import { CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { ChangeEvent, Dispatch, SetStateAction } from "react";
-import Calibrator from "@/geometry/Calibrator";
 import { Calibrations } from "@/hooks/useCanvas/useCalibrators";
 
 export type Props = {
@@ -24,7 +18,7 @@ export default function Calibrate(props: Props) {
 
     props.setCalibrations((prev) => ({
       ...prev,
-      [id]: new Calibrator(id, prev[id].coord, value, prev[id].axis),
+      [id]: prev[id].copyWithValue(value),
     }));
   };
 
