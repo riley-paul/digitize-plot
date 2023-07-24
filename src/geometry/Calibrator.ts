@@ -51,7 +51,7 @@ export default class Calibrator {
     ctx.font = `${fontHeight}px courier`;
     ctx.fillStyle = "hsl(220 8.9% 46.1%)";
 
-    ctx.setLineDash([15, 5]);
+    ctx.setLineDash([15 / scale, 5 / scale]);
 
     if (this.axis === "x") {
       ctx.save();

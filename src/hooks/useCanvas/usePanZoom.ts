@@ -1,3 +1,4 @@
+import Point from "@/geometry/Point";
 import {
   MouseEventHandler,
   RefObject,
@@ -6,76 +7,52 @@ import {
   useState,
 } from "react";
 
-const MAX_ZOOM = 10;
-const MIN_ZOOM = 0.25;
-const SCROLL_SENSITIVITY = 0.0005;
-
-type Coords = { x: number; y: number };
-
 export default function usePanZoom(
   canvasRef: RefObject<HTMLCanvasElement>,
+  mousePoint: Point | undefined,
   image: HTMLImageElement | undefined,
   debug: boolean
 ) {
-  const [cameraOffset, setCameraOffset] = useState<Coords>({ x: 0, y: 0 });
-  const [cameraZoom, setCameraZoom] = useState<number>(1);
+  const [matrix, setMatrix] = useState<DOMMatrix>(new DOMMatrix());
   const [isPanning, setIsPanning] = useState<boolean>(false);
-  const [panStart, setPanStart] = useState<Coords>({ x: 0, y: 0 });
+  const [panStart, setPanStart] = useState<Point>(new Point(0, 0));
 
   useEffect(() => {
-    if (debug) console.log("cameraOffset", cameraOffset);
-  }, [cameraOffset]);
+    if (debug) console.log("panStart", panStart);
+  }, [panStart]);
 
-  useEffect(() => {
-    if (debug) console.log("cameraZoom", cameraZoom);
-  }, [cameraZoom]);
-
-  useEffect(() => {
-    if (!image || !canvasRef.current) return;
-
-    const scale = canvasRef.current.getContext("2d")?.getTransform().a || 1;
-
-    setCameraOffset({
-      x: (canvasRef.current.width - image.width) / 2 / scale,
-      y: (canvasRef.current.height - image.height) / 2 / scale,
-    });
-  }, [image, canvasRef.current]);
-
-  // Draw everything to canvas
-  const drawPanZoom = (context: CanvasRenderingContext2D): void => {
-    const { width, height } = context.canvas;
-    context.translate(width / 2, height / 2);
-    context.scale(cameraZoom, cameraZoom);
-    context.translate(
-      -width / 2 + cameraOffset.x,
-      -height / 2 + cameraOffset.y
+  const centerImage = () => {
+    if (!canvasRef.current || !image) return;
+    setMatrix(() =>
+      new DOMMatrix().translate(
+        (canvasRef.current!.width - image.width) / 2,
+        (canvasRef.current!.height - image.height) / 2
+      )
     );
   };
 
-  const getEventLocation = (event: MouseEvent): Coords => {
-    return {
-      x: event.offsetX / cameraZoom,
-      y: event.offsetY / cameraZoom,
-    };
+  useEffect(() => {
+    centerImage();
+  }, [image, canvasRef.current]);
+
+  const drawPanZoom = (context: CanvasRenderingContext2D): void => {
+    const { a, b, c, d, e, f } = matrix;
+    context.transform(a, b, c, d, e, f);
   };
 
-  // Event handlers
   const mouseMovePanZoom: MouseEventHandler<HTMLCanvasElement> = (event) => {
-    if (isPanning) {
-      setCameraOffset({
-        x: getEventLocation(event.nativeEvent).x - panStart.x,
-        y: getEventLocation(event.nativeEvent).y - panStart.y,
-      });
-    }
+    if (!isPanning || !mousePoint) return;
+    console.log("panning");
+    setMatrix((prev) =>
+      prev.translate(mousePoint.x - panStart.x, mousePoint.y - panStart.y)
+    );
   };
 
   const mouseDownPanZoom: MouseEventHandler<HTMLCanvasElement> = (event) => {
+    if (!mousePoint) return;
     if (event.button === 2 || event.button === 1) {
       setIsPanning(true);
-      setPanStart({
-        x: getEventLocation(event.nativeEvent).x - cameraOffset.x,
-        y: getEventLocation(event.nativeEvent).y - cameraOffset.y,
-      });
+      setPanStart(mousePoint);
     }
   };
 
@@ -90,14 +67,15 @@ export default function usePanZoom(
     event.preventDefault();
     event.stopPropagation();
 
-    if (isPanning) return;
-    const amount = -event.deltaY * SCROLL_SENSITIVITY;
-    setCameraZoom((prev) => {
-      let zoom = prev + amount;
-      zoom = Math.min(zoom, MAX_ZOOM);
-      zoom = Math.max(zoom, MIN_ZOOM);
-      return zoom;
-    });
+    if (isPanning || !mousePoint) return;
+    const zoom = event.deltaY < 0 ? 1.1 : 0.9;
+
+    setMatrix((prev) =>
+      prev
+        .translate(mousePoint.x, mousePoint.y)
+        .scale(zoom, zoom)
+        .translate(-mousePoint.x, -mousePoint.y)
+    );
   };
 
   return {
@@ -106,5 +84,6 @@ export default function usePanZoom(
     mouseDownPanZoom,
     mouseUpPanZoom,
     wheelPanZoom,
+    centerImage,
   };
 }

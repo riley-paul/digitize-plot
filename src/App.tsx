@@ -13,7 +13,7 @@ import { Button } from "./components/ui/button";
 
 function App() {
   const [image, setImage] = useState<HTMLImageElement | undefined>();
-  const [debug, setDebug] = useState(false);
+  const [debug, setDebug] = useState(true);
 
   const {
     points,
