@@ -12,9 +12,7 @@ This web app allows users to upload an image of a plot, calibrate an x and y sca
 
 There are many instances where data is available in only a chart format with an x and y axis and minimal labels. The below is a prime example of this.
 
-![example plot](https://github.com/rjp301/digitize-plot/blob/a3575a7d7bffa3f95082dd20a085016e059c2cdd/docs/BPL220K%2024ft.png)
-
-![example plot in app](https://github.com/rjp301/digitize-plot/blob/d6edcbf71fd572acbfa66e648f7173761f457fd7/docs/digitize_plot_app.png)
+![BPL220K 24ft](https://github.com/rjp301/digitize-plot-2/assets/71047303/a2bb6ba6-8c7d-45b6-8c85-95bf02a4c244)
 
 ## How I Built It
 
