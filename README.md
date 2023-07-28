@@ -18,8 +18,10 @@ There are many instances where data is available in only a chart format with an 
 
 ## How I Built It
 
-This single-page React application is written in Typescript and hosted on GitHub Pages. I made use of several libraries such as react-csv, react-konva (for the canvas) and react-dropzone.
+This single-page React application is written in Typescript and hosted on GitHub Pages. I tried to use as few libraries as possible and work directly with native web technologies such as canvas and form elements.
+
+I used the [Shadcn](https://ui.shadcn.com) UI component library to enhance the overall fit and finish.
 
 ## Future Plans
 
-In the future I would consider adding options for different axis scales such as logarithmic and datetime. As well I would like to improve the general fit and finish for a better user experience.
+In the future I would consider adding options for different axis scales such as logarithmic and datetime.
