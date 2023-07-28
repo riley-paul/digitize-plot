@@ -33,4 +33,4 @@ jobs:
       - name: Run a multi-line script
         run: |
           npm install
-          npm run deloy
+          npm run deploy
