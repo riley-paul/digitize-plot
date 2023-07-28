@@ -16,6 +16,10 @@ There are many instances where data is available in only a chart format with an 
 
 This app allows users to import an image, calibrate the image, then place as many points as they would like and export those to a CSV file. Currently the tool is only able to be calibrated for linear plots.
 
+![digitize_plot_initial](https://github.com/rjp301/digitize-plot/assets/71047303/fa6dc215-4259-4e0a-9048-430c7f0e42b0)
+
+![Digitize Plot Screenshot](https://github.com/rjp301/digitize-plot/assets/71047303/5c53e6f7-8ae2-41b9-871e-766027f27e40)
+
 ## How I Built It
 
 This single-page React application is written in Typescript and hosted on GitHub Pages. I tried to use as few libraries as possible and work directly with native web technologies such as canvas and form elements.
