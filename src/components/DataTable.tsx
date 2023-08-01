@@ -28,10 +28,7 @@ export default function DataTable({ points, coordsConverter }: Props) {
           Points placed will be listed here
           <br />
           <br />
-          Pan by dragging with the right mouse button. Zoom using the scroll wheel.
-          <br />
-          <br />
-          Place points with a left click. Delete points with a right click.
+          Zoom using the scroll wheel. Place points with a left click. Delete points with a right click.
           <br />
           <br />
           Drag the lines or points to move them around.
