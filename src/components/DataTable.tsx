@@ -23,7 +23,23 @@ export default function DataTable({ points, coordsConverter }: Props) {
 
   return (
     <Table>
-      {points.length === 0 && <TableCaption>Points placed will be listed here</TableCaption>}
+      {points.length === 0 && (
+        <TableCaption>
+          Points placed will be listed here
+          <br />
+          <br />
+          Pan by dragging with the right mouse button. Zoom using the scroll wheel.
+          <br />
+          <br />
+          Place points with a left click. Delete points with a right click.
+          <br />
+          <br />
+          Drag the lines or points to move them around.
+          <br />
+          <br />
+          To calibrate, drag the calibration lines to known values then enter their location in the right panel.
+        </TableCaption>
+      )}
       <TableHeader>
         <TableRow>
           <TableHead className="text-center w-1/2">X</TableHead>
