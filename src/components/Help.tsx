@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 
 import {
   Card,
-  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
@@ -34,14 +33,13 @@ const helpSteps: Step[] = [
   },
   {
     title: "Debug",
-    content:
-      "Used to show quadtree agorithm at work.",
+    content: "Used to show quadtree agorithm at work.",
     coords: "bottom-0 right-0",
   },
 ];
 
 export type Props = {
-  setShowHelp: Dispatch<SetStateAction<boolean>>;
+  setShowHelp: (state: boolean) => void;
 };
 
 export default function Help(props: Props) {

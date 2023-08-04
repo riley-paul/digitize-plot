@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import useCanvas from "./hooks/useCanvas";
+import useHelp from "./hooks/useHelp";
 
 import Bullseye from "./components/Bullseye";
 import DataTable from "./components/DataTable";
@@ -16,7 +17,8 @@ import { Button } from "./components/ui/button";
 function App() {
   const [image, setImage] = useState<HTMLImageElement | undefined>();
   const [debug, setDebug] = useState(false);
-  const [showHelp, setShowHelp] = useState(true);
+
+  const { showHelp, handleSetShowHelp } = useHelp();
 
   const {
     points,
@@ -45,7 +47,7 @@ function App() {
         ) : (
           <Dropzone {...{ setImage }} />
         )}
-        {image && showHelp && <Help {...{ setShowHelp }} />}
+        {image && showHelp && <Help setShowHelp={handleSetShowHelp} />}
       </main>
       <aside className="w-60 bg-card shadow border-l overflow-y-auto flex flex-col justify-between">
         <div>
@@ -64,7 +66,7 @@ function App() {
             className="rounded-full"
             size="icon"
             variant={showHelp ? "default" : "secondary"}
-            onClick={() => setShowHelp((prev) => !prev)}
+            onClick={() => handleSetShowHelp(!showHelp)}
           >
             ?
           </Button>
