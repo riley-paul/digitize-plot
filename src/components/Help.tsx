@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 
 type Step = { title: string; content: string; coords: string };
 
