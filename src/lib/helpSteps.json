@@ -1,0 +1,12 @@
+[
+  {
+    "title": "Pan and Zoom",
+    "content": "Zoom in and out using the scroll wheel. Click and drag using the middle or right mouse button.",
+    "coords": "bottom-0 left-0"
+  },
+  {
+    "title": "Calibrating",
+    "content": "Drag the horizontal and vertical calibration lines to coincide with a known value on the plot. Enter their locations in the right side panel.",
+    "coords": "top-0 right-0"
+  }
+]

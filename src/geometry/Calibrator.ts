@@ -35,7 +35,7 @@ export default class Calibrator {
     const colorY = options.colorY || "red";
     const width = (options.width || 1.5) / scale;
     const buffer = 10 / scale;
-    const fontHeight = 12 / scale;
+    const fontHeight = 15 / scale;
     const textOffset = 7 / scale;
 
     const drawLine = (x1: number, y1: number, x2: number, y2: number) => {
