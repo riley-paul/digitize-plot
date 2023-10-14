@@ -57,7 +57,9 @@ export default function Dropzone({ setImage }: Props) {
   };
 
   const useSample: MouseEventHandler = (_) => {
-    const url = "/BPL220K 24ft.png";
+    const url = `${
+      import.meta.env.PROD ? "digitize-plot" : ""
+    }/BPL220K 24ft.png`;
     createImage(url);
   };
 
