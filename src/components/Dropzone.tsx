@@ -85,7 +85,7 @@ export default function Dropzone({ setImage }: Props) {
             />
             {error && <small className="text-destructive">{error}</small>}
             <div className="flex flex-col lg:flex-row gap-2">
-              <Button className="w-full" type="submit">
+              <Button className="w-full" type="submit" disabled={!file}>
                 Let's go
               </Button>
               <Button
