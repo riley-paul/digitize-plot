@@ -10,7 +10,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -99,18 +98,6 @@ export default function Dropzone({ setImage }: Props) {
             <input type="submit" hidden />
           </form>
         </CardContent>
-        <CardFooter>
-          <small className="text-muted-foreground">
-            An app by{" "}
-            <a
-              href="https://rileypaul.ca"
-              className="underline hover:no-underline hover:text-foreground"
-              target="blank"
-            >
-              Riley Paul
-            </a>
-          </small>
-        </CardFooter>
       </Card>
     </div>
   );
