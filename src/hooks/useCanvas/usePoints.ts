@@ -42,8 +42,8 @@ export default function usePoints(
 
   // Draw everything to canvas
   const drawPoints = (ctx: CanvasRenderingContext2D): void => {
-    const DEFAULT_COLOUR = "hsl(224 71.4% 4.1%)";
-    const SELECTED_COLOUR = "hsl(220 8.9% 46.1%)";
+    const DEFAULT_COLOUR = "#7c3aed";
+    const SELECTED_COLOUR = "#a78bfa";
 
     if (debug) {
       // ctx.font = "12px Courier";
@@ -52,7 +52,12 @@ export default function usePoints(
       // ctx.fillText(`current ID: ${currentPointId}`, 10, 35);
 
       quadtree.current?.draw(ctx);
-      mousePoint?.draw(ctx, { color: "blue", radius: 3 });
+      mousePoint?.draw(ctx, {
+        color: "#84cc16",
+        radius: 3,
+        showLabel: true,
+        labelPos: "t",
+      });
     }
 
     for (let pt of points) {

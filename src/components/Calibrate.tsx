@@ -23,7 +23,7 @@ export default function Calibrate(props: Props) {
   };
 
   return (
-    <form action="">
+    <section>
       <CardHeader className="pt-0">
         <CardTitle>Calibrate X-Axis</CardTitle>
         <div className="text-sm text-muted-foreground flex flex-col gap-2">
@@ -33,6 +33,7 @@ export default function Calibrate(props: Props) {
               type="number"
               value={props.calibrations.x1.value}
               onChange={(e) => updateValue(e, "x1")}
+              onFocus={(e) => e.target.select()}
             />
           </div>
           <div className="flex items-center gap-2">
@@ -41,6 +42,7 @@ export default function Calibrate(props: Props) {
               type="number"
               value={props.calibrations.x2.value}
               onChange={(e) => updateValue(e, "x2")}
+              onFocus={(e) => e.target.select()}
             />
           </div>
         </div>
@@ -54,6 +56,7 @@ export default function Calibrate(props: Props) {
               type="number"
               value={props.calibrations.y1.value}
               onChange={(e) => updateValue(e, "y1")}
+              onFocus={(e) => e.target.select()}
             />
           </div>
           <div className="flex items-center gap-2">
@@ -62,11 +65,11 @@ export default function Calibrate(props: Props) {
               type="number"
               value={props.calibrations.y2.value}
               onChange={(e) => updateValue(e, "y2")}
+              onFocus={(e) => e.target.select()}
             />
           </div>
         </div>
       </CardHeader>
-      <input type="submit" hidden />
-    </form>
+    </section>
   );
 }

@@ -31,8 +31,8 @@ export default class Calibrator {
       .transformPoint(new DOMPoint(ctx.canvas.width, ctx.canvas.height));
 
     const scale = ctx.getTransform().a;
-    const colorX = options.colorX || "blue";
-    const colorY = options.colorY || "red";
+    const colorX = options.colorX || "#2563eb";
+    const colorY = options.colorY || "#dc2626";
     const width = (options.width || 1.5) / scale;
     const buffer = 10 / scale;
     const fontHeight = 15 / scale;

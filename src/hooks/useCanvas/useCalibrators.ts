@@ -75,12 +75,12 @@ export default function useCalibrators(
 
   const drawCalibrators = (ctx: CanvasRenderingContext2D): void => {
     const defaultDrawOptions: CalibratorDrawOptions = {
-      colorX: "blue",
-      colorY: "red",
+      colorX: "#2563eb",
+      colorY: "#dc2626",
     };
     const hoverDrawOptions: CalibratorDrawOptions = {
-      colorX: "skyblue",
-      colorY: "coral",
+      colorX: "#60a5fa",
+      colorY: "#f87171",
     };
 
     for (let calibrator of Object.values(calibrations)) {
@@ -148,7 +148,7 @@ export default function useCalibrators(
     }
 
     const scale = context.getTransform().a;
-    const distance = 2 / scale;
+    const distance = 5 / scale;
 
     const sortNearest = (a: Calibrator, b: Calibrator) =>
       a.distPoint(mousePoint) - b.distPoint(mousePoint);
