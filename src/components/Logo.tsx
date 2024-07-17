@@ -1,11 +1,10 @@
-import { LineChart } from "lucide-react";
 import React from "react";
 
 const Logo: React.FC = () => {
   return (
     <div className="flex flex-col gap-1">
-      <h1 className="flex gap-3">
-        <LineChart size={24} className="text-primary" />
+      <h1 className="flex items-center gap-3">
+        <i className="fa-solid fa-chart-line fa-lg text-primary" />
         <span className="text-lg font-bold">Digitize Plot</span>
       </h1>
       <p className="text-xs text-gray-500">

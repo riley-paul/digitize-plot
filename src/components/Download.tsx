@@ -19,6 +19,7 @@ export default function Download({ points, coordsConverter }: Props) {
       onClick={() => points.length > 0}
     >
       <Button disabled={points.length === 0} className="w-full">
+        <i className="fa-solid fa-download mr-2" />
         Download CSV
       </Button>
     </CSVLink>

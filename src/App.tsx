@@ -42,6 +42,7 @@ function App() {
         </section>
         <footer className="sticky bottom-0 grid gap-2 bg-card p-4">
           <Button className="w-full" variant="secondary" onClick={clearPoints}>
+            <i className="fa-solid fa-broom mr-2" />
             Clear Points
           </Button>
           <Download {...{ coordsConverter, points }} />
