@@ -2,16 +2,19 @@ import React from "react";
 import Point from "../../geometry/Point";
 import { QuadTree, createQuadTree } from "../../geometry/QuadTree";
 import use2dContext from "./use2dContext";
+import { toast } from "sonner";
 
 export default function usePoints(
   canvasRef: React.RefObject<HTMLCanvasElement>,
-  debug: boolean
+  debug: boolean,
 ) {
   const quadtree = React.useRef<QuadTree | null>(null);
   const context = use2dContext(canvasRef);
 
   const [points, setPoints] = React.useState<Point[]>([]);
-  const [mousePoint, setMousePoint] = React.useState<Point | undefined>(undefined);
+  const [mousePoint, setMousePoint] = React.useState<Point | undefined>(
+    undefined,
+  );
   const [currentPointId, setCurrentPointId] = React.useState<string>("");
   const [draggingId, setDraggingId] = React.useState<string>("");
 
@@ -29,7 +32,7 @@ export default function usePoints(
 
   const movePoint = (id: string, coords: Point) => {
     setPoints((prev) =>
-      prev.map((pt) => (pt.id === id ? new Point(coords.x, coords.y, id) : pt))
+      prev.map((pt) => (pt.id === id ? new Point(coords.x, coords.y, id) : pt)),
     );
     console.log("point updated");
   };
@@ -68,17 +71,21 @@ export default function usePoints(
   };
 
   // Event handlers
-  const mouseMovePoints: React.MouseEventHandler<HTMLCanvasElement> = (event) => {
+  const mouseMovePoints: React.MouseEventHandler<HTMLCanvasElement> = (
+    event,
+  ) => {
     if (!context) return;
     const pt = new DOMPoint(
       event.nativeEvent.offsetX,
-      event.nativeEvent.offsetY
+      event.nativeEvent.offsetY,
     );
     const transformed = context.getTransform().invertSelf().transformPoint(pt);
     setMousePoint(new Point(transformed.x, transformed.y, "MOUSE"));
   };
 
-  const mouseDownPoints: React.MouseEventHandler<HTMLCanvasElement> = (event) => {
+  const mouseDownPoints: React.MouseEventHandler<HTMLCanvasElement> = (
+    event,
+  ) => {
     if (currentPointId) {
       if (event.button === 2) deletePoint(currentPointId);
       else if (event.button === 0) setDraggingId(currentPointId);
@@ -114,10 +121,21 @@ export default function usePoints(
     if (!mousePoint || !quadtree.current || !context) return;
     const nearPoints = quadtree.current.queryRadius(
       mousePoint,
-      7 / context.getTransform().a
+      7 / context.getTransform().a,
     );
     setCurrentPointId(mousePoint.nearest(nearPoints)?.id || "");
   }, [mousePoint, points]);
+
+  const clearPoints = () => {
+    const prevPoints = [...points];
+    setPoints([]);
+    toast.success("Points cleared", {
+      action: {
+        label: "Undo",
+        onClick: () => setPoints(prevPoints),
+      },
+    });
+  };
 
   return {
     drawPoints,
@@ -127,6 +145,6 @@ export default function usePoints(
     mouseLeavePoints,
     points,
     mousePoint,
-    clearPoints: () => setPoints([]),
+    clearPoints,
   };
 }

@@ -9,6 +9,6 @@ import '@fontsource-variable/roboto-mono';
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <>
     <App />
-    <Toaster />
+    <Toaster position="bottom-center" />
   </>,
 );
