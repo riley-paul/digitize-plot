@@ -1,23 +1,17 @@
 import Point from "@/geometry/Point";
-import {
-  MouseEventHandler,
-  RefObject,
-  WheelEventHandler,
-  useEffect,
-  useState,
-} from "react";
+import React from "react";
 
 export default function usePanZoom(
-  canvasRef: RefObject<HTMLCanvasElement>,
+  canvasRef: React.RefObject<HTMLCanvasElement>,
   mousePoint: Point | undefined,
   image: HTMLImageElement | undefined,
-  debug: boolean
+  debug: boolean,
 ) {
-  const [matrix, setMatrix] = useState<DOMMatrix>(new DOMMatrix());
-  const [isPanning, setIsPanning] = useState<boolean>(false);
-  const [panStart, setPanStart] = useState<Point>(new Point(0, 0));
+  const [matrix, setMatrix] = React.useState<DOMMatrix>(new DOMMatrix());
+  const [isPanning, setIsPanning] = React.useState<boolean>(false);
+  const [panStart, setPanStart] = React.useState<Point>(new Point(0, 0));
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (debug) console.log("panStart", panStart);
   }, [panStart]);
 
@@ -26,20 +20,20 @@ export default function usePanZoom(
     setMatrix(() =>
       new DOMMatrix().translate(
         (canvasRef.current!.width - image.width) / 2,
-        (canvasRef.current!.height - image.height) / 2
-      )
+        (canvasRef.current!.height - image.height) / 2,
+      ),
     );
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!isPanning || !mousePoint) return;
     console.log("panning");
     setMatrix((prev) =>
-      prev.translate(mousePoint.x - panStart.x, mousePoint.y - panStart.y)
+      prev.translate(mousePoint.x - panStart.x, mousePoint.y - panStart.y),
     );
   }, [mousePoint]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     centerImage();
   }, [image, canvasRef.current]);
 
@@ -48,7 +42,9 @@ export default function usePanZoom(
     context.transform(a, b, c, d, e, f);
   };
 
-  const mouseDownPanZoom: MouseEventHandler<HTMLCanvasElement> = (event) => {
+  const mouseDownPanZoom: React.MouseEventHandler<HTMLCanvasElement> = (
+    event,
+  ) => {
     if (!mousePoint) return;
     if (event.button === 2 || event.button === 1) {
       setIsPanning(true);
@@ -56,13 +52,15 @@ export default function usePanZoom(
     }
   };
 
-  const mouseUpPanZoom: MouseEventHandler<HTMLCanvasElement> = (event) => {
+  const mouseUpPanZoom: React.MouseEventHandler<HTMLCanvasElement> = (
+    event,
+  ) => {
     if (event.button === 2 || event.button === 1) {
       setIsPanning(false);
     }
   };
 
-  const wheelPanZoom: WheelEventHandler<HTMLCanvasElement> = (event) => {
+  const wheelPanZoom: React.WheelEventHandler<HTMLCanvasElement> = (event) => {
     console.log("scrolling");
     event.preventDefault();
     event.stopPropagation();
@@ -74,7 +72,7 @@ export default function usePanZoom(
       prev
         .translateSelf(mousePoint.x, mousePoint.y)
         .scaleSelf(zoom, zoom)
-        .translateSelf(-mousePoint.x, -mousePoint.y)
+        .translateSelf(-mousePoint.x, -mousePoint.y),
     );
   };
 

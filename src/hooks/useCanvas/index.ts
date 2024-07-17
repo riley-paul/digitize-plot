@@ -1,4 +1,4 @@
-import { MouseEventHandler, WheelEventHandler, useEffect, useRef } from "react";
+import React from "react";
 import usePoints from "./usePoints";
 import use2dContext from "./use2dContext";
 import usePanZoom from "./usePanZoom";
@@ -8,7 +8,7 @@ export default function useCanvas(
   image: HTMLImageElement | undefined,
   debug: boolean
 ) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const context = use2dContext(canvasRef);
 
   const {
@@ -44,38 +44,38 @@ export default function useCanvas(
   };
 
   // Event handlers
-  const onMouseMove: MouseEventHandler<HTMLCanvasElement> = (event) => {
+  const onMouseMove: React.MouseEventHandler<HTMLCanvasElement> = (event) => {
     mouseMovePoints(event);
   };
 
-  const onMouseDown: MouseEventHandler<HTMLCanvasElement> = (event) => {
+  const onMouseDown: React.MouseEventHandler<HTMLCanvasElement> = (event) => {
     mouseDownPanZoom(event);
     mouseDownCalibrators(event);
     if (markerDragging) return;
     mouseDownPoints(event);
   };
 
-  const onMouseUp: MouseEventHandler<HTMLCanvasElement> = (event) => {
+  const onMouseUp: React.MouseEventHandler<HTMLCanvasElement> = (event) => {
     mouseUpPanZoom(event);
     MouseUpCalibrators(event);
     mouseUpPoints(event);
   };
 
-  const onContextMenu: MouseEventHandler<HTMLCanvasElement> = (event) => {
+  const onContextMenu: React.MouseEventHandler<HTMLCanvasElement> = (event) => {
     event.preventDefault();
     event.stopPropagation();
   };
 
-  const onWheel: WheelEventHandler<HTMLCanvasElement> = (event) => {
+  const onWheel: React.WheelEventHandler<HTMLCanvasElement> = (event) => {
     wheelPanZoom(event);
   };
 
-  const onMouseLeave: WheelEventHandler<HTMLCanvasElement> = (event) => {
+  const onMouseLeave: React.WheelEventHandler<HTMLCanvasElement> = (event) => {
     mouseLeavePoints(event);
   };
 
   // draw loop
-  useEffect(() => {
+  React.useEffect(() => {
     if (!context) return;
     let animationFrameId: number;
 
@@ -97,7 +97,7 @@ export default function useCanvas(
   }, [draw]);
 
   // add and remove event listener for resize
-  useEffect(() => {
+  React.useEffect(() => {
     const handleResize = () => {
       const canvas = canvasRef.current;
       if (!canvas) return;
@@ -111,7 +111,7 @@ export default function useCanvas(
     return () => window.removeEventListener("resize", handleResize);
   }, [image]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (debug) console.log(points);
   }, [points]);
 

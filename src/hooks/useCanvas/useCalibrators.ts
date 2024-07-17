@@ -1,4 +1,4 @@
-import { MouseEventHandler, RefObject, useEffect, useState } from "react";
+import React from "react";
 import Point from "@/geometry/Point";
 import use2dContext from "./use2dContext";
 import Calibrator, { type CalibratorDrawOptions } from "@/geometry/Calibrator";
@@ -24,10 +24,10 @@ function linearInterp(values: LinearInterpValues): number {
 }
 
 export default function useCalibrators(
-  canvasRef: RefObject<HTMLCanvasElement>,
+  canvasRef: React.RefObject<HTMLCanvasElement>,
   mousePoint: Point | undefined,
   image: HTMLImageElement | undefined,
-  debug: boolean
+  debug: boolean,
 ) {
   const intialCalibrations: Calibrations = {
     x1: new Calibrator("x1", 0, 0, "x"),
@@ -36,7 +36,7 @@ export default function useCalibrators(
     y2: new Calibrator("y2", 0, 1, "y"),
   };
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (!image) return;
     setCalibrations({
       x1: new Calibrator("x1", 0, 0, "x"),
@@ -47,7 +47,7 @@ export default function useCalibrators(
   }, [image]);
 
   const [calibrations, setCalibrations] =
-    useState<Calibrations>(intialCalibrations);
+    React.useState<Calibrations>(intialCalibrations);
 
   const coordsConverter = (coords: Point): Point => {
     const xValues = {
@@ -69,8 +69,12 @@ export default function useCalibrators(
     return new Point(linearInterp(xValues), linearInterp(yValues));
   };
 
-  const [current, setCurrent] = useState<keyof Calibrations | undefined>();
-  const [dragging, setDragging] = useState<keyof Calibrations | undefined>();
+  const [current, setCurrent] = React.useState<
+    keyof Calibrations | undefined
+  >();
+  const [dragging, setDragging] = React.useState<
+    keyof Calibrations | undefined
+  >();
   const context = use2dContext(canvasRef);
 
   const drawCalibrators = (ctx: CanvasRenderingContext2D): void => {
@@ -108,12 +112,12 @@ export default function useCalibrators(
       ctx.fillText(
         `dragging ID: ${dragging}`,
         origin.x + 10 / scale,
-        origin.y + 20 / scale
+        origin.y + 20 / scale,
       );
       ctx.fillText(
         `current ID: ${current}`,
         origin.x + 10 / scale,
-        origin.y + 35 / scale
+        origin.y + 35 / scale,
       );
     }
   };
@@ -122,8 +126,8 @@ export default function useCalibrators(
     setCalibrations((prev) => ({ ...prev, [id]: prev[id].copyToPoint(point) }));
   };
 
-  const mouseDownCalibrators: MouseEventHandler<HTMLCanvasElement> = (
-    event
+  const mouseDownCalibrators: React.MouseEventHandler<HTMLCanvasElement> = (
+    event,
   ) => {
     if (current && event.button === 0) {
       event.preventDefault();
@@ -132,7 +136,9 @@ export default function useCalibrators(
     }
   };
 
-  const MouseUpCalibrators: MouseEventHandler<HTMLCanvasElement> = (event) => {
+  const MouseUpCalibrators: React.MouseEventHandler<HTMLCanvasElement> = (
+    event,
+  ) => {
     if (dragging && mousePoint) {
       event.preventDefault();
       updateCalibrator(dragging, mousePoint);
@@ -141,7 +147,7 @@ export default function useCalibrators(
   };
 
   // determine current calibrator
-  useEffect(() => {
+  React.useEffect(() => {
     if (!context || !mousePoint) {
       setCurrent(undefined);
       return;
@@ -163,7 +169,7 @@ export default function useCalibrators(
     setCurrent(undefined);
   }, [mousePoint, calibrations]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (debug) console.log("current", current);
   }, [current]);
 

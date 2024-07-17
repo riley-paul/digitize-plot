@@ -20,7 +20,7 @@ export default function Bullseye(props: Props) {
 
   if (!mousePoint || !context) {
     return (
-      <div className="aspect-square relative overflow-hidden bg-gray-50"></div>
+      <div className="relative aspect-square overflow-hidden bg-gray-50"></div>
     );
   }
 
@@ -36,7 +36,7 @@ export default function Bullseye(props: Props) {
   return (
     <div
       ref={ref}
-      className="aspect-square relative overflow-hidden bg-gray-50"
+      className="relative aspect-square overflow-hidden bg-gray-50"
       style={{
         backgroundImage: `url(${imgUrl})`,
         backgroundRepeat: "no-repeat",
@@ -44,9 +44,9 @@ export default function Bullseye(props: Props) {
         backgroundPosition: `${w / 2 - x * zoom}px ${h / 2 - y * zoom}px`,
       }}
     >
-      <div className="absolute top-1/2 -translate-y-1/2 h-px w-full bg-muted-foreground opacity-50" />
-      <div className="absolute left-1/2 -translate-x-1/2 w-px h-full bg-muted-foreground opacity-50" />
-      <div className="absolute left-1/2 top-1/2 -translate-y-1/2 -translate-x-1/2 bg-foreground h-1 w-1 rounded-full" />
+      <div className="absolute top-1/2 h-px w-full -translate-y-1/2 bg-muted-foreground opacity-50" />
+      <div className="absolute left-1/2 h-full w-px -translate-x-1/2 bg-muted-foreground opacity-50" />
+      <div className="absolute left-1/2 top-1/2 h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-foreground" />
     </div>
   );
 }

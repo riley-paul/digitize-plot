@@ -1,10 +1,11 @@
-import { RefObject, useEffect, useState } from "react";
-
+import React from "react";
 type ContextState = CanvasRenderingContext2D | undefined | null;
 
-export default function use2dContext(canvasRef: RefObject<HTMLCanvasElement>) {
-  const [context, setContext] = useState<ContextState>(undefined);
-  useEffect(() => {
+export default function use2dContext(
+  canvasRef: React.RefObject<HTMLCanvasElement>,
+) {
+  const [context, setContext] = React.useState<ContextState>(undefined);
+  React.useEffect(() => {
     setContext(canvasRef.current?.getContext("2d"));
   }, [canvasRef.current]);
 

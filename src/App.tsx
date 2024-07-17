@@ -32,36 +32,36 @@ function App() {
   } = useCanvas(image, debug);
 
   return (
-    <div className="w-full h-screen flex">
-      <aside className="w-60 bg-card shadow border-r overflow-y-auto flex flex-col gap-2">
-        <header className="sticky top-0 p-4 pb-6 bg-card">
+    <div className="flex h-screen w-full">
+      <aside className="flex w-60 flex-col gap-2 overflow-y-auto border-r bg-card">
+        <header className="sticky top-0 bg-card p-4 pb-6">
           <Logo />
         </header>
         <section className="flex-1 px-4">
           <DataTable {...{ coordsConverter, points }} />
         </section>
-        <footer className="grid gap-2 p-4 sticky bottom-0 bg-card">
+        <footer className="sticky bottom-0 grid gap-2 bg-card p-4">
           <Button className="w-full" variant="secondary" onClick={clearPoints}>
             Clear Points
           </Button>
           <Download {...{ coordsConverter, points }} />
         </footer>
       </aside>
-      <main className="flex-1 relative">
+      <main className="relative flex-1">
         {image ? (
-          <canvas {...canvasProps} className="w-full h-full" />
+          <canvas {...canvasProps} className="h-full w-full" />
         ) : (
           <Dropzone {...{ setImage }} />
         )}
         {image && showHelp && <Help setShowHelp={handleSetShowHelp} />}
       </main>
-      <aside className="w-60 bg-card shadow border-l overflow-y-auto flex flex-col justify-between">
+      <aside className="flex w-60 flex-col justify-between overflow-y-auto border-l bg-card">
         <div>
           <Bullseye canvasRef={canvasProps.ref} mousePoint={mousePoint} />
           <MouseCoords {...{ coordsConverter, mousePoint }} />
           <Calibrate {...{ calibrations, setCalibrations }} />
         </div>
-        <div className="flex justify-between p-6 w-full gap-4">
+        <div className="flex w-full justify-between gap-4 p-6">
           <Toggle
             id="debug"
             name="Debug Mode"
