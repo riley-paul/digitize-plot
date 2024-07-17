@@ -129,7 +129,7 @@ export default function usePoints(
   const clearPoints = () => {
     const prevPoints = [...points];
     setPoints([]);
-    toast.success(`${prevPoints.length} points cleared`, {
+    toast(`${prevPoints.length} points cleared`, {
       action: {
         label: "Undo",
         onClick: () => setPoints(prevPoints),
