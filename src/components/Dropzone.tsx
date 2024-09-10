@@ -1,10 +1,4 @@
-import {
-  ChangeEventHandler,
-  Dispatch,
-  FormEventHandler,
-  MouseEventHandler,
-  useState,
-} from "react";
+import React from "react";
 
 import {
   Card,
@@ -17,12 +11,12 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 
 export type Props = {
-  setImage: Dispatch<HTMLImageElement | undefined>;
+  setImage: React.Dispatch<HTMLImageElement | undefined>;
 };
 
 export default function Dropzone({ setImage }: Props) {
-  const [error, setError] = useState("");
-  const [file, setFile] = useState<File | null>(null);
+  const [error, setError] = React.useState("");
+  const [file, setFile] = React.useState<File | null>(null);
 
   const createImage = (url: string) => {
     const img = new Image();
@@ -34,7 +28,7 @@ export default function Dropzone({ setImage }: Props) {
     };
   };
 
-  const onFileChange: ChangeEventHandler<HTMLInputElement> = (event) => {
+  const onFileChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     if (!event.target.files) {
       setFile(null);
       return;
@@ -42,7 +36,7 @@ export default function Dropzone({ setImage }: Props) {
     setFile(event.target.files[0]);
   };
 
-  const onSubmit: FormEventHandler<HTMLFormElement> = (event) => {
+  const onSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
 
     if (!file) {
@@ -55,7 +49,7 @@ export default function Dropzone({ setImage }: Props) {
     createImage(url);
   };
 
-  const useSample: MouseEventHandler = (_) => {
+  const useSample: React.MouseEventHandler = (_) => {
     const url = `BPL220K 24ft.png`;
     createImage(url);
   };

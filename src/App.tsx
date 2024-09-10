@@ -1,19 +1,19 @@
 import { useState } from "react";
 
-import useCanvas from "./hooks/useCanvas";
-import useHelp from "./hooks/useHelp";
+import useCanvas from "@/hooks/use-canvas";
+import useHelp from "@/hooks/use-help";
 
-import Bullseye from "./components/Bullseye";
-import DataTable from "./components/DataTable";
-import Download from "./components/Download";
-import MouseCoords from "./components/MouseCoords";
-import Dropzone from "./components/Dropzone";
-import Calibrate from "./components/Calibrate";
-import Toggle from "./components/Toggle";
-import Help from "./components/Help";
+import Bullseye from "@/components/bullseye";
+import DataTable from "@/components/data-table";
+import Download from "@/components/download";
+import MouseCoords from "@/components/mouse-coords";
+import Dropzone from "@/components/dropzone";
+import Calibrate from "@/components/calibrate";
+import Toggle from "@/components/toggle";
+import Help from "@/components/help";
 
-import { Button } from "./components/ui/button";
-import Logo from "./components/Logo";
+import { Button } from "@/components/ui/button";
+import Logo from "@/components/logo";
 
 function App() {
   const [image, setImage] = useState<HTMLImageElement | undefined>();

@@ -1,18 +1,18 @@
+import React from "react";
 import { CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { ChangeEvent, Dispatch, SetStateAction } from "react";
-import { Calibrations } from "@/hooks/useCanvas/useCalibrators";
+import type { Calibrations } from "@/hooks/use-canvas/use-calibrators";
 
 export type Props = {
   calibrations: Calibrations;
-  setCalibrations: Dispatch<SetStateAction<Calibrations>>;
+  setCalibrations: React.Dispatch<React.SetStateAction<Calibrations>>;
 };
 
 export default function Calibrate(props: Props) {
   const updateValue = (
-    event: ChangeEvent<HTMLInputElement>,
-    id: keyof Calibrations
+    event: React.ChangeEvent<HTMLInputElement>,
+    id: keyof Calibrations,
   ) => {
     const value = Number(event.target.value);
 
@@ -26,7 +26,7 @@ export default function Calibrate(props: Props) {
     <section>
       <CardHeader className="pt-0">
         <CardTitle>Calibrate X-Axis</CardTitle>
-        <div className="text-sm text-muted-foreground flex flex-col gap-2">
+        <div className="flex flex-col gap-2 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <Label>X1</Label>
             <Input
@@ -49,7 +49,7 @@ export default function Calibrate(props: Props) {
       </CardHeader>
       <CardHeader className="pt-0">
         <CardTitle>Calibrate Y-Axis</CardTitle>
-        <div className="text-sm text-muted-foreground flex flex-col gap-2">
+        <div className="flex flex-col gap-2 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
             <Label>Y1</Label>
             <Input
