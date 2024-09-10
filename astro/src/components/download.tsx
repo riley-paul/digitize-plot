@@ -1,5 +1,5 @@
 import { CSVLink } from "react-csv";
-import Point from "../geometry/Point";
+import Point from "../geometry/point";
 import { Button } from "./ui/button";
 
 export type Props = {

@@ -1,6 +1,6 @@
 import { RefObject, useEffect, useRef, useState } from "react";
-import Point from "@/geometry/Point";
-import use2dContext from "@/hooks/useCanvas/use2dContext";
+import Point from "@/geometry/point";
+import use2dContext from "@/hooks/use-canvas/use-2d-context";
 
 export type Props = {
   canvasRef: RefObject<HTMLCanvasElement>;
