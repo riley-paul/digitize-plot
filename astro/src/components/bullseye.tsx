@@ -1,20 +1,20 @@
-import { RefObject, useEffect, useRef, useState } from "react";
+import React from "react";
 import Point from "@/geometry/point";
 import use2dContext from "@/hooks/use-canvas/use-2d-context";
 
 export type Props = {
-  canvasRef: RefObject<HTMLCanvasElement>;
+  canvasRef: React.RefObject<HTMLCanvasElement>;
   mousePoint: Point | undefined;
 };
 
 export default function Bullseye(props: Props) {
   const { canvasRef, mousePoint } = props;
 
-  const ref = useRef<HTMLDivElement>(null);
-  const [imgUrl, setImgUrl] = useState<string | null | undefined>("");
+  const ref = React.useRef<HTMLDivElement>(null);
+  const [imgUrl, setImgUrl] = React.useState<string | null | undefined>("");
   const context = use2dContext(canvasRef);
 
-  useEffect(() => {
+  React.useEffect(() => {
     setImgUrl(canvasRef.current?.toDataURL());
   }, [mousePoint, canvasRef.current]);
 

@@ -1,4 +1,4 @@
-import Point from "../geometry/point";
+import Point from "@/geometry/point";
 
 import {
   Table,

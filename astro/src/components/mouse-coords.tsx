@@ -1,4 +1,4 @@
-import Point from "../geometry/point";
+import Point from "@/geometry/point";
 import { CardHeader, CardTitle } from "@/components/ui/card";
 
 export type Props = {

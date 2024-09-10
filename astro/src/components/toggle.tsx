@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import React from "react";
 import { Label } from "./ui/label";
 import { Switch } from "./ui/switch";
 
@@ -6,7 +6,7 @@ export type Props = {
   id: string;
   name: string;
   state: boolean;
-  setState: Dispatch<SetStateAction<boolean>>;
+  setState: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function Toggle(props: Props) {
