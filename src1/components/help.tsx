@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "src1/components/ui/button";
 import { useStep } from "usehooks-ts";
 
 import {
@@ -7,7 +7,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "src1/components/ui/card";
 
 import useHelpStore from "./help-store";
 

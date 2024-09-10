@@ -1,18 +1,18 @@
 import { useState } from "react";
 
-import useCanvas from "@/hooks/use-canvas";
+import useCanvas from "src1/hooks/use-canvas";
 
-import Bullseye from "@/components/bullseye";
-import DataTable from "@/components/data-table";
-import Download from "@/components/download";
-import MouseCoords from "@/components/mouse-coords";
-import Dropzone from "@/components/dropzone";
-import Calibrate from "@/components/calibrate";
-import Toggle from "@/components/toggle";
-import Help from "@/components/help";
+import Bullseye from "src1/components/bullseye";
+import DataTable from "src1/components/data-table";
+import Download from "src1/components/download";
+import MouseCoords from "src1/components/mouse-coords";
+import Dropzone from "src1/components/dropzone";
+import Calibrate from "src1/components/calibrate";
+import Toggle from "src1/components/toggle";
+import Help from "src1/components/help";
 
-import { Button } from "@/components/ui/button";
-import Logo from "@/components/logo";
+import { Button } from "src1/components/ui/button";
+import Logo from "src1/components/logo";
 import useHelpStore from "./components/help-store";
 
 function App() {

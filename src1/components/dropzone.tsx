@@ -6,7 +6,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "src1/components/ui/card";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 
@@ -55,7 +55,7 @@ export default function Dropzone({ setImage }: Props) {
   };
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center p-4">
+    <div className="flex h-full w-full flex-col items-center justify-center p-4">
       <Card className="max-w-lg">
         <CardHeader>
           <CardTitle>Welcome to Digitize Plot</CardTitle>
@@ -64,7 +64,7 @@ export default function Dropzone({ setImage }: Props) {
             raw points.
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex gap-2 flex-col">
+        <CardContent className="flex flex-col gap-2">
           <CardDescription>
             To get started, choose an image of a plot to be digitized. Or if you
             just want to try out the app, start with a sample image.
@@ -77,7 +77,7 @@ export default function Dropzone({ setImage }: Props) {
               onChange={onFileChange}
             />
             {error && <small className="text-destructive">{error}</small>}
-            <div className="flex flex-col lg:flex-row gap-2">
+            <div className="flex flex-col gap-2 lg:flex-row">
               <Button className="w-full" type="submit" disabled={!file}>
                 Let's go
               </Button>

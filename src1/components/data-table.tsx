@@ -1,4 +1,4 @@
-import Point from "@/geometry/point";
+import Point from "src1/geometry/point";
 
 import {
   Table,
@@ -8,7 +8,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "src1/components/ui/table";
 
 export type Props = {
   points: Point[];
@@ -28,8 +28,8 @@ export default function DataTable({ points, coordsConverter }: Props) {
       )}
       <TableHeader>
         <TableRow>
-          <TableHead className="text-center w-1/2">X</TableHead>
-          <TableHead className="text-center w-1/2">Y</TableHead>
+          <TableHead className="w-1/2 text-center">X</TableHead>
+          <TableHead className="w-1/2 text-center">Y</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

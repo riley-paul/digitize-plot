@@ -1,5 +1,5 @@
 // import { CSVLink } from "react-csv";
-import Point from "@/geometry/point";
+import Point from "src1/geometry/point";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
 
