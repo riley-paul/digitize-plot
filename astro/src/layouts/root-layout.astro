@@ -1,5 +1,9 @@
 ---
 import "@/globals.css";
+
+import "@fontsource/space-mono";
+import "@fontsource-variable/roboto-mono";
+import { Toaster } from "@/components/ui/sonner";
 ---
 
 <!doctype html>
@@ -16,5 +20,6 @@ import "@/globals.css";
   </head>
   <body>
     <slot />
+    <Toaster position="bottom-center" />
   </body>
 </html>
