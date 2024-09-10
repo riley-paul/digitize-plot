@@ -1,5 +1,4 @@
-import { useState } from "react";
-
+import React from "react";
 import useCanvas from "src/hooks/use-canvas";
 
 import Bullseye from "src/components/bullseye";
@@ -14,10 +13,13 @@ import Help from "src/components/help";
 import { Button } from "src/components/ui/button";
 import Logo from "src/components/logo";
 import useHelpStore from "./lib/stores/help-store";
+import useScrollShadow from "./hooks/use-scroll-shadow";
+import { cn } from "./lib/utils";
+import { Separator } from "./components/ui/separator";
 
 function App() {
-  const [image, setImage] = useState<HTMLImageElement | undefined>();
-  const [debug, setDebug] = useState(false);
+  const [image, setImage] = React.useState<HTMLImageElement | undefined>();
+  const [debug, setDebug] = React.useState(false);
 
   const { showHelp, setShowHelp } = useHelpStore();
 
@@ -31,15 +33,27 @@ function App() {
     ...canvasProps
   } = useCanvas(image, debug);
 
+  const { listRef: leftSideRef, isScrolled: isLeftSideScrolled } =
+    useScrollShadow();
+
   return (
     <div className="flex h-screen w-full">
-      <aside className="flex w-60 flex-col gap-2 overflow-y-auto border-r bg-card">
-        <header className="sticky top-0 bg-card p-4 pb-6">
+      <aside
+        ref={leftSideRef}
+        className="flex w-60 flex-col overflow-y-auto border-r bg-card"
+      >
+        <header
+          className={cn(
+            "sticky top-0 z-50 bg-card p-4 pb-6",
+            isLeftSideScrolled && "shadow",
+          )}
+        >
           <Logo />
         </header>
         <section className="flex-1 px-4">
           <DataTable {...{ coordsConverter, points }} />
         </section>
+        <Separator />
         <footer className="sticky bottom-0 grid gap-2 bg-card p-4">
           <Button
             disabled={points.length === 0}
