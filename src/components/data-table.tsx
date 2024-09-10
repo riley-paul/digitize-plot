@@ -1,4 +1,4 @@
-import Point from "src1/geometry/point";
+import Point from "src/geometry/point";
 
 import {
   Table,
@@ -8,7 +8,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "src1/components/ui/table";
+} from "src/components/ui/table";
 
 export type Props = {
   points: Point[];

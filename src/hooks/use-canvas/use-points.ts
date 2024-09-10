@@ -1,6 +1,6 @@
 import React from "react";
-import Point from "src1/geometry/point";
-import { QuadTree, createQuadTree } from "src1/geometry/quad-tree";
+import Point from "src/geometry/point";
+import { QuadTree, createQuadTree } from "src/geometry/quad-tree";
 import use2dContext from "./use-2d-context";
 import { toast } from "sonner";
 

@@ -1,4 +1,4 @@
-import Point from "src1/geometry/point";
+import Point from "src/geometry/point";
 import React from "react";
 
 export default function usePanZoom(

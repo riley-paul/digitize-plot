@@ -1,9 +1,9 @@
 import React from "react";
-import Point from "src1/geometry/point";
+import Point from "src/geometry/point";
 import use2dContext from "./use-2d-context";
 import Calibrator, {
   type CalibratorDrawOptions,
-} from "src1/geometry/calibrator";
+} from "src/geometry/calibrator";
 
 export type Calibrations = {
   x1: Calibrator;

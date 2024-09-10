@@ -6,7 +6,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "src1/components/ui/card";
+} from "src/components/ui/card";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 
