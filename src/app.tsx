@@ -13,7 +13,7 @@ import Help from "src/components/help";
 
 import { Button } from "src/components/ui/button";
 import Logo from "src/components/logo";
-import useHelpStore from "./components/help-store";
+import useHelpStore from "./lib/stores/help-store";
 
 function App() {
   const [image, setImage] = useState<HTMLImageElement | undefined>();

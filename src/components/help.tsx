@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "src/components/ui/card";
 
-import useHelpStore from "./help-store";
+import useHelpStore from "../lib/stores/help-store";
 
 type Step = { title: string; content: string; coords: string };
 
