@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        mono: ["Roboto Mono Variable", ...defaultTheme.fontFamily.mono],
+        sans: ["Roboto Mono Variable", ...defaultTheme.fontFamily.mono],
       },
       borderRadius: {
         lg: "var(--radius)",
