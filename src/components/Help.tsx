@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { useStep } from "usehooks-ts";
 
 import {
   Card,
@@ -8,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { useState } from "react";
+import useHelpStore from "./help-store";
 
 type Step = { title: string; content: string; coords: string };
 
@@ -38,34 +39,34 @@ const helpSteps: Step[] = [
   },
 ];
 
-export type Props = {
-  setShowHelp: (state: boolean) => void;
-};
+const Help: React.FC = () => {
+  const { setShowHelp } = useHelpStore();
+  const [currentStepNum, helpers] = useStep(helpSteps.length);
+  const currentStep = helpSteps[currentStepNum - 1];
 
-export default function Help(props: Props) {
-  const { setShowHelp } = props;
-  const [helpStep, setHelpStep] = useState(0);
+  const { canGoToPrevStep, canGoToNextStep, goToNextStep, goToPrevStep } =
+    helpers;
 
   return (
-    <Card className={"absolute w-96 m-4 " + helpSteps[helpStep].coords}>
+    <Card className={"absolute m-4 w-96 " + currentStep.coords}>
       <CardHeader className="relative">
         <CardTitle>
-          <span>? - {helpSteps[helpStep].title}</span>
+          <span>? - {currentStep.title}</span>
         </CardTitle>
-        <CardDescription>{helpSteps[helpStep].content}</CardDescription>
+        <CardDescription>{currentStep.content}</CardDescription>
       </CardHeader>
       <CardFooter className="flex gap-2">
         <Button
           className="w-full"
-          disabled={helpStep === 0}
-          onClick={() => setHelpStep((prev) => prev - 1)}
+          disabled={!canGoToPrevStep}
+          onClick={goToPrevStep}
         >
           Prev
         </Button>
         <Button
           className="w-full"
-          disabled={helpStep === helpSteps.length - 1}
-          onClick={() => setHelpStep((prev) => prev + 1)}
+          disabled={!canGoToNextStep}
+          onClick={goToNextStep}
         >
           Next
         </Button>
@@ -79,4 +80,6 @@ export default function Help(props: Props) {
       </CardFooter>
     </Card>
   );
-}
+};
+
+export default Help;
