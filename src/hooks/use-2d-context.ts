@@ -1,11 +1,10 @@
 import React from "react";
-type ContextState = CanvasRenderingContext2D | undefined | null;
 
 export default function use2dContext(
   canvasRef: React.RefObject<HTMLCanvasElement>,
-): ContextState {
+): CanvasRenderingContext2D | null {
   return React.useMemo(
-    () => canvasRef.current?.getContext("2d"),
+    () => canvasRef.current?.getContext("2d") ?? null,
     [canvasRef.current],
   );
 }

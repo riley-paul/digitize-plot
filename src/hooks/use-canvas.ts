@@ -1,12 +1,12 @@
 import React from "react";
-import usePoints from "./use-points";
+import usePoints from "./use-canvas-points";
 import use2dContext from "./use-2d-context";
-import usePanZoom from "./use-pan-zoom";
-import useCalibrators from "./use-calibrators";
+import usePanZoom from "./use-canvas-pan-zoom";
+import useCalibrators from "./use-canvas-calibrators";
 
 export default function useCanvas(
   image: HTMLImageElement | undefined,
-  debug: boolean
+  debug: boolean,
 ) {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const context = use2dContext(canvasRef);
@@ -22,8 +22,13 @@ export default function useCanvas(
     clearPoints,
   } = usePoints(canvasRef, debug);
 
-  const { drawPanZoom, mouseDownPanZoom, mouseUpPanZoom, wheelPanZoom } =
-    usePanZoom(canvasRef, mousePoint, image, debug);
+  const {
+    matrix,
+    mouseDownPanZoom,
+    mouseUpPanZoom,
+    mouseMovePanZoom,
+    wheelPanZoom,
+  } = usePanZoom(canvasRef, mousePoint, image, debug);
 
   const {
     drawCalibrators,
@@ -37,7 +42,6 @@ export default function useCanvas(
 
   // Draw everything to canvas
   const draw = (context: CanvasRenderingContext2D): void => {
-    drawPanZoom(context);
     if (image) context.drawImage(image, 0, 0, image.width, image.height);
     drawCalibrators(context);
     drawPoints(context);
@@ -46,6 +50,7 @@ export default function useCanvas(
   // Event handlers
   const onMouseMove: React.MouseEventHandler<HTMLCanvasElement> = (event) => {
     mouseMovePoints(event);
+    mouseMovePanZoom(event);
   };
 
   const onMouseDown: React.MouseEventHandler<HTMLCanvasElement> = (event) => {
@@ -85,6 +90,7 @@ export default function useCanvas(
       context.clearRect(0, 0, context.canvas.width, context.canvas.height);
       // context.imageSmoothingEnabled = false;
 
+      context.setTransform(matrix);
       draw(context);
       // context.restore();
       animationFrameId = window.requestAnimationFrame(render);
@@ -94,7 +100,7 @@ export default function useCanvas(
     return () => {
       window.cancelAnimationFrame(animationFrameId);
     };
-  }, [draw]);
+  }, [draw, matrix]);
 
   // add and remove event listener for resize
   React.useEffect(() => {

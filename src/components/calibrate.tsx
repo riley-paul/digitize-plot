@@ -2,7 +2,7 @@ import React from "react";
 import { CardHeader, CardTitle } from "src/components/ui/card";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import type { Calibrations } from "src/hooks/use-canvas/use-calibrators";
+import type { Calibrations } from "@/hooks/use-canvas-calibrators";
 
 export type Props = {
   calibrations: Calibrations;

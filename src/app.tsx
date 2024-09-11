@@ -1,5 +1,5 @@
 import React from "react";
-import useCanvas from "src/hooks/use-canvas";
+import useCanvas from "@/hooks/use-canvas";
 
 import Bullseye from "src/components/bullseye";
 import DataTable from "src/components/data-table";
