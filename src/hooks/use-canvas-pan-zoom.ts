@@ -1,22 +1,17 @@
 import Point from "src/geometry/point";
 import React from "react";
+import getPointFromEvent from "@/lib/helpers/get-point-from-event";
+import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
 
 export default function usePanZoom(
   canvasRef: React.RefObject<HTMLCanvasElement>,
-  mousePoint: Point | undefined,
-  image: HTMLImageElement | undefined,
-  debug: boolean,
 ) {
   const [matrix, setMatrix] = React.useState<DOMMatrix>(new DOMMatrix());
   const [isPanning, setIsPanning] = React.useState<boolean>(false);
   const [panStart, setPanStart] = React.useState<Point>(new Point(0, 0));
 
-  React.useEffect(() => {
-    if (debug) console.log("panStart", panStart);
-  }, [panStart]);
-
-  const centerImage = () => {
-    if (!canvasRef.current || !image) return;
+  const centerImage = (image: HTMLImageElement) => {
+    if (!canvasRef.current) return;
     setMatrix(() =>
       new DOMMatrix().translate(
         (canvasRef.current!.width - image.width) / 2,
@@ -24,10 +19,6 @@ export default function usePanZoom(
       ),
     );
   };
-
-  React.useEffect(() => {
-    centerImage();
-  }, [image, canvasRef.current]);
 
   const mouseDownPanZoom: React.MouseEventHandler<HTMLCanvasElement> = (
     event,
@@ -61,8 +52,10 @@ export default function usePanZoom(
     event.preventDefault();
     event.stopPropagation();
 
-    if (isPanning || !mousePoint) return;
+    if (isPanning) return;
     const zoom = event.deltaY < 0 ? 1.1 : 0.9;
+    const ctx = get2dCanvasContext(canvasRef);
+    const mousePoint = getPointFromEvent(event, ctx);
 
     setMatrix((prev) =>
       prev

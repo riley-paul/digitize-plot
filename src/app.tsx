@@ -31,6 +31,7 @@ function App() {
     calibrations,
     setCalibrations,
     coordsConverter,
+    centerImage,
     ...canvasProps
   } = useCanvas(image, debug);
 
@@ -38,6 +39,10 @@ function App() {
     useScrollShadow();
 
   const { cursor } = useCursorStore();
+
+  React.useEffect(() => {
+    if (image) centerImage(image);
+  }, [image, canvasProps.ref.current]);
 
   return (
     <div className="flex h-screen w-full">
@@ -71,9 +76,23 @@ function App() {
       </aside>
       <main className="relative flex-1" style={{ cursor }}>
         {image ? (
-          <canvas {...canvasProps} className="h-full w-full" />
+          <>
+            <canvas {...canvasProps} className="h-full w-full" />
+            <Button
+              className="absolute bottom-4 right-4 rounded-full"
+              size="icon"
+              onClick={() => centerImage(image)}
+            >
+              <i className="fa-solid fa-expand" />
+            </Button>
+          </>
         ) : (
-          <Dropzone {...{ setImage }} />
+          <Dropzone
+            onImageLoad={(img) => {
+              setImage(img);
+              centerImage(img);
+            }}
+          />
         )}
         {image && showHelp && <Help />}
       </main>

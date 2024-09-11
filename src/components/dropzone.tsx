@@ -11,17 +11,17 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 
 export type Props = {
-  setImage: React.Dispatch<HTMLImageElement | undefined>;
+  onImageLoad: (image: HTMLImageElement) => void;
 };
 
-export default function Dropzone({ setImage }: Props) {
+const Dropzone: React.FC<Props> = ({ onImageLoad }) => {
   const [error, setError] = React.useState("");
   const [file, setFile] = React.useState<File | null>(null);
 
   const createImage = (url: string) => {
     const img = new Image();
     img.src = url;
-    img.onload = () => setImage(img);
+    img.onload = () => onImageLoad(img);
     img.onerror = (err) => {
       console.log("Could not load image");
       console.error(err);
@@ -95,4 +95,6 @@ export default function Dropzone({ setImage }: Props) {
       </Card>
     </div>
   );
-}
+};
+
+export default Dropzone;

@@ -28,7 +28,8 @@ export default function useCanvas(
     mouseUpPanZoom,
     mouseMovePanZoom,
     wheelPanZoom,
-  } = usePanZoom(canvasRef, mousePoint, image, debug);
+    centerImage,
+  } = usePanZoom(canvasRef);
 
   const {
     drawCalibrators,
@@ -135,5 +136,6 @@ export default function useCanvas(
     onMouseLeave,
     onContextMenu,
     onWheel,
+    centerImage,
   };
 }
