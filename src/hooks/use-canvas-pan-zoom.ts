@@ -32,7 +32,6 @@ export default function usePanZoom(
   const mouseDownPanZoom: React.MouseEventHandler<HTMLCanvasElement> = (
     event,
   ) => {
-    if (!mousePoint) return;
     if (event.button === 2 || event.button === 1) {
       setIsPanning(true);
       setPanStart(new Point(event.clientX, event.clientY));
@@ -51,8 +50,8 @@ export default function usePanZoom(
     event,
   ) => {
     if (!isPanning) return;
-    const deltaX = event.clientX - panStart.x;
-    const deltaY = event.clientY - panStart.y;
+    const deltaX = (event.clientX - panStart.x) / matrix.a;
+    const deltaY = (event.clientY - panStart.y) / matrix.d;
     setMatrix((prev) => prev.translate(deltaX, deltaY));
     setPanStart(new Point(event.clientX, event.clientY));
   };
