@@ -40,7 +40,7 @@ function App() {
     <div className="flex h-screen w-full">
       <aside
         ref={leftSideRef}
-        className="flex w-60 flex-col overflow-y-auto border-r bg-card"
+        className="flex w-60 flex-col gap-2 overflow-y-auto border-r bg-card"
       >
         <header
           className={cn(
@@ -53,8 +53,7 @@ function App() {
         <section className="flex-1 px-4">
           <DataTable {...{ coordsConverter, points }} />
         </section>
-        <Separator />
-        <footer className="sticky bottom-0 grid gap-2 bg-card p-4">
+        <footer className="sticky bottom-0 z-50 grid gap-2 border-t bg-card p-4">
           <Button
             disabled={points.length === 0}
             className="w-full"
@@ -78,6 +77,7 @@ function App() {
       <aside className="flex w-60 flex-col justify-between overflow-y-auto border-l bg-card">
         <div>
           <Bullseye canvasRef={canvasProps.ref} mousePoint={mousePoint} />
+          <Separator />
           <MouseCoords {...{ coordsConverter, mousePoint }} />
           <Calibrate {...{ calibrations, setCalibrations }} />
         </div>

@@ -1,4 +1,4 @@
-// import { CSVLink } from "react-csv";
+import { CSVLink } from "react-csv";
 import Point from "src/geometry/point";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
@@ -14,13 +14,15 @@ export default function Download({ points, coordsConverter }: Props) {
     .map((marker) => ({ X: marker.x, Y: marker.y }));
 
   return (
-    <Button
-      disabled={points.length === 0}
-      onClick={() => toast.info("Not implemented")}
-      className="w-full"
+    <CSVLink
+      data={csvData}
+      filename="digitize-plot.csv"
+      onClick={() => toast.success("CSV downloaded")}
     >
-      <i className="fa-solid fa-download mr-2" />
-      Download CSV
-    </Button>
+      <Button disabled={points.length === 0} className="w-full">
+        <i className="fa-solid fa-download mr-2" />
+        Download CSV
+      </Button>
+    </CSVLink>
   );
 }
