@@ -16,6 +16,7 @@ import useHelpStore from "./lib/stores/help-store";
 import useScrollShadow from "./hooks/use-scroll-shadow";
 import { cn } from "./lib/utils";
 import { Separator } from "./components/ui/separator";
+import useCursorStore from "./lib/stores/cursor-store";
 
 function App() {
   const [image, setImage] = React.useState<HTMLImageElement | undefined>();
@@ -35,6 +36,8 @@ function App() {
 
   const { listRef: leftSideRef, isScrolled: isLeftSideScrolled } =
     useScrollShadow();
+
+  const { cursor } = useCursorStore();
 
   return (
     <div className="flex h-screen w-full">
@@ -66,7 +69,7 @@ function App() {
           <Download {...{ coordsConverter, points }} />
         </footer>
       </aside>
-      <main className="relative flex-1">
+      <main className="relative flex-1" style={{ cursor }}>
         {image ? (
           <canvas {...canvasProps} className="h-full w-full" />
         ) : (
