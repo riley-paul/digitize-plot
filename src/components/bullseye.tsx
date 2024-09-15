@@ -1,6 +1,6 @@
 import React from "react";
 import Point from "src/geometry/point";
-import use2dContext from "@/hooks/use-2d-context";
+import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
 
 export type Props = {
   canvasRef: React.RefObject<HTMLCanvasElement>;
@@ -12,7 +12,7 @@ export default function Bullseye(props: Props) {
 
   const ref = React.useRef<HTMLDivElement>(null);
   const [imgUrl, setImgUrl] = React.useState<string | null | undefined>("");
-  const context = use2dContext(canvasRef);
+  const context = get2dCanvasContext(canvasRef);
 
   React.useEffect(() => {
     setImgUrl(canvasRef.current?.toDataURL());

@@ -1,9 +1,9 @@
 import React from "react";
 import Point from "src/geometry/point";
-import use2dContext from "./use-2d-context";
 import Calibrator, {
   type CalibratorDrawOptions,
 } from "src/geometry/calibrator";
+import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
 
 export type Calibrations = {
   x1: Calibrator;
@@ -77,7 +77,7 @@ export default function useCalibrators(
   const [dragging, setDragging] = React.useState<
     keyof Calibrations | undefined
   >();
-  const context = use2dContext(canvasRef);
+  const ctx = get2dCanvasContext(canvasRef);
 
   const drawCalibrators = (ctx: CanvasRenderingContext2D): void => {
     const defaultDrawOptions: CalibratorDrawOptions = {
@@ -108,7 +108,7 @@ export default function useCalibrators(
         .invertSelf()
         .transformPoint(new DOMPoint(0, 0));
 
-      const scale = context!.getTransform().a;
+      const scale = ctx!.getTransform().a;
       ctx.font = `${12 / scale}px Courier`;
       ctx.fillStyle = "red";
       ctx.fillText(
@@ -150,12 +150,12 @@ export default function useCalibrators(
 
   // determine current calibrator
   React.useEffect(() => {
-    if (!context || !mousePoint) {
+    if (!ctx || !mousePoint) {
       setCurrent(undefined);
       return;
     }
 
-    const scale = context.getTransform().a;
+    const scale = ctx.getTransform().a;
     const distance = 5 / scale;
 
     const sortNearest = (a: Calibrator, b: Calibrator) =>

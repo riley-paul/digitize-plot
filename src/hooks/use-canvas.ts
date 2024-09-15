@@ -1,15 +1,15 @@
 import React from "react";
 import usePoints from "./use-canvas-points";
-import use2dContext from "./use-2d-context";
 import usePanZoom from "./use-canvas-pan-zoom";
 import useCalibrators from "./use-canvas-calibrators";
+import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
 
 export default function useCanvas(
   image: HTMLImageElement | undefined,
   debug: boolean,
 ) {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
-  const context = use2dContext(canvasRef);
+  const ctx = get2dCanvasContext(canvasRef);
 
   const {
     drawPoints,
@@ -82,17 +82,17 @@ export default function useCanvas(
 
   // draw loop
   React.useEffect(() => {
-    if (!context) return;
+    if (!ctx) return;
     let animationFrameId: number;
 
     const render = () => {
       // context.save();
-      context.setTransform(1, 0, 0, 1, 0, 0);
-      context.clearRect(0, 0, context.canvas.width, context.canvas.height);
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
       // context.imageSmoothingEnabled = false;
 
-      context.setTransform(matrix);
-      draw(context);
+      ctx.setTransform(matrix);
+      draw(ctx);
       // context.restore();
       animationFrameId = window.requestAnimationFrame(render);
     };

@@ -68,6 +68,8 @@ export default function usePanZoom(
     if (isPanning) return;
     const zoom = event.deltaY < 0 ? 1.1 : 0.9;
     const ctx = get2dCanvasContext(canvasRef);
+    if (!ctx) return;
+
     const mousePoint = getPointFromEvent(event, ctx);
 
     setMatrix((prev) =>
