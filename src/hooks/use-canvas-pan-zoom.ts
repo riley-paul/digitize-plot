@@ -61,8 +61,6 @@ export default function usePanZoom(
   };
 
   const wheelPanZoom: React.WheelEventHandler<HTMLCanvasElement> = (event) => {
-    console.log("scrolling");
-    event.preventDefault();
     event.stopPropagation();
 
     if (isPanning) return;
