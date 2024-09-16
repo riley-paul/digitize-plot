@@ -3,6 +3,8 @@ import Point from "src/geometry/point";
 import { QuadTree, createQuadTree } from "src/geometry/quad-tree";
 import { toast } from "sonner";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
+import { useAtom } from "jotai";
+import { mousePointAtom } from "@/lib/store";
 
 export default function usePoints(
   canvasRef: React.RefObject<HTMLCanvasElement>,
@@ -12,9 +14,7 @@ export default function usePoints(
   const ctx = get2dCanvasContext(canvasRef);
 
   const [points, setPoints] = React.useState<Point[]>([]);
-  const [mousePoint, setMousePoint] = React.useState<Point | undefined>(
-    undefined,
-  );
+  const [mousePoint, setMousePoint] = useAtom(mousePointAtom);
   const [currentPointId, setCurrentPointId] = React.useState<string>("");
   const [draggingId, setDraggingId] = React.useState<string>("");
 
@@ -144,7 +144,6 @@ export default function usePoints(
     mouseMovePoints,
     mouseLeavePoints,
     points,
-    mousePoint,
     clearPoints,
   };
 }

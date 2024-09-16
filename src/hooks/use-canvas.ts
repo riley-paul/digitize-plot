@@ -18,7 +18,6 @@ export default function useCanvas(
     mouseMovePoints,
     mouseLeavePoints,
     points,
-    mousePoint,
     clearPoints,
   } = usePoints(canvasRef, debug);
 
@@ -39,7 +38,7 @@ export default function useCanvas(
     calibrations,
     setCalibrations,
     coordsConverter,
-  } = useCalibrators(canvasRef, mousePoint, image, debug);
+  } = useCalibrators(canvasRef, image, debug);
 
   // Draw everything to canvas
   const draw = (context: CanvasRenderingContext2D): void => {
@@ -125,7 +124,6 @@ export default function useCanvas(
   return {
     ref: canvasRef,
     points,
-    mousePoint,
     clearPoints,
     calibrations,
     setCalibrations,

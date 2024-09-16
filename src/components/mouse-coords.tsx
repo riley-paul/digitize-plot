@@ -1,13 +1,16 @@
 import Point from "src/geometry/point";
 import { CardHeader, CardTitle } from "src/components/ui/card";
+import { useAtomValue } from "jotai";
+import { mousePointAtom } from "@/lib/store";
 
 export type Props = {
-  mousePoint: Point | undefined;
   coordsConverter: (coords: Point) => Point;
 };
 
 export default function MouseCoords(props: Props) {
-  const { mousePoint, coordsConverter } = props;
+  const { coordsConverter } = props;
+  const mousePoint = useAtomValue(mousePointAtom);
+
   const point = mousePoint || new Point(0, 0);
   const { x, y } = coordsConverter(point);
 

@@ -1,14 +1,17 @@
 import React from "react";
 import Point from "src/geometry/point";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
+import { useAtomValue } from "jotai";
+import { mousePointAtom } from "@/lib/store";
 
 export type Props = {
   canvasRef: React.RefObject<HTMLCanvasElement>;
-  mousePoint: Point | undefined;
 };
 
 export default function Bullseye(props: Props) {
-  const { canvasRef, mousePoint } = props;
+  const { canvasRef } = props;
+
+  const mousePoint = useAtomValue(mousePointAtom);
 
   const ref = React.useRef<HTMLDivElement>(null);
   const [imgUrl, setImgUrl] = React.useState<string | null | undefined>("");
