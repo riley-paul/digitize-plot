@@ -22,15 +22,15 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useAtom } from "jotai/react";
-import { debugAtom, showHelpAtom } from "@/lib/store";
+import { debugAtom, imgAtom, showHelpAtom } from "@/lib/store";
 import ClearPointsButton from "./components/clear-points-button";
 
 function App() {
-  const [image, setImage] = React.useState<HTMLImageElement | undefined>();
+  const [image, setImage] = useAtom(imgAtom);
   const [debug, setDebug] = useAtom(debugAtom);
   const [showHelp, setShowHelp] = useAtom(showHelpAtom);
 
-  const { centerImage, ...canvasProps } = useCanvas(image);
+  const { centerImage, ...canvasProps } = useCanvas();
 
   const { listRef: leftSideRef, isScrolled: isLeftSideScrolled } =
     useScrollShadow();

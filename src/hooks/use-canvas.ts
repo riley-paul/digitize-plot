@@ -3,17 +3,18 @@ import useCanvasPoints from "./use-canvas-points";
 import usePanZoom from "./use-canvas-pan-zoom";
 import useCalibrators from "./use-canvas-calibrators";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
-import { useSetAtom } from "jotai";
-import { mousePointAtom } from "@/lib/store";
+import { useAtomValue, useSetAtom } from "jotai";
+import { imgAtom, mousePointAtom } from "@/lib/store";
 import getPointFromEvent from "@/lib/helpers/get-point-from-event";
 import Point from "@/geometry/point";
 
-export default function useCanvas(image: HTMLImageElement | undefined) {
+export default function useCanvas() {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const requestRef = React.useRef<number>(0);
 
   const ctx = get2dCanvasContext(canvasRef);
 
+  const image = useAtomValue(imgAtom);
   const setMousePoint = useSetAtom(mousePointAtom);
 
   const { drawPoints, mouseDownPoints, mouseUpPoints, mouseMovePoints } =
@@ -34,7 +35,7 @@ export default function useCanvas(image: HTMLImageElement | undefined) {
     mouseUpCalibrators,
     mouseMoveCalibrators,
     markerDragging,
-  } = useCalibrators(canvasRef, image);
+  } = useCalibrators(canvasRef);
 
   // Draw everything to canvas
   const draw = (context: CanvasRenderingContext2D): void => {

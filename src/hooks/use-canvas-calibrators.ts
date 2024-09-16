@@ -5,15 +5,20 @@ import Calibrator, {
 } from "src/geometry/calibrator";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
 import { useAtom, useAtomValue } from "jotai";
-import { calibrationsAtom, debugAtom, mousePointAtom } from "@/lib/store";
+import {
+  calibrationsAtom,
+  debugAtom,
+  imgAtom,
+  mousePointAtom,
+} from "@/lib/store";
 import type { Calibrations } from "@/lib/interpolators/types";
 
 export default function useCalibrators(
   canvasRef: React.RefObject<HTMLCanvasElement>,
-  image: HTMLImageElement | undefined,
 ) {
   const debug = useAtomValue(debugAtom);
   const mousePoint = useAtomValue(mousePointAtom);
+  const image = useAtomValue(imgAtom);
 
   const [calibrations, setCalibrations] = useAtom(calibrationsAtom);
 
