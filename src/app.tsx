@@ -21,9 +21,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useAtom, useAtomValue } from "jotai/react";
-import { pointsAtom, showHelpAtom } from "@/lib/store";
-import usePoints from "./hooks/use-points";
+import { useAtom } from "jotai/react";
+import { showHelpAtom } from "@/lib/store";
+import ClearPointsButton from "./components/clear-points-button";
 
 function App() {
   const [image, setImage] = React.useState<HTMLImageElement | undefined>();
@@ -38,9 +38,6 @@ function App() {
     centerImage,
     ...canvasProps
   } = useCanvas(image, debug);
-
-  const points = useAtomValue(pointsAtom);
-  const { clearPoints } = usePoints(pointsAtom);
 
   const { listRef: leftSideRef, isScrolled: isLeftSideScrolled } =
     useScrollShadow();
@@ -68,16 +65,8 @@ function App() {
             <DataTable coordsConverter={coordsConverter} />
           </section>
           <footer className="sticky bottom-0 z-50 grid gap-2 border-t bg-card p-4">
-            <Button
-              disabled={points.length === 0}
-              className="w-full"
-              variant="secondary"
-              onClick={clearPoints}
-            >
-              <i className="fa-solid fa-broom mr-2" />
-              Clear Points
-            </Button>
-            <Download {...{ coordsConverter, points }} />
+            <ClearPointsButton />
+            <Download coordsConverter={coordsConverter} />
           </footer>
         </aside>
         <main className="relative flex-1">
