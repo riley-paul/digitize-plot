@@ -19,6 +19,7 @@ export const calibrationsAtom = atom<Calibrations>({
 export const coordsConverterLinearAtom = atom<CoordsConverter>((get) =>
   linearInterpGenerator(get(calibrationsAtom)),
 );
+export const matrixAtom = atom<DOMMatrix>(new DOMMatrix());
 
 export const imgAtom = atom<HTMLImageElement | undefined>(undefined);
 export const debugAtom = atom<boolean>(false);

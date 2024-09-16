@@ -4,7 +4,7 @@ import usePanZoom from "@/hooks/use-canvas-pan-zoom";
 import useCalibrators from "@/hooks/use-canvas-calibrators";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
 import { useAtomValue, useSetAtom } from "jotai";
-import { imgAtom, mousePointAtom } from "@/lib/store";
+import { imgAtom, matrixAtom, mousePointAtom } from "@/lib/store";
 import getPointFromEvent from "@/lib/helpers/get-point-from-event";
 import Point from "@/geometry/point";
 
@@ -16,18 +16,13 @@ const Canvas: React.FC = () => {
 
   const image = useAtomValue(imgAtom);
   const setMousePoint = useSetAtom(mousePointAtom);
+  const matrix = useAtomValue(matrixAtom);
 
   const { drawPoints, mouseDownPoints, mouseUpPoints, mouseMovePoints } =
     useCanvasPoints(canvasRef);
 
-  const {
-    matrix,
-    mouseDownPanZoom,
-    mouseUpPanZoom,
-    mouseMovePanZoom,
-    wheelPanZoom,
-    centerImage,
-  } = usePanZoom(canvasRef);
+  const { mouseDownPanZoom, mouseUpPanZoom, mouseMovePanZoom, wheelPanZoom } =
+    usePanZoom(canvasRef);
 
   const {
     drawCalibrators,

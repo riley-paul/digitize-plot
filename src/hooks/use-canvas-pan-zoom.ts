@@ -2,36 +2,15 @@ import Point from "src/geometry/point";
 import React from "react";
 import getPointFromEvent from "@/lib/helpers/get-point-from-event";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
+import { useAtom } from "jotai";
+import { matrixAtom } from "@/lib/store";
 
 export default function usePanZoom(
   canvasRef: React.RefObject<HTMLCanvasElement>,
 ) {
-  const [matrix, setMatrix] = React.useState<DOMMatrix>(new DOMMatrix());
+  const [matrix, setMatrix] = useAtom(matrixAtom);
   const [isPanning, setIsPanning] = React.useState<boolean>(false);
   const [panStart, setPanStart] = React.useState<Point>(new Point(0, 0));
-
-  const centerImage = (image: HTMLImageElement) => {
-    if (!canvasRef.current) return;
-    setMatrix(() => {
-      const canvasWidth = canvasRef.current?.width ?? 0;
-      const canvasHeight = canvasRef.current?.height ?? 0;
-
-      const scaleX = canvasWidth / image.width;
-      const scaleY = canvasHeight / image.height;
-      const scale = Math.min(scaleX, scaleY) * 0.8;
-
-      const center = new Point(canvasWidth / 2, canvasHeight / 2);
-
-      return new DOMMatrix()
-        .translateSelf(center.x, center.y)
-        .scaleSelf(scale, scale)
-        .translateSelf(-center.x, -center.y)
-        .translate(
-          (canvasWidth - image.width) / 2,
-          (canvasHeight - image.height) / 2,
-        );
-    });
-  };
 
   const mouseDownPanZoom: React.MouseEventHandler<HTMLCanvasElement> = (
     event,
@@ -79,11 +58,9 @@ export default function usePanZoom(
   };
 
   return {
-    matrix,
     mouseDownPanZoom,
     mouseUpPanZoom,
     mouseMovePanZoom,
     wheelPanZoom,
-    centerImage,
   };
 }
