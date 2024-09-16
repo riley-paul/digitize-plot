@@ -1,5 +1,4 @@
 import React from "react";
-import Point from "src/geometry/point";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
 import { useAtomValue } from "jotai";
 import { mousePointAtom } from "@/lib/store";
