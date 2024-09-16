@@ -61,12 +61,12 @@ const Canvas: React.FC<Props> = ({ canvasRef }) => {
       ctx.font = `${12 / scale}px Courier`;
       ctx.fillStyle = "red";
       ctx.fillText(
-        `dragging ID: ${draggingId}`,
+        `Dragging ID: ${draggingId}`,
         origin.x + 10 / scale,
         origin.y + 20 / scale,
       );
       ctx.fillText(
-        `current ID: ${hoveringId}`,
+        `Hovering ID: ${hoveringId}`,
         origin.x + 10 / scale,
         origin.y + 35 / scale,
       );
