@@ -2,6 +2,7 @@ import React from "react";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
 import { useAtomValue } from "jotai";
 import { mousePointAtom } from "@/lib/store";
+import { useInterval } from "usehooks-ts";
 
 export type Props = {
   canvasRef: React.RefObject<HTMLCanvasElement>;
@@ -16,9 +17,7 @@ export default function Bullseye(props: Props) {
   const [imgUrl, setImgUrl] = React.useState<string | null | undefined>("");
   const context = get2dCanvasContext(canvasRef);
 
-  React.useEffect(() => {
-    setImgUrl(canvasRef.current?.toDataURL());
-  }, [mousePoint, canvasRef.current]);
+  useInterval(() => setImgUrl(canvasRef.current?.toDataURL()), 10);
 
   if (!mousePoint || !context) {
     return (
@@ -30,8 +29,8 @@ export default function Bullseye(props: Props) {
   const { x, y } = context
     .getTransform()
     .transformPoint(new DOMPoint(mousePoint.x, mousePoint.y));
-  const w = ref.current ? ref.current.offsetWidth : 0;
-  const h = ref.current ? ref.current.offsetHeight : 0;
+  const w = ref.current?.offsetWidth ?? 0;
+  const h = ref.current?.offsetHeight ?? 0;
 
   // console.table({ x, y, w, h });
 
