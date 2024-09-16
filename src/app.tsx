@@ -15,15 +15,15 @@ import Logo from "src/components/logo";
 import useScrollShadow from "./hooks/use-scroll-shadow";
 import { cn } from "./lib/utils";
 import { Separator } from "@/components/ui/separator";
-import useCursorStore from "@/lib/stores/cursor-store";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useAtom } from "jotai/react";
-import { showHelpAtom } from "@/lib/store";
+import { useAtom, useAtomValue } from "jotai/react";
+import { pointsAtom, showHelpAtom } from "@/lib/store";
+import usePoints from "./hooks/use-points";
 
 function App() {
   const [image, setImage] = React.useState<HTMLImageElement | undefined>();
@@ -32,8 +32,6 @@ function App() {
   const [showHelp, setShowHelp] = useAtom(showHelpAtom);
 
   const {
-    points,
-    clearPoints,
     calibrations,
     setCalibrations,
     coordsConverter,
@@ -41,10 +39,11 @@ function App() {
     ...canvasProps
   } = useCanvas(image, debug);
 
+  const points = useAtomValue(pointsAtom);
+  const { clearPoints } = usePoints(pointsAtom);
+
   const { listRef: leftSideRef, isScrolled: isLeftSideScrolled } =
     useScrollShadow();
-
-  const { cursor } = useCursorStore();
 
   React.useEffect(() => {
     if (image) centerImage(image);
@@ -66,7 +65,7 @@ function App() {
             <Logo />
           </header>
           <section className="flex-1 px-4">
-            <DataTable {...{ coordsConverter, points }} />
+            <DataTable coordsConverter={coordsConverter} />
           </section>
           <footer className="sticky bottom-0 z-50 grid gap-2 border-t bg-card p-4">
             <Button
@@ -81,7 +80,7 @@ function App() {
             <Download {...{ coordsConverter, points }} />
           </footer>
         </aside>
-        <main className="relative flex-1" style={{ cursor }}>
+        <main className="relative flex-1">
           {image ? (
             <>
               <canvas {...canvasProps} className="h-full w-full" />

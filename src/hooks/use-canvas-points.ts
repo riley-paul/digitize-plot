@@ -1,41 +1,25 @@
 import React from "react";
 import Point from "src/geometry/point";
 import { QuadTree, createQuadTree } from "src/geometry/quad-tree";
-import { toast } from "sonner";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
-import { useAtom } from "jotai";
-import { mousePointAtom } from "@/lib/store";
+import { useAtom, useAtomValue } from "jotai";
+import { mousePointAtom, pointsAtom } from "@/lib/store";
+import usePoints from "./use-points";
 
-export default function usePoints(
+export default function useCanvasPoints(
   canvasRef: React.RefObject<HTMLCanvasElement>,
   debug: boolean,
 ) {
   const quadtree = React.useRef<QuadTree | null>(null);
   const ctx = get2dCanvasContext(canvasRef);
 
-  const [points, setPoints] = React.useState<Point[]>([]);
+  const { removePoint, addPoint, movePoint } = usePoints(pointsAtom);
+  const points = useAtomValue(pointsAtom);
+
   const [mousePoint, setMousePoint] = useAtom(mousePointAtom);
+
   const [currentPointId, setCurrentPointId] = React.useState<string>("");
   const [draggingId, setDraggingId] = React.useState<string>("");
-
-  // Manage points
-  const createPoint = (coords: Point) => {
-    const point = new Point(coords.x, coords.y);
-    setPoints((prev) => [...prev, point]);
-    // console.log("point created");
-  };
-
-  const deletePoint = (id: string) => {
-    setPoints((prev) => [...prev.filter((pt) => pt.id !== id)]);
-    // console.log("point removed");
-  };
-
-  const movePoint = (id: string, coords: Point) => {
-    setPoints((prev) =>
-      prev.map((pt) => (pt.id === id ? new Point(coords.x, coords.y, id) : pt)),
-    );
-    console.log("point updated");
-  };
 
   // Draw everything to canvas
   const drawPoints = (ctx: CanvasRenderingContext2D): void => {
@@ -87,11 +71,11 @@ export default function usePoints(
     event,
   ) => {
     if (currentPointId) {
-      if (event.button === 2) deletePoint(currentPointId);
+      if (event.button === 2) removePoint(currentPointId);
       else if (event.button === 0) setDraggingId(currentPointId);
     } else {
       if (!currentPointId && event.button === 0 && mousePoint) {
-        createPoint(mousePoint);
+        addPoint(mousePoint);
       }
     }
   };
@@ -126,24 +110,11 @@ export default function usePoints(
     setCurrentPointId(mousePoint.nearest(nearPoints)?.id || "");
   }, [mousePoint, points]);
 
-  const clearPoints = () => {
-    const prevPoints = [...points];
-    setPoints([]);
-    toast(`${prevPoints.length} points cleared`, {
-      action: {
-        label: "Undo",
-        onClick: () => setPoints(prevPoints),
-      },
-    });
-  };
-
   return {
     drawPoints,
     mouseDownPoints,
     mouseUpPoints,
     mouseMovePoints,
     mouseLeavePoints,
-    points,
-    clearPoints,
   };
 }

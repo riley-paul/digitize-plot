@@ -1,5 +1,5 @@
 import React from "react";
-import usePoints from "./use-canvas-points";
+import useCanvasPoints from "./use-canvas-points";
 import usePanZoom from "./use-canvas-pan-zoom";
 import useCalibrators from "./use-canvas-calibrators";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
@@ -17,9 +17,7 @@ export default function useCanvas(
     mouseUpPoints,
     mouseMovePoints,
     mouseLeavePoints,
-    points,
-    clearPoints,
-  } = usePoints(canvasRef, debug);
+  } = useCanvasPoints(canvasRef, debug);
 
   const {
     matrix,
@@ -117,14 +115,8 @@ export default function useCanvas(
     return () => window.removeEventListener("resize", handleResize);
   }, [image]);
 
-  React.useEffect(() => {
-    if (debug) console.log(points);
-  }, [points]);
-
   return {
     ref: canvasRef,
-    points,
-    clearPoints,
     calibrations,
     setCalibrations,
     coordsConverter,
