@@ -8,8 +8,8 @@ import {
   CardHeader,
   CardTitle,
 } from "src/components/ui/card";
-
-import useHelpStore from "../lib/stores/help-store";
+import { useSetAtom } from "jotai/react";
+import { showHelpAtom } from "@/lib/store";
 
 type Step = { title: string; content: string; coords: string };
 
@@ -40,7 +40,7 @@ const helpSteps: Step[] = [
 ];
 
 const Help: React.FC = () => {
-  const { setShowHelp } = useHelpStore();
+  const setShowHelp = useSetAtom(showHelpAtom);
   const [currentStepNum, helpers] = useStep(helpSteps.length);
   const currentStep = helpSteps[currentStepNum - 1];
 

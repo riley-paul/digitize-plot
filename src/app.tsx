@@ -12,23 +12,24 @@ import Help from "src/components/help";
 
 import { Button } from "src/components/ui/button";
 import Logo from "src/components/logo";
-import useHelpStore from "./lib/stores/help-store";
 import useScrollShadow from "./hooks/use-scroll-shadow";
 import { cn } from "./lib/utils";
 import { Separator } from "./components/ui/separator";
-import useCursorStore from "./lib/stores/cursor-store";
+import useCursorStore from "@/lib/stores/cursor-store";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useAtom } from "jotai/react";
+import { showHelpAtom } from "@/lib/store";
 
 function App() {
   const [image, setImage] = React.useState<HTMLImageElement | undefined>();
   const [debug, setDebug] = React.useState(false);
 
-  const { showHelp, setShowHelp } = useHelpStore();
+  const [showHelp, setShowHelp] = useAtom(showHelpAtom);
 
   const {
     points,
