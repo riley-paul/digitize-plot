@@ -7,7 +7,6 @@ import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
 import { useAtom, useAtomValue } from "jotai";
 import {
   calibrationsAtom,
-  debugAtom,
   draggingEntityIdAtom,
   hoveringEntityIdAtom,
   imgAtom,
@@ -18,7 +17,6 @@ import type { Calibrations } from "@/lib/interpolators/types";
 export default function useCalibrators(
   canvasRef: React.RefObject<HTMLCanvasElement>,
 ) {
-  const debug = useAtomValue(debugAtom);
   const mousePoint = useAtomValue(mousePointAtom);
   const image = useAtomValue(imgAtom);
 
@@ -49,17 +47,21 @@ export default function useCalibrators(
     };
 
     for (let calibrator of Object.values(calibrations)) {
-      if (draggingId === calibrator.id) continue;
-      const options =
-        hoveringId === calibrator.id ? hoverDrawOptions : defaultDrawOptions;
+      const isHovering = hoveringId === calibrator.id;
+      const isDragging = draggingId === calibrator.id;
+
+      if (isDragging && mousePoint) {
+        calibrator.copyToPoint(mousePoint).draw(ctx, hoverDrawOptions);
+      }
+      const options = isHovering ? hoverDrawOptions : defaultDrawOptions;
       calibrator.draw(ctx, options);
     }
 
-    if (draggingId in calibrations && mousePoint) {
-      calibrations[draggingId as keyof Calibrations]
-        .copyToPoint(mousePoint)
-        .draw(ctx, hoverDrawOptions);
-    }
+    // if (draggingId in calibrations && mousePoint) {
+    //   calibrations[draggingId as keyof Calibrations]
+    //     .copyToPoint(mousePoint)
+    //     .draw(ctx, hoverDrawOptions);
+    // }
   };
 
   const updateCalibrator = (id: string, point: Point) => {
@@ -106,16 +108,13 @@ export default function useCalibrators(
     const nearest = Object.values(calibrations).sort(sortNearest)[0];
 
     if (nearest.distPoint(mousePoint) <= distance) {
-      setHoveringId(nearest.id as keyof Calibrations);
+      console.log(nearest.id);
+      setHoveringId(nearest.id);
       return;
     }
 
     setHoveringId("");
   };
-
-  React.useEffect(() => {
-    if (debug) console.log("current calibrator", hoveringId);
-  }, [hoveringId]);
 
   return {
     drawCalibrators,
