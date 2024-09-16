@@ -24,20 +24,19 @@ import {
 import { useAtom } from "jotai/react";
 import { debugAtom, imgAtom, showHelpAtom } from "@/lib/store";
 import ClearPointsButton from "./components/clear-points-button";
+import Canvas from "./components/canvas";
 
 function App() {
   const [image, setImage] = useAtom(imgAtom);
   const [debug, setDebug] = useAtom(debugAtom);
   const [showHelp, setShowHelp] = useAtom(showHelpAtom);
 
-  const { centerImage, ...canvasProps } = useCanvas();
-
   const { listRef: leftSideRef, isScrolled: isLeftSideScrolled } =
     useScrollShadow();
 
-  React.useEffect(() => {
-    if (image) centerImage(image);
-  }, [image, canvasProps.ref.current]);
+  // React.useEffect(() => {
+  //   if (image) centerImage(image);
+  // }, [image, canvasProps.ref.current]);
 
   return (
     <TooltipProvider>
@@ -65,13 +64,13 @@ function App() {
         <main className="relative flex-1">
           {image ? (
             <>
-              <canvas {...canvasProps} className="h-full w-full" />
+              <Canvas />
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
                     className="absolute bottom-4 right-4 rounded-full"
                     size="icon"
-                    onClick={() => centerImage(image)}
+                    // onClick={() => centerImage(image)}
                   >
                     <i className="fa-solid fa-expand" />
                   </Button>
@@ -83,7 +82,7 @@ function App() {
             <Dropzone
               onImageLoad={(img) => {
                 setImage(img);
-                centerImage(img);
+                // centerImage(img);
               }}
             />
           )}
@@ -91,7 +90,7 @@ function App() {
         </main>
         <aside className="flex w-60 flex-col justify-between overflow-y-auto border-l bg-card">
           <div>
-            <Bullseye canvasRef={canvasProps.ref} />
+            {/* <Bullseye canvasRef={canvasProps.ref} /> */}
             <Separator />
             <MouseCoords />
             <Calibrate />
