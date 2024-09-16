@@ -5,6 +5,7 @@ import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
 import { useAtom, useAtomValue } from "jotai";
 import { mousePointAtom, pointsAtom } from "@/lib/store";
 import usePoints from "./use-points";
+import getPointFromEvent from "@/lib/helpers/get-point-from-event";
 
 export default function useCanvasPoints(
   canvasRef: React.RefObject<HTMLCanvasElement>,
@@ -15,8 +16,7 @@ export default function useCanvasPoints(
 
   const { removePoint, addPoint, movePoint } = usePoints(pointsAtom);
   const points = useAtomValue(pointsAtom);
-
-  const [mousePoint, setMousePoint] = useAtom(mousePointAtom);
+  const mousePoint = useAtomValue(mousePointAtom);
 
   const [currentPointId, setCurrentPointId] = React.useState<string>("");
   const [draggingId, setDraggingId] = React.useState<string>("");
@@ -27,10 +27,10 @@ export default function useCanvasPoints(
     const SELECTED_COLOUR = "#a78bfa";
 
     if (debug) {
-      // ctx.font = "12px Courier";
-      // ctx.fillStyle = "red";
-      // ctx.fillText(`dragging ID: ${draggingId}`, 10, 20);
-      // ctx.fillText(`current ID: ${currentPointId}`, 10, 35);
+      ctx.font = "12px Courier";
+      ctx.fillStyle = "red";
+      ctx.fillText(`dragging ID: ${draggingId}`, 10, 20);
+      ctx.fillText(`current ID: ${currentPointId}`, 10, 35);
 
       quadtree.current?.draw(ctx);
       mousePoint?.draw(ctx, {
@@ -58,13 +58,11 @@ export default function useCanvasPoints(
   const mouseMovePoints: React.MouseEventHandler<HTMLCanvasElement> = (
     event,
   ) => {
-    if (!ctx) return;
-    const pt = new DOMPoint(
-      event.nativeEvent.offsetX,
-      event.nativeEvent.offsetY,
-    );
-    const transformed = ctx.getTransform().invertSelf().transformPoint(pt);
-    setMousePoint(new Point(transformed.x, transformed.y, "MOUSE"));
+    if (!quadtree.current || !ctx) return;
+    const mousePoint = getPointFromEvent(event, ctx);
+    const radius = 7 / ctx.getTransform().a;
+    const nearPoints = quadtree.current.queryRadius(mousePoint, radius);
+    setCurrentPointId(mousePoint.nearest(nearPoints)?.id || "");
   };
 
   const mouseDownPoints: React.MouseEventHandler<HTMLCanvasElement> = (
@@ -91,30 +89,15 @@ export default function useCanvasPoints(
     }
   };
 
-  const mouseLeavePoints: React.MouseEventHandler<HTMLCanvasElement> = (_) => {
-    setMousePoint(undefined);
-  };
-
   // rebuild quadtree whenever points update
   React.useEffect(() => {
     quadtree.current = createQuadTree(points);
   }, [points]);
-
-  // determine current point
-  React.useEffect(() => {
-    if (!mousePoint || !quadtree.current || !ctx) return;
-    const nearPoints = quadtree.current.queryRadius(
-      mousePoint,
-      7 / ctx.getTransform().a,
-    );
-    setCurrentPointId(mousePoint.nearest(nearPoints)?.id || "");
-  }, [mousePoint, points]);
 
   return {
     drawPoints,
     mouseDownPoints,
     mouseUpPoints,
     mouseMovePoints,
-    mouseLeavePoints,
   };
 }

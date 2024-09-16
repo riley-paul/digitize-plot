@@ -3,6 +3,10 @@ import useCanvasPoints from "./use-canvas-points";
 import usePanZoom from "./use-canvas-pan-zoom";
 import useCalibrators from "./use-canvas-calibrators";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
+import { useSetAtom } from "jotai";
+import { mousePointAtom } from "@/lib/store";
+import getPointFromEvent from "@/lib/helpers/get-point-from-event";
+import Point from "@/geometry/point";
 
 export default function useCanvas(
   image: HTMLImageElement | undefined,
@@ -11,13 +15,10 @@ export default function useCanvas(
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const ctx = get2dCanvasContext(canvasRef);
 
-  const {
-    drawPoints,
-    mouseDownPoints,
-    mouseUpPoints,
-    mouseMovePoints,
-    mouseLeavePoints,
-  } = useCanvasPoints(canvasRef, debug);
+  const setMousePoint = useSetAtom(mousePointAtom);
+
+  const { drawPoints, mouseDownPoints, mouseUpPoints, mouseMovePoints } =
+    useCanvasPoints(canvasRef, debug);
 
   const {
     matrix,
@@ -47,6 +48,11 @@ export default function useCanvas(
 
   // Event handlers
   const onMouseMove: React.MouseEventHandler<HTMLCanvasElement> = (event) => {
+    setMousePoint(() => {
+      if (!ctx) return undefined;
+      const pt = getPointFromEvent(event, ctx);
+      return new Point(pt.x, pt.y, "MOUSE");
+    });
     mouseMovePoints(event);
     mouseMovePanZoom(event);
   };
@@ -74,7 +80,7 @@ export default function useCanvas(
   };
 
   const onMouseLeave: React.WheelEventHandler<HTMLCanvasElement> = (event) => {
-    mouseLeavePoints(event);
+    setMousePoint(undefined);
   };
 
   // draw loop
