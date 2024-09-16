@@ -8,17 +8,14 @@ import { mousePointAtom } from "@/lib/store";
 import getPointFromEvent from "@/lib/helpers/get-point-from-event";
 import Point from "@/geometry/point";
 
-export default function useCanvas(
-  image: HTMLImageElement | undefined,
-  debug: boolean,
-) {
+export default function useCanvas(image: HTMLImageElement | undefined) {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const ctx = get2dCanvasContext(canvasRef);
 
   const setMousePoint = useSetAtom(mousePointAtom);
 
   const { drawPoints, mouseDownPoints, mouseUpPoints, mouseMovePoints } =
-    useCanvasPoints(canvasRef, debug);
+    useCanvasPoints(canvasRef);
 
   const {
     matrix,
@@ -32,12 +29,13 @@ export default function useCanvas(
   const {
     drawCalibrators,
     mouseDownCalibrators,
-    MouseUpCalibrators,
+    mouseUpCalibrators,
+    mouseMoveCalibrators,
     markerDragging,
     calibrations,
     setCalibrations,
     coordsConverter,
-  } = useCalibrators(canvasRef, image, debug);
+  } = useCalibrators(canvasRef, image);
 
   // Draw everything to canvas
   const draw = (context: CanvasRenderingContext2D): void => {
@@ -53,6 +51,7 @@ export default function useCanvas(
       const pt = getPointFromEvent(event, ctx);
       return new Point(pt.x, pt.y, "MOUSE");
     });
+    mouseMoveCalibrators(event);
     mouseMovePoints(event);
     mouseMovePanZoom(event);
   };
@@ -66,7 +65,7 @@ export default function useCanvas(
 
   const onMouseUp: React.MouseEventHandler<HTMLCanvasElement> = (event) => {
     mouseUpPanZoom(event);
-    MouseUpCalibrators(event);
+    mouseUpCalibrators(event);
     mouseUpPoints(event);
   };
 

@@ -3,14 +3,14 @@ import Point from "src/geometry/point";
 import { QuadTree, createQuadTree } from "src/geometry/quad-tree";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
 import { useAtom, useAtomValue } from "jotai";
-import { mousePointAtom, pointsAtom } from "@/lib/store";
+import { debugAtom, mousePointAtom, pointsAtom } from "@/lib/store";
 import usePoints from "./use-points";
 import getPointFromEvent from "@/lib/helpers/get-point-from-event";
 
 export default function useCanvasPoints(
   canvasRef: React.RefObject<HTMLCanvasElement>,
-  debug: boolean,
 ) {
+  const debug = useAtomValue(debugAtom);
   const quadtree = React.useRef<QuadTree | null>(null);
   const ctx = get2dCanvasContext(canvasRef);
 

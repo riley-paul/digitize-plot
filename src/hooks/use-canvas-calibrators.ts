@@ -4,8 +4,8 @@ import Calibrator, {
   type CalibratorDrawOptions,
 } from "src/geometry/calibrator";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
-import { useAtomValue } from "jotai";
-import { mousePointAtom } from "@/lib/store";
+import { useAtom, useAtomValue } from "jotai";
+import { calibrationsAtom, debugAtom, mousePointAtom } from "@/lib/store";
 
 export type Calibrations = {
   x1: Calibrator;
@@ -30,16 +30,11 @@ function linearInterp(values: LinearInterpValues): number {
 export default function useCalibrators(
   canvasRef: React.RefObject<HTMLCanvasElement>,
   image: HTMLImageElement | undefined,
-  debug: boolean,
 ) {
+  const debug = useAtomValue(debugAtom);
   const mousePoint = useAtomValue(mousePointAtom);
 
-  const intialCalibrations: Calibrations = {
-    x1: new Calibrator("x1", 0, 0, "x"),
-    x2: new Calibrator("x2", 50, 1, "x"),
-    y1: new Calibrator("y1", 50, 0, "y"),
-    y2: new Calibrator("y2", 0, 1, "y"),
-  };
+  const [calibrations, setCalibrations] = useAtom(calibrationsAtom);
 
   React.useEffect(() => {
     if (!image) return;
@@ -50,9 +45,6 @@ export default function useCalibrators(
       y2: new Calibrator("y2", 0, 1, "y"),
     });
   }, [image]);
-
-  const [calibrations, setCalibrations] =
-    React.useState<Calibrations>(intialCalibrations);
 
   const coordsConverter = (coords: Point): Point => {
     const xValues = {
@@ -141,7 +133,7 @@ export default function useCalibrators(
     }
   };
 
-  const MouseUpCalibrators: React.MouseEventHandler<HTMLCanvasElement> = (
+  const mouseUpCalibrators: React.MouseEventHandler<HTMLCanvasElement> = (
     event,
   ) => {
     if (dragging && mousePoint) {
@@ -151,8 +143,9 @@ export default function useCalibrators(
     }
   };
 
-  // determine current calibrator
-  React.useEffect(() => {
+  const mouseMoveCalibrators: React.MouseEventHandler<HTMLCanvasElement> = (
+    event,
+  ) => {
     if (!ctx || !mousePoint) {
       setCurrent(undefined);
       return;
@@ -172,7 +165,7 @@ export default function useCalibrators(
     }
 
     setCurrent(undefined);
-  }, [mousePoint, calibrations]);
+  };
 
   React.useEffect(() => {
     if (debug) console.log("current", current);
@@ -181,7 +174,8 @@ export default function useCalibrators(
   return {
     drawCalibrators,
     mouseDownCalibrators,
-    MouseUpCalibrators,
+    mouseUpCalibrators,
+    mouseMoveCalibrators,
     calibrations,
     setCalibrations,
     coordsConverter,
