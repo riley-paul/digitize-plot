@@ -28,16 +28,9 @@ import ClearPointsButton from "./components/clear-points-button";
 function App() {
   const [image, setImage] = React.useState<HTMLImageElement | undefined>();
   const [debug, setDebug] = useAtom(debugAtom);
-
   const [showHelp, setShowHelp] = useAtom(showHelpAtom);
 
-  const {
-    calibrations,
-    setCalibrations,
-    coordsConverter,
-    centerImage,
-    ...canvasProps
-  } = useCanvas(image);
+  const { centerImage, ...canvasProps } = useCanvas(image);
 
   const { listRef: leftSideRef, isScrolled: isLeftSideScrolled } =
     useScrollShadow();
@@ -62,11 +55,11 @@ function App() {
             <Logo />
           </header>
           <section className="flex-1 px-4">
-            <DataTable coordsConverter={coordsConverter} />
+            <DataTable />
           </section>
           <footer className="sticky bottom-0 z-50 grid gap-2 border-t bg-card p-4">
             <ClearPointsButton />
-            <Download coordsConverter={coordsConverter} />
+            <Download />
           </footer>
         </aside>
         <main className="relative flex-1">
@@ -100,8 +93,8 @@ function App() {
           <div>
             <Bullseye canvasRef={canvasProps.ref} />
             <Separator />
-            <MouseCoords {...{ coordsConverter }} />
-            <Calibrate {...{ calibrations, setCalibrations }} />
+            <MouseCoords />
+            <Calibrate />
           </div>
           <div className="flex w-full justify-between gap-4 p-6">
             <Toggle

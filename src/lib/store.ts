@@ -1,9 +1,8 @@
 import Calibrator from "@/geometry/calibrator";
 import Point from "@/geometry/point";
-import type { Calibrations } from "@/hooks/use-canvas-calibrators";
 import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
-import type { CoordsConverter } from "./interpolators/types";
+import type { Calibrations, CoordsConverter } from "./interpolators/types";
 import { linearInterpGenerator } from "./interpolators/linear";
 
 export const showHelpAtom = atomWithStorage("showHelp", true);

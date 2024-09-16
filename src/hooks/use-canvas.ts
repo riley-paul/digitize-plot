@@ -10,6 +10,8 @@ import Point from "@/geometry/point";
 
 export default function useCanvas(image: HTMLImageElement | undefined) {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
+  const requestRef = React.useRef<number>(0);
+
   const ctx = get2dCanvasContext(canvasRef);
 
   const setMousePoint = useSetAtom(mousePointAtom);
@@ -32,9 +34,6 @@ export default function useCanvas(image: HTMLImageElement | undefined) {
     mouseUpCalibrators,
     mouseMoveCalibrators,
     markerDragging,
-    calibrations,
-    setCalibrations,
-    coordsConverter,
   } = useCalibrators(canvasRef, image);
 
   // Draw everything to canvas
@@ -85,24 +84,16 @@ export default function useCanvas(image: HTMLImageElement | undefined) {
   // draw loop
   React.useEffect(() => {
     if (!ctx) return;
-    let animationFrameId: number;
 
     const render = () => {
-      // context.save();
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-      // context.imageSmoothingEnabled = false;
-
       ctx.setTransform(matrix);
       draw(ctx);
-      // context.restore();
-      animationFrameId = window.requestAnimationFrame(render);
+      requestRef.current = window.requestAnimationFrame(render);
     };
-    render();
-
-    return () => {
-      window.cancelAnimationFrame(animationFrameId);
-    };
+    requestRef.current = window.requestAnimationFrame(render);
+    return () => window.cancelAnimationFrame(requestRef.current);
   }, [draw, matrix]);
 
   // add and remove event listener for resize
@@ -122,9 +113,6 @@ export default function useCanvas(image: HTMLImageElement | undefined) {
 
   return {
     ref: canvasRef,
-    calibrations,
-    setCalibrations,
-    coordsConverter,
     onMouseDown,
     onMouseUp,
     onMouseMove,

@@ -3,13 +3,14 @@ import Point from "src/geometry/point";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
 import { useAtomValue } from "jotai";
-import { pointsAtom } from "@/lib/store";
+import { coordsConverterLinearAtom, pointsAtom } from "@/lib/store";
 
 export type Props = {
   coordsConverter: (coords: Point) => Point;
 };
 
-export default function Download({ coordsConverter }: Props) {
+export default function Download() {
+  const coordsConverter = useAtomValue(coordsConverterLinearAtom);
   const points = useAtomValue(pointsAtom);
   const csvData = points
     .map(coordsConverter)

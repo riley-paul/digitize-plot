@@ -10,14 +10,15 @@ import {
   TableRow,
 } from "src/components/ui/table";
 import { useAtomValue } from "jotai";
-import { pointsAtom } from "@/lib/store";
+import { coordsConverterLinearAtom, pointsAtom } from "@/lib/store";
 
 export type Props = {
   coordsConverter: (coords: Point) => Point;
 };
 
-export default function DataTable({ coordsConverter }: Props) {
+export default function DataTable() {
   const points = useAtomValue(pointsAtom);
+  const coordsConverter = useAtomValue(coordsConverterLinearAtom);
 
   const toString = (num: number) =>
     num.toLocaleString(undefined, { minimumFractionDigits: 2 });

@@ -1,8 +1,7 @@
 import React from "react";
-import Point from "src/geometry/point";
 import { QuadTree, createQuadTree } from "src/geometry/quad-tree";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtomValue } from "jotai";
 import { debugAtom, mousePointAtom, pointsAtom } from "@/lib/store";
 import usePoints from "./use-points";
 import getPointFromEvent from "@/lib/helpers/get-point-from-event";
