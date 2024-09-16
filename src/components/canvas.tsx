@@ -8,8 +8,11 @@ import { imgAtom, matrixAtom, mousePointAtom } from "@/lib/store";
 import getPointFromEvent from "@/lib/helpers/get-point-from-event";
 import Point from "@/geometry/point";
 
-const Canvas: React.FC = () => {
-  const canvasRef = React.useRef<HTMLCanvasElement>(null);
+interface Props {
+  canvasRef: React.RefObject<HTMLCanvasElement>;
+}
+
+const Canvas: React.FC<Props> = ({ canvasRef }) => {
   const requestRef = React.useRef<number>(0);
 
   const ctx = get2dCanvasContext(canvasRef);
