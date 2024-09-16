@@ -6,6 +6,7 @@ import {
   debugAtom,
   draggingEntityIdAtom,
   hoveringEntityIdAtom,
+  matrixAtom,
   mousePointAtom,
   pointsAtom,
 } from "@/lib/store";
@@ -22,14 +23,25 @@ export default function useCanvasPoints(
   const { removePoint, addPoint, movePoint } = usePoints(pointsAtom);
   const points = useAtomValue(pointsAtom);
   const mousePoint = useAtomValue(mousePointAtom);
+  const matrix = useAtomValue(matrixAtom);
 
-  const [hoveringId, setHoveringId] = useAtom(hoveringEntityIdAtom);
-  const [draggingId, setDraggingId] = useAtom(draggingEntityIdAtom);
+  const [hoveringId, setHoveringId] = React.useState("");
+  const [draggingId, setDraggingId] = React.useState("");
+
+  const getNearestPoint = () => {
+    if (!quadtree.current || !mousePoint) return;
+    const radius = 7 / matrix.a;
+    const nearPoints = quadtree.current.queryRadius(mousePoint, radius);
+    const nearestId = mousePoint.nearest(nearPoints)?.id ?? "";
+    setHoveringId((prev) => (prev !== nearestId ? nearestId : prev));
+  };
 
   // Draw everything to canvas
   const drawPoints = (ctx: CanvasRenderingContext2D): void => {
     const DEFAULT_COLOUR = "#7c3aed";
     const SELECTED_COLOUR = "#a78bfa";
+
+    getNearestPoint();
 
     if (debug) {
       quadtree.current?.draw(ctx);
@@ -58,11 +70,11 @@ export default function useCanvasPoints(
   const mouseMovePoints: React.MouseEventHandler<HTMLCanvasElement> = (
     event,
   ) => {
-    if (!quadtree.current || !ctx) return;
-    const mousePoint = getPointFromEvent(event, ctx);
-    const radius = 7 / ctx.getTransform().a;
-    const nearPoints = quadtree.current.queryRadius(mousePoint, radius);
-    setHoveringId(mousePoint.nearest(nearPoints)?.id || "");
+    // if (!quadtree.current || !ctx) return;
+    // const mousePoint = getPointFromEvent(event, ctx);
+    // const radius = 7 / ctx.getTransform().a;
+    // const nearPoints = quadtree.current.queryRadius(mousePoint, radius);
+    // setHoveringId(mousePoint.nearest(nearPoints)?.id || "");
   };
 
   const mouseDownPoints: React.MouseEventHandler<HTMLCanvasElement> = (

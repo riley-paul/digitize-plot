@@ -42,7 +42,7 @@ const Canvas: React.FC<Props> = ({ canvasRef }) => {
     drawCalibrators,
     mouseDownCalibrators,
     mouseUpCalibrators,
-    mouseMoveCalibrators,
+    // mouseMoveCalibrators,
   } = useCalibrators(canvasRef);
 
   // Draw everything to canvas
@@ -108,13 +108,13 @@ const Canvas: React.FC<Props> = ({ canvasRef }) => {
       className="h-full w-full"
       ref={canvasRef}
       onMouseMove={(event) => {
-        setMousePoint((prev) => {
-          if (!ctx) return undefined;
-          const pt = getPointFromEvent(event, ctx);
-          if (pt.x === prev?.x && pt.y === prev?.y) return prev;
-          return new Point(pt.x, pt.y, "MOUSE");
-        });
-        mouseMoveCalibrators(event);
+        // setMousePoint((prev) => {
+        //   if (!ctx) return undefined;
+        //   const pt = getPointFromEvent(event, ctx);
+        //   if (pt.x === prev?.x && pt.y === prev?.y) return prev;
+        //   return new Point(pt.x, pt.y, "MOUSE");
+        // });
+        // mouseMoveCalibrators(event);
         mouseMovePoints(event);
         mouseMovePanZoom(event);
       }}
