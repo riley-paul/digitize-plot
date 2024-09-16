@@ -8,6 +8,8 @@ import { useAtom, useAtomValue } from "jotai";
 import {
   calibrationsAtom,
   debugAtom,
+  draggingEntityIdAtom,
+  hoveringEntityIdAtom,
   imgAtom,
   mousePointAtom,
 } from "@/lib/store";
@@ -21,6 +23,8 @@ export default function useCalibrators(
   const image = useAtomValue(imgAtom);
 
   const [calibrations, setCalibrations] = useAtom(calibrationsAtom);
+  const [hoveringId, setHoveringId] = useAtom(hoveringEntityIdAtom);
+  const [draggingId, setDraggingId] = useAtom(draggingEntityIdAtom);
 
   React.useEffect(() => {
     if (!image) return;
@@ -32,12 +36,6 @@ export default function useCalibrators(
     });
   }, [image]);
 
-  const [current, setCurrent] = React.useState<
-    keyof Calibrations | undefined
-  >();
-  const [dragging, setDragging] = React.useState<
-    keyof Calibrations | undefined
-  >();
   const ctx = get2dCanvasContext(canvasRef);
 
   const drawCalibrators = (ctx: CanvasRenderingContext2D): void => {
@@ -51,61 +49,44 @@ export default function useCalibrators(
     };
 
     for (let calibrator of Object.values(calibrations)) {
-      if (dragging === calibrator.id) continue;
+      if (draggingId === calibrator.id) continue;
       const options =
-        current === calibrator.id ? hoverDrawOptions : defaultDrawOptions;
+        hoveringId === calibrator.id ? hoverDrawOptions : defaultDrawOptions;
       calibrator.draw(ctx, options);
     }
 
-    if (dragging && mousePoint) {
-      calibrations[dragging]
+    if (draggingId in calibrations && mousePoint) {
+      calibrations[draggingId as keyof Calibrations]
         .copyToPoint(mousePoint)
         .draw(ctx, hoverDrawOptions);
     }
-
-    if (debug) {
-      const origin = ctx
-        .getTransform()
-        .invertSelf()
-        .transformPoint(new DOMPoint(0, 0));
-
-      const scale = ctx!.getTransform().a;
-      ctx.font = `${12 / scale}px Courier`;
-      ctx.fillStyle = "red";
-      ctx.fillText(
-        `dragging ID: ${dragging}`,
-        origin.x + 10 / scale,
-        origin.y + 20 / scale,
-      );
-      ctx.fillText(
-        `current ID: ${current}`,
-        origin.x + 10 / scale,
-        origin.y + 35 / scale,
-      );
-    }
   };
 
-  const updateCalibrator = (id: keyof Calibrations, point: Point) => {
-    setCalibrations((prev) => ({ ...prev, [id]: prev[id].copyToPoint(point) }));
+  const updateCalibrator = (id: string, point: Point) => {
+    if (!(id in calibrations)) return;
+    setCalibrations((prev) => ({
+      ...prev,
+      [id]: prev[id as keyof Calibrations].copyToPoint(point),
+    }));
   };
 
   const mouseDownCalibrators: React.MouseEventHandler<HTMLCanvasElement> = (
     event,
   ) => {
-    if (current && event.button === 0) {
+    if (hoveringId && event.button === 0) {
       event.preventDefault();
       event.nativeEvent.stopImmediatePropagation();
-      setDragging(current);
+      setDraggingId(hoveringId);
     }
   };
 
   const mouseUpCalibrators: React.MouseEventHandler<HTMLCanvasElement> = (
     event,
   ) => {
-    if (dragging && mousePoint) {
+    if (draggingId && mousePoint) {
       event.preventDefault();
-      updateCalibrator(dragging, mousePoint);
-      setDragging(undefined);
+      updateCalibrator(draggingId, mousePoint);
+      setDraggingId("");
     }
   };
 
@@ -113,7 +94,7 @@ export default function useCalibrators(
     event,
   ) => {
     if (!ctx || !mousePoint) {
-      setCurrent(undefined);
+      setHoveringId("");
       return;
     }
 
@@ -123,25 +104,23 @@ export default function useCalibrators(
     const sortNearest = (a: Calibrator, b: Calibrator) =>
       a.distPoint(mousePoint) - b.distPoint(mousePoint);
     const nearest = Object.values(calibrations).sort(sortNearest)[0];
-    // console.log(nearest)
 
     if (nearest.distPoint(mousePoint) <= distance) {
-      setCurrent(nearest.id as keyof Calibrations);
+      setHoveringId(nearest.id as keyof Calibrations);
       return;
     }
 
-    setCurrent(undefined);
+    setHoveringId("");
   };
 
   React.useEffect(() => {
-    if (debug) console.log("current", current);
-  }, [current]);
+    if (debug) console.log("current calibrator", hoveringId);
+  }, [hoveringId]);
 
   return {
     drawCalibrators,
     mouseDownCalibrators,
     mouseUpCalibrators,
     mouseMoveCalibrators,
-    markerDragging: current,
   };
 }

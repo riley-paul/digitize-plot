@@ -16,10 +16,14 @@ export const calibrationsAtom = atom<Calibrations>({
   y1: new Calibrator("y1", 50, 0, "y"),
   y2: new Calibrator("y2", 0, 1, "y"),
 });
+
 export const coordsConverterLinearAtom = atom<CoordsConverter>((get) =>
   linearInterpGenerator(get(calibrationsAtom)),
 );
-export const matrixAtom = atom<DOMMatrix>(new DOMMatrix());
 
+export const hoveringEntityIdAtom = atom<string>("");
+export const draggingEntityIdAtom = atom<string>("");
+
+export const matrixAtom = atom<DOMMatrix>(new DOMMatrix());
 export const imgAtom = atom<HTMLImageElement | undefined>(undefined);
 export const debugAtom = atom<boolean>(false);

@@ -4,7 +4,14 @@ import usePanZoom from "@/hooks/use-canvas-pan-zoom";
 import useCalibrators from "@/hooks/use-canvas-calibrators";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
 import { useAtomValue, useSetAtom } from "jotai";
-import { imgAtom, matrixAtom, mousePointAtom } from "@/lib/store";
+import {
+  debugAtom,
+  draggingEntityIdAtom,
+  hoveringEntityIdAtom,
+  imgAtom,
+  matrixAtom,
+  mousePointAtom,
+} from "@/lib/store";
 import getPointFromEvent from "@/lib/helpers/get-point-from-event";
 import Point from "@/geometry/point";
 
@@ -20,6 +27,10 @@ const Canvas: React.FC<Props> = ({ canvasRef }) => {
   const image = useAtomValue(imgAtom);
   const setMousePoint = useSetAtom(mousePointAtom);
   const matrix = useAtomValue(matrixAtom);
+  const debug = useAtomValue(debugAtom);
+
+  const draggingId = useAtomValue(draggingEntityIdAtom);
+  const hoveringId = useAtomValue(hoveringEntityIdAtom);
 
   const { drawPoints, mouseDownPoints, mouseUpPoints, mouseMovePoints } =
     useCanvasPoints(canvasRef);
@@ -32,14 +43,34 @@ const Canvas: React.FC<Props> = ({ canvasRef }) => {
     mouseDownCalibrators,
     mouseUpCalibrators,
     mouseMoveCalibrators,
-    markerDragging,
   } = useCalibrators(canvasRef);
 
   // Draw everything to canvas
-  const draw = (context: CanvasRenderingContext2D): void => {
-    if (image) context.drawImage(image, 0, 0, image.width, image.height);
-    drawCalibrators(context);
-    drawPoints(context);
+  const draw = (ctx: CanvasRenderingContext2D): void => {
+    if (image) ctx.drawImage(image, 0, 0, image.width, image.height);
+    drawCalibrators(ctx);
+    drawPoints(ctx);
+
+    if (debug) {
+      const origin = ctx
+        .getTransform()
+        .invertSelf()
+        .transformPoint(new DOMPoint(0, 0));
+
+      const scale = ctx.getTransform().a;
+      ctx.font = `${12 / scale}px Courier`;
+      ctx.fillStyle = "red";
+      ctx.fillText(
+        `dragging ID: ${draggingId}`,
+        origin.x + 10 / scale,
+        origin.y + 20 / scale,
+      );
+      ctx.fillText(
+        `current ID: ${hoveringId}`,
+        origin.x + 10 / scale,
+        origin.y + 35 / scale,
+      );
+    }
   };
 
   // draw loop
@@ -90,7 +121,6 @@ const Canvas: React.FC<Props> = ({ canvasRef }) => {
       onMouseDown={(event) => {
         mouseDownPanZoom(event);
         mouseDownCalibrators(event);
-        if (markerDragging) return;
         mouseDownPoints(event);
       }}
       onMouseUp={(event) => {
