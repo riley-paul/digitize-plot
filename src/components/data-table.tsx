@@ -19,8 +19,6 @@ export default function DataTable({ points, coordsConverter }: Props) {
   const toString = (num: number) =>
     num.toLocaleString(undefined, { minimumFractionDigits: 2 });
 
-  points = points.map(coordsConverter);
-
   return (
     <Table>
       {points.length === 0 && (
@@ -33,7 +31,7 @@ export default function DataTable({ points, coordsConverter }: Props) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {points.map((pt) => (
+        {points.map(coordsConverter).map((pt) => (
           <TableRow key={pt.id}>
             <TableCell className="text-center">{toString(pt.x)}</TableCell>
             <TableCell className="text-center">{toString(pt.y)}</TableCell>
