@@ -4,6 +4,8 @@ import Calibrator, {
   type CalibratorDrawOptions,
 } from "src/geometry/calibrator";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
+import { useAtomValue } from "jotai";
+import { debugAtom } from "@/lib/store";
 
 export type Calibrations = {
   x1: Calibrator;
@@ -29,8 +31,8 @@ export default function useCalibrators(
   canvasRef: React.RefObject<HTMLCanvasElement>,
   mousePoint: Point | undefined,
   image: HTMLImageElement | undefined,
-  debug: boolean,
 ) {
+  const debug = useAtomValue(debugAtom);
   const intialCalibrations: Calibrations = {
     x1: new Calibrator("x1", 0, 0, "x"),
     x2: new Calibrator("x2", 50, 1, "x"),

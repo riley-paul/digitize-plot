@@ -3,11 +3,14 @@ import Point from "src/geometry/point";
 import { QuadTree, createQuadTree } from "src/geometry/quad-tree";
 import { toast } from "sonner";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
+import { useAtomValue } from "jotai";
+import { debugAtom } from "@/lib/store";
 
 export default function usePoints(
   canvasRef: React.RefObject<HTMLCanvasElement>,
-  debug: boolean,
 ) {
+  const debug = useAtomValue(debugAtom);
+
   const quadtree = React.useRef<QuadTree | null>(null);
   const ctx = get2dCanvasContext(canvasRef);
 

@@ -3,13 +3,13 @@ import usePoints from "./use-canvas-points";
 import usePanZoom from "./use-canvas-pan-zoom";
 import useCalibrators from "./use-canvas-calibrators";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
+import { useAtomValue } from "jotai";
+import { debugAtom } from "@/lib/store";
 
-export default function useCanvas(
-  image: HTMLImageElement | undefined,
-  debug: boolean,
-) {
+export default function useCanvas(image: HTMLImageElement | undefined) {
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
   const ctx = get2dCanvasContext(canvasRef);
+  const debug = useAtomValue(debugAtom);
 
   const {
     drawPoints,
@@ -20,7 +20,7 @@ export default function useCanvas(
     points,
     mousePoint,
     clearPoints,
-  } = usePoints(canvasRef, debug);
+  } = usePoints(canvasRef);
 
   const {
     matrix,
@@ -39,7 +39,7 @@ export default function useCanvas(
     calibrations,
     setCalibrations,
     coordsConverter,
-  } = useCalibrators(canvasRef, mousePoint, image, debug);
+  } = useCalibrators(canvasRef, mousePoint, image);
 
   // Draw everything to canvas
   const draw = (context: CanvasRenderingContext2D): void => {

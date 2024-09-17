@@ -23,11 +23,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useAtom } from "jotai/react";
-import { showHelpAtom } from "@/lib/store";
+import { debugAtom, showHelpAtom } from "@/lib/store";
 
 function App() {
   const [image, setImage] = React.useState<HTMLImageElement | undefined>();
-  const [debug, setDebug] = React.useState(false);
+  const [debug, setDebug] = useAtom(debugAtom);
 
   const [showHelp, setShowHelp] = useAtom(showHelpAtom);
 
@@ -40,7 +40,7 @@ function App() {
     coordsConverter,
     centerImage,
     ...canvasProps
-  } = useCanvas(image, debug);
+  } = useCanvas(image);
 
   const { listRef: leftSideRef, isScrolled: isLeftSideScrolled } =
     useScrollShadow();
