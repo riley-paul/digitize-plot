@@ -9,13 +9,16 @@ import {
   TableHeader,
   TableRow,
 } from "src/components/ui/table";
+import { useAtomValue } from "jotai";
+import { pointsAtom } from "@/lib/store";
 
 export type Props = {
-  points: Point[];
   coordsConverter: (coords: Point) => Point;
 };
 
-export default function DataTable({ points, coordsConverter }: Props) {
+export default function DataTable({ coordsConverter }: Props) {
+  const points = useAtomValue(pointsAtom);
+
   const toString = (num: number) =>
     num.toLocaleString(undefined, { minimumFractionDigits: 2 });
 

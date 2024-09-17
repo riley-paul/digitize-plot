@@ -1,10 +1,10 @@
 import Point from "@/geometry/point";
+import { useAtom, type PrimitiveAtom } from "jotai";
 import { toast } from "sonner";
 
-export default function usePoints(
-  points: Point[],
-  setPoints: React.Dispatch<React.SetStateAction<Point[]>>,
-) {
+export default function usePoints(atom: PrimitiveAtom<Point[]>) {
+  const [points, setPoints] = useAtom(atom);
+
   const createPoint = (coords: Point) => {
     const point = new Point(coords.x, coords.y);
     setPoints((prev) => [...prev, point]);

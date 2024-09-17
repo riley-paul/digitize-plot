@@ -6,7 +6,7 @@ import Calibrator, {
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
 import { useAtomValue } from "jotai";
 import { debugAtom } from "@/lib/store";
-import type { Calibrations } from "@/lib/interpolators/types";
+import { intialCalibrations, type Calibrations } from "@/lib/interpolators/types";
 import { linearCoordsConverterGenerator } from "@/lib/interpolators/linear";
 
 export default function useCalibrators(
@@ -15,12 +15,7 @@ export default function useCalibrators(
   image: HTMLImageElement | undefined,
 ) {
   const debug = useAtomValue(debugAtom);
-  const intialCalibrations: Calibrations = {
-    x1: new Calibrator("x1", 0, 0, "x"),
-    x2: new Calibrator("x2", 50, 1, "x"),
-    y1: new Calibrator("y1", 50, 0, "y"),
-    y2: new Calibrator("y2", 0, 1, "y"),
-  };
+
 
   React.useEffect(() => {
     if (!image) return;

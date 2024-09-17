@@ -1,5 +1,4 @@
 import React from "react";
-import useCanvas from "@/hooks/use-canvas";
 
 import Bullseye from "src/components/bullseye";
 import DataTable from "src/components/data-table";
@@ -23,29 +22,35 @@ import {
 } from "@/components/ui/tooltip";
 import { useAtom } from "jotai/react";
 import { debugAtom, showHelpAtom } from "@/lib/store";
+import type Point from "@/geometry/point";
+import Canvas from "@/components/canvas";
+import {
+  type Calibrations,
+  intialCalibrations,
+} from "@/lib/interpolators/types";
+import { linearCoordsConverterGenerator } from "./lib/interpolators/linear";
 
 function App() {
   const [image, setImage] = React.useState<HTMLImageElement | undefined>();
+  const [mousePoint, setMousePoint] = React.useState<Point | undefined>(
+    undefined,
+  );
+  const [calibrations, setCalibrations] =
+    React.useState<Calibrations>(intialCalibrations);
+
+  const canvasRef = React.useRef<HTMLCanvasElement>(null);
+
+  const coordsConverter = linearCoordsConverterGenerator(calibrations);
+
   const [debug, setDebug] = useAtom(debugAtom);
   const [showHelp, setShowHelp] = useAtom(showHelpAtom);
-
-  const {
-    mousePoint,
-    calibrations,
-    setCalibrations,
-    coordsConverter,
-    centerImage,
-    points,
-    clearPoints,
-    ...canvasProps
-  } = useCanvas(image);
 
   const { listRef: leftSideRef, isScrolled: isLeftSideScrolled } =
     useScrollShadow();
 
-  React.useEffect(() => {
-    if (image) centerImage(image);
-  }, [image, canvasProps.ref.current]);
+  // React.useEffect(() => {
+  //   if (image) centerImage(image);
+  // }, [image, canvasProps.ref.current]);
 
   return (
     <TooltipProvider>
@@ -63,10 +68,10 @@ function App() {
             <Logo />
           </header>
           <section className="flex-1 px-4">
-            <DataTable coordsConverter={coordsConverter} points={points} />
+            <DataTable coordsConverter={coordsConverter} />
           </section>
           <footer className="sticky bottom-0 z-50 grid gap-2 border-t bg-card p-4">
-            <Button
+            {/* <Button
               disabled={points.length === 0}
               className="w-full"
               variant="secondary"
@@ -74,20 +79,25 @@ function App() {
             >
               <i className="fa-solid fa-broom mr-2" />
               Clear Points
-            </Button>
-            <Download coordsConverter={coordsConverter} points={points} />
+            </Button> */}
+            <Download coordsConverter={coordsConverter} />
           </footer>
         </aside>
         <main className="relative flex-1">
           {image ? (
             <>
-              <canvas {...canvasProps} className="h-full w-full" />
+              <Canvas
+                canvasRef={canvasRef}
+                image={image}
+                mousePoint={mousePoint}
+                setMousePoint={setMousePoint}
+              />
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
                     className="absolute bottom-4 right-4 rounded-full"
                     size="icon"
-                    onClick={() => centerImage(image)}
+                    // onClick={() => centerImage(image)}
                   >
                     <i className="fa-solid fa-expand" />
                   </Button>
@@ -99,7 +109,7 @@ function App() {
             <Dropzone
               onImageLoad={(img) => {
                 setImage(img);
-                centerImage(img);
+                // centerImage(img);
               }}
             />
           )}
@@ -107,7 +117,7 @@ function App() {
         </main>
         <aside className="flex w-60 flex-col justify-between overflow-y-auto border-l bg-card">
           <div>
-            <Bullseye canvasRef={canvasProps.ref} mousePoint={mousePoint} />
+            <Bullseye canvasRef={canvasRef} mousePoint={mousePoint} />
             <Separator />
             <MouseCoords
               coordsConverter={coordsConverter}
