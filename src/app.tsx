@@ -28,17 +28,16 @@ import { debugAtom, showHelpAtom } from "@/lib/store";
 function App() {
   const [image, setImage] = React.useState<HTMLImageElement | undefined>();
   const [debug, setDebug] = useAtom(debugAtom);
-
   const [showHelp, setShowHelp] = useAtom(showHelpAtom);
 
   const {
-    points,
     mousePoint,
-    clearPoints,
     calibrations,
     setCalibrations,
     coordsConverter,
     centerImage,
+    points,
+    clearPoints,
     ...canvasProps
   } = useCanvas(image);
 

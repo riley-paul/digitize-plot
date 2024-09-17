@@ -1,5 +1,5 @@
 import React from "react";
-import usePoints from "@/hooks/use-canvas-points";
+import useCanvasPoints from "@/hooks/use-canvas-points";
 import usePanZoom from "@/hooks/use-canvas-pan-zoom";
 import useCalibrators from "@/hooks/use-canvas-calibrators";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
@@ -24,8 +24,7 @@ const Canvas: React.FC<Props> = ({ image }) => {
     mouseLeavePoints,
     points,
     mousePoint,
-    clearPoints,
-  } = usePoints(canvasRef);
+  } = useCanvasPoints(canvasRef);
 
   const {
     matrix,
@@ -130,7 +129,6 @@ const Canvas: React.FC<Props> = ({ image }) => {
   const result = {
     points,
     mousePoint,
-    clearPoints,
     calibrations,
     setCalibrations,
     coordsConverter,

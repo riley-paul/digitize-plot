@@ -5,8 +5,9 @@ import { toast } from "sonner";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
 import { useAtomValue } from "jotai";
 import { debugAtom } from "@/lib/store";
+import usePoints from "./use-points";
 
-export default function usePoints(
+export default function useCanvasPoints(
   canvasRef: React.RefObject<HTMLCanvasElement>,
 ) {
   const debug = useAtomValue(debugAtom);
@@ -15,30 +16,17 @@ export default function usePoints(
   const ctx = get2dCanvasContext(canvasRef);
 
   const [points, setPoints] = React.useState<Point[]>([]);
+
+  const { createPoint, deletePoint, movePoint, clearPoints } = usePoints(
+    points,
+    setPoints,
+  );
+
   const [mousePoint, setMousePoint] = React.useState<Point | undefined>(
     undefined,
   );
   const [currentPointId, setCurrentPointId] = React.useState<string>("");
   const [draggingId, setDraggingId] = React.useState<string>("");
-
-  // Manage points
-  const createPoint = (coords: Point) => {
-    const point = new Point(coords.x, coords.y);
-    setPoints((prev) => [...prev, point]);
-    // console.log("point created");
-  };
-
-  const deletePoint = (id: string) => {
-    setPoints((prev) => [...prev.filter((pt) => pt.id !== id)]);
-    // console.log("point removed");
-  };
-
-  const movePoint = (id: string, coords: Point) => {
-    setPoints((prev) =>
-      prev.map((pt) => (pt.id === id ? new Point(coords.x, coords.y, id) : pt)),
-    );
-    console.log("point updated");
-  };
 
   // Draw everything to canvas
   const drawPoints = (ctx: CanvasRenderingContext2D): void => {
@@ -128,17 +116,6 @@ export default function usePoints(
     );
     setCurrentPointId(mousePoint.nearest(nearPoints)?.id || "");
   }, [mousePoint, points]);
-
-  const clearPoints = () => {
-    const prevPoints = [...points];
-    setPoints([]);
-    toast(`${prevPoints.length} points cleared`, {
-      action: {
-        label: "Undo",
-        onClick: () => setPoints(prevPoints),
-      },
-    });
-  };
 
   return {
     drawPoints,
