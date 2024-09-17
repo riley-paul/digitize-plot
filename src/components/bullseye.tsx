@@ -17,10 +17,6 @@ export default function Bullseye(props: Props) {
 
   useInterval(() => setImgUrl(canvasRef.current?.toDataURL()), 10);
 
-  // React.useEffect(() => {
-  //   setImgUrl(canvasRef.current?.toDataURL());
-  // }, [mousePoint, canvasRef.current]);
-
   if (!mousePoint || !context) {
     return (
       <div className="relative aspect-square overflow-hidden bg-gray-50"></div>
