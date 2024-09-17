@@ -1,7 +1,6 @@
 import React from "react";
 import Point from "src/geometry/point";
 import { QuadTree, createQuadTree } from "src/geometry/quad-tree";
-import { toast } from "sonner";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
 import { useAtomValue } from "jotai";
 import { debugAtom } from "@/lib/store";

@@ -15,7 +15,6 @@ import Logo from "src/components/logo";
 import useScrollShadow from "./hooks/use-scroll-shadow";
 import { cn } from "./lib/utils";
 import { Separator } from "./components/ui/separator";
-import useCursorStore from "@/lib/stores/cursor-store";
 import {
   Tooltip,
   TooltipContent,
@@ -43,8 +42,6 @@ function App() {
 
   const { listRef: leftSideRef, isScrolled: isLeftSideScrolled } =
     useScrollShadow();
-
-  const { cursor } = useCursorStore();
 
   React.useEffect(() => {
     if (image) centerImage(image);
@@ -81,7 +78,7 @@ function App() {
             <Download coordsConverter={coordsConverter} points={points} />
           </footer>
         </aside>
-        <main className="relative flex-1" style={{ cursor }}>
+        <main className="relative flex-1">
           {image ? (
             <>
               <canvas {...canvasProps} className="h-full w-full" />
