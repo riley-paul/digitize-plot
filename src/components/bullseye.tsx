@@ -1,6 +1,7 @@
 import React from "react";
 import Point from "src/geometry/point";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
+import { useInterval } from "usehooks-ts";
 
 export type Props = {
   canvasRef: React.RefObject<HTMLCanvasElement>;
@@ -14,9 +15,11 @@ export default function Bullseye(props: Props) {
   const [imgUrl, setImgUrl] = React.useState<string | null | undefined>("");
   const context = get2dCanvasContext(canvasRef);
 
-  React.useEffect(() => {
-    setImgUrl(canvasRef.current?.toDataURL());
-  }, [mousePoint, canvasRef.current]);
+  useInterval(() => setImgUrl(canvasRef.current?.toDataURL()), 10);
+
+  // React.useEffect(() => {
+  //   setImgUrl(canvasRef.current?.toDataURL());
+  // }, [mousePoint, canvasRef.current]);
 
   if (!mousePoint || !context) {
     return (
