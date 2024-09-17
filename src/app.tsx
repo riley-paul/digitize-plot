@@ -20,8 +20,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useAtom } from "jotai/react";
-import { debugAtom, showHelpAtom } from "@/lib/store";
+import { useAtom, useAtomValue } from "jotai/react";
+import { debugAtom, pointsAtom, showHelpAtom } from "@/lib/store";
 import type Point from "@/geometry/point";
 import Canvas from "@/components/canvas";
 import {
@@ -29,6 +29,8 @@ import {
   intialCalibrations,
 } from "@/lib/interpolators/types";
 import { linearCoordsConverterGenerator } from "./lib/interpolators/linear";
+import usePoints from "./hooks/use-points";
+import useCenterImage from "./hooks/use-center-image";
 
 function App() {
   const [image, setImage] = React.useState<HTMLImageElement | undefined>();
@@ -48,9 +50,14 @@ function App() {
   const { listRef: leftSideRef, isScrolled: isLeftSideScrolled } =
     useScrollShadow();
 
-  // React.useEffect(() => {
-  //   if (image) centerImage(image);
-  // }, [image, canvasProps.ref.current]);
+  const points = useAtomValue(pointsAtom);
+  const { clearPoints } = usePoints(pointsAtom);
+
+  const centerImage = useCenterImage(canvasRef);
+
+  React.useEffect(() => {
+    if (image) centerImage(image);
+  }, [image, canvasRef.current]);
 
   return (
     <TooltipProvider>
@@ -71,7 +78,7 @@ function App() {
             <DataTable coordsConverter={coordsConverter} />
           </section>
           <footer className="sticky bottom-0 z-50 grid gap-2 border-t bg-card p-4">
-            {/* <Button
+            <Button
               disabled={points.length === 0}
               className="w-full"
               variant="secondary"
@@ -79,7 +86,7 @@ function App() {
             >
               <i className="fa-solid fa-broom mr-2" />
               Clear Points
-            </Button> */}
+            </Button>
             <Download coordsConverter={coordsConverter} />
           </footer>
         </aside>
@@ -97,7 +104,7 @@ function App() {
                   <Button
                     className="absolute bottom-4 right-4 rounded-full"
                     size="icon"
-                    // onClick={() => centerImage(image)}
+                    onClick={() => centerImage(image)}
                   >
                     <i className="fa-solid fa-expand" />
                   </Button>
@@ -109,7 +116,7 @@ function App() {
             <Dropzone
               onImageLoad={(img) => {
                 setImage(img);
-                // centerImage(img);
+                centerImage(img);
               }}
             />
           )}

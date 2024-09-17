@@ -34,7 +34,6 @@ const Canvas: React.FC<Props> = ({
     mouseUpPanZoom,
     mouseMovePanZoom,
     wheelPanZoom,
-    centerImage,
   } = usePanZoom(canvasRef);
 
   const {
@@ -130,14 +129,6 @@ const Canvas: React.FC<Props> = ({
       }}
     />
   );
-
-  const result = {
-    points,
-    calibrations,
-    setCalibrations,
-    coordsConverter,
-    centerImage,
-  };
 };
 
 export default Canvas;
