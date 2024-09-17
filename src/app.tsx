@@ -66,7 +66,7 @@ function App() {
             <Logo />
           </header>
           <section className="flex-1 px-4">
-            <DataTable {...{ coordsConverter, points }} />
+            <DataTable coordsConverter={coordsConverter} points={points} />
           </section>
           <footer className="sticky bottom-0 z-50 grid gap-2 border-t bg-card p-4">
             <Button
@@ -78,7 +78,7 @@ function App() {
               <i className="fa-solid fa-broom mr-2" />
               Clear Points
             </Button>
-            <Download {...{ coordsConverter, points }} />
+            <Download coordsConverter={coordsConverter} points={points} />
           </footer>
         </aside>
         <main className="relative flex-1" style={{ cursor }}>
@@ -112,8 +112,14 @@ function App() {
           <div>
             <Bullseye canvasRef={canvasProps.ref} mousePoint={mousePoint} />
             <Separator />
-            <MouseCoords {...{ coordsConverter, mousePoint }} />
-            <Calibrate {...{ calibrations, setCalibrations }} />
+            <MouseCoords
+              coordsConverter={coordsConverter}
+              mousePoint={mousePoint}
+            />
+            <Calibrate
+              calibrations={calibrations}
+              setCalibrations={setCalibrations}
+            />
           </div>
           <div className="flex w-full justify-between gap-4 p-6">
             <Toggle
