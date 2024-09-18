@@ -2,8 +2,8 @@ import React from "react";
 import Point from "src/geometry/point";
 import { QuadTree, createQuadTree } from "src/geometry/quad-tree";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
-import { useAtomValue } from "jotai";
-import { debugAtom, pointsAtom } from "@/lib/store";
+import { useAtom, useAtomValue } from "jotai";
+import { debugAtom, hoveredPointIdAtom, pointsAtom } from "@/lib/store";
 import usePoints from "./use-points";
 
 type Props = {
@@ -21,7 +21,7 @@ export default function useCanvasPoints({ canvasRef, mousePoint }: Props) {
   const { createPoint, deletePoint, movePoint, clearPoints } =
     usePoints(pointsAtom);
 
-  const [currentPointId, setCurrentPointId] = React.useState<string>("");
+  const [hoveredPointId, setHoveredPointId] = useAtom(hoveredPointIdAtom);
   const [draggingId, setDraggingId] = React.useState<string>("");
 
   // Draw everything to canvas
@@ -47,7 +47,7 @@ export default function useCanvasPoints({ canvasRef, mousePoint }: Props) {
     for (let pt of points) {
       if (debug) pt.label = pt.label || pt.id.substring(0, 4);
       if (pt.id === draggingId) continue;
-      if (pt.id === currentPointId) {
+      if (pt.id === hoveredPointId) {
         pt.draw(ctx, { color: SELECTED_COLOUR });
         continue;
       }
@@ -62,11 +62,11 @@ export default function useCanvasPoints({ canvasRef, mousePoint }: Props) {
   const mouseDownPoints: React.MouseEventHandler<HTMLCanvasElement> = (
     event,
   ) => {
-    if (currentPointId) {
-      if (event.button === 2) deletePoint(currentPointId);
-      else if (event.button === 0) setDraggingId(currentPointId);
+    if (hoveredPointId) {
+      if (event.button === 2) deletePoint(hoveredPointId);
+      else if (event.button === 0) setDraggingId(hoveredPointId);
     } else {
-      if (!currentPointId && event.button === 0 && mousePoint) {
+      if (!hoveredPointId && event.button === 0 && mousePoint) {
         createPoint(mousePoint);
       }
     }
@@ -95,7 +95,7 @@ export default function useCanvasPoints({ canvasRef, mousePoint }: Props) {
       mousePoint,
       7 / ctx.getTransform().a,
     );
-    setCurrentPointId(mousePoint.nearest(nearPoints)?.id || "");
+    setHoveredPointId(mousePoint.nearest(nearPoints)?.id || "");
   }, [mousePoint, points]);
 
   return {

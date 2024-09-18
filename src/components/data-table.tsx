@@ -9,15 +9,18 @@ import {
   TableHeader,
   TableRow,
 } from "src/components/ui/table";
-import { useAtomValue } from "jotai";
-import { pointsAtom } from "@/lib/store";
+import { useAtom, useAtomValue } from "jotai";
+import { hoveredPointIdAtom, pointsAtom } from "@/lib/store";
+import { cn } from "@/lib/utils";
+import React from "react";
 
 export type Props = {
   coordsConverter: (coords: Point) => Point;
 };
 
-export default function DataTable({ coordsConverter }: Props) {
+const DataTable: React.FC<Props> = ({ coordsConverter }: Props) => {
   const points = useAtomValue(pointsAtom);
+  const [hoveredPointId, setHoveredPointId] = useAtom(hoveredPointIdAtom);
 
   const toString = (num: number) =>
     num.toLocaleString(undefined, { minimumFractionDigits: 2 });
@@ -35,7 +38,12 @@ export default function DataTable({ coordsConverter }: Props) {
       </TableHeader>
       <TableBody>
         {points.map(coordsConverter).map((pt) => (
-          <TableRow key={pt.id}>
+          <TableRow
+            key={pt.id}
+            className={cn(hoveredPointId === pt.id && "bg-red-500")}
+            onMouseEnter={() => setHoveredPointId(pt.id)}
+            onMouseLeave={() => setHoveredPointId("")}
+          >
             <TableCell className="text-center">{toString(pt.x)}</TableCell>
             <TableCell className="text-center">{toString(pt.y)}</TableCell>
           </TableRow>
@@ -43,4 +51,6 @@ export default function DataTable({ coordsConverter }: Props) {
       </TableBody>
     </Table>
   );
-}
+};
+
+export default DataTable;

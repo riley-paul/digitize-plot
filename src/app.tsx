@@ -31,6 +31,7 @@ import {
 import { linearCoordsConverterGenerator } from "./lib/interpolators/linear";
 import usePoints from "./hooks/use-points";
 import useCenterImage from "./hooks/use-center-image";
+import useCursor from "./hooks/use-cursor";
 
 function App() {
   const [image, setImage] = React.useState<HTMLImageElement | undefined>();
@@ -54,6 +55,7 @@ function App() {
   const { clearPoints } = usePoints(pointsAtom);
 
   const centerImage = useCenterImage(canvasRef);
+  const cursor = useCursor();
 
   React.useEffect(() => {
     if (image) centerImage(image);
@@ -90,7 +92,7 @@ function App() {
             <Download coordsConverter={coordsConverter} />
           </footer>
         </aside>
-        <main className="relative flex-1">
+        <main className="relative flex-1" style={{ cursor }}>
           {image ? (
             <>
               <Canvas
