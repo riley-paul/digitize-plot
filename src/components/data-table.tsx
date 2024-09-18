@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "src/components/ui/table";
 import { useAtom, useAtomValue } from "jotai";
-import { hoveredPointIdAtom, pointsAtom } from "@/lib/store";
+import { hoveringPointIdAtom, pointsAtom } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import React from "react";
 
@@ -20,7 +20,7 @@ export type Props = {
 
 const DataTable: React.FC<Props> = ({ coordsConverter }: Props) => {
   const points = useAtomValue(pointsAtom);
-  const [hoveredPointId, setHoveredPointId] = useAtom(hoveredPointIdAtom);
+  const [hoveredPointId, setHoveredPointId] = useAtom(hoveringPointIdAtom);
 
   const toString = (num: number) =>
     num.toLocaleString(undefined, { minimumFractionDigits: 2 });
