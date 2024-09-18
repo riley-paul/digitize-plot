@@ -6,4 +6,6 @@ export const showHelpAtom = atomWithStorage("showHelp", false);
 export const debugAtom = atom(false);
 export const pointsAtom = atom<Point[]>([]);
 export const matrixAtom = atom(new DOMMatrix());
+
 export const hoveringPointIdAtom = atom<string>("");
+export const draggingPointIdAtom = atom<string>("");

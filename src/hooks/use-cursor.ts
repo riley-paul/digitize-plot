@@ -1,10 +1,10 @@
-import { hoveringPointIdAtom } from "@/lib/store";
+import { draggingPointIdAtom } from "@/lib/store";
 import { useAtomValue } from "jotai";
 
 export default function useCursor(): React.CSSProperties["cursor"] {
-  const hoveredPointId = useAtomValue(hoveringPointIdAtom);
+  const draggingPointId = useAtomValue(draggingPointIdAtom);
 
-  if (hoveredPointId) return "move";
+  if (draggingPointId) return "move";
 
   return "default";
 }

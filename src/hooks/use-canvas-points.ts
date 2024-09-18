@@ -3,7 +3,12 @@ import Point from "src/geometry/point";
 import { QuadTree, createQuadTree } from "src/geometry/quad-tree";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
 import { useAtom, useAtomValue } from "jotai";
-import { debugAtom, hoveringPointIdAtom, pointsAtom } from "@/lib/store";
+import {
+  debugAtom,
+  draggingPointIdAtom,
+  hoveringPointIdAtom,
+  pointsAtom,
+} from "@/lib/store";
 import usePoints from "./use-points";
 
 type Props = {
@@ -22,7 +27,7 @@ export default function useCanvasPoints({ canvasRef, mousePoint }: Props) {
     usePoints(pointsAtom);
 
   const [hoveringPointId, setHoveringPointId] = useAtom(hoveringPointIdAtom);
-  const [draggingId, setDraggingId] = React.useState<string>("");
+  const [draggingPointId, setDraggingPointId] = useAtom(draggingPointIdAtom);
 
   // Draw everything to canvas
   const drawPoints = (ctx: CanvasRenderingContext2D): void => {
@@ -46,7 +51,7 @@ export default function useCanvasPoints({ canvasRef, mousePoint }: Props) {
 
     for (let pt of points) {
       if (debug) pt.label = pt.label || pt.id.substring(0, 4);
-      if (pt.id === draggingId) continue;
+      if (pt.id === draggingPointId) continue;
       if (pt.id === hoveringPointId) {
         pt.draw(ctx, { color: SELECTED_COLOUR });
         continue;
@@ -54,7 +59,7 @@ export default function useCanvasPoints({ canvasRef, mousePoint }: Props) {
       pt.draw(ctx, { color: DEFAULT_COLOUR });
     }
 
-    if (draggingId) mousePoint?.draw(ctx, { color: SELECTED_COLOUR });
+    if (draggingPointId) mousePoint?.draw(ctx, { color: SELECTED_COLOUR });
   };
 
   // Event handlers
@@ -64,7 +69,7 @@ export default function useCanvasPoints({ canvasRef, mousePoint }: Props) {
   ) => {
     if (hoveringPointId) {
       if (event.button === 2) deletePoint(hoveringPointId);
-      else if (event.button === 0) setDraggingId(hoveringPointId);
+      else if (event.button === 0) setDraggingPointId(hoveringPointId);
     } else {
       if (!hoveringPointId && event.button === 0 && mousePoint) {
         createPoint(mousePoint);
@@ -75,9 +80,9 @@ export default function useCanvasPoints({ canvasRef, mousePoint }: Props) {
   const mouseUpPoints: React.MouseEventHandler<HTMLCanvasElement> = (event) => {
     if (event.button !== 0) return;
 
-    if (draggingId) {
-      const id = draggingId;
-      setDraggingId("");
+    if (draggingPointId) {
+      const id = draggingPointId;
+      setDraggingPointId("");
       if (!mousePoint) return;
       movePoint(id, mousePoint);
     }
