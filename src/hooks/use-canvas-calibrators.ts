@@ -4,9 +4,12 @@ import Calibrator, {
   type CalibratorDrawOptions,
 } from "src/geometry/calibrator";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
-import { useAtomValue } from "jotai";
-import { debugAtom } from "@/lib/store";
-import { intialCalibrations, type Calibrations } from "@/lib/interpolators/types";
+import { useAtom, useAtomValue } from "jotai";
+import { debugAtom, draggingCalIdAtom, hoveringCalIdAtom } from "@/lib/store";
+import {
+  intialCalibrations,
+  type Calibrations,
+} from "@/lib/interpolators/types";
 import { linearCoordsConverterGenerator } from "@/lib/interpolators/linear";
 
 export default function useCalibrators(
@@ -15,7 +18,6 @@ export default function useCalibrators(
   image: HTMLImageElement | undefined,
 ) {
   const debug = useAtomValue(debugAtom);
-
 
   React.useEffect(() => {
     if (!image) return;
@@ -32,12 +34,8 @@ export default function useCalibrators(
 
   const coordsConverter = linearCoordsConverterGenerator(calibrations);
 
-  const [current, setCurrent] = React.useState<
-    keyof Calibrations | undefined
-  >();
-  const [dragging, setDragging] = React.useState<
-    keyof Calibrations | undefined
-  >();
+  const [hoveringCalId, setHoveringCalId] = useAtom(hoveringCalIdAtom);
+  const [draggingCalId, setDraggingCalId] = useAtom(draggingCalIdAtom);
   const ctx = get2dCanvasContext(canvasRef);
 
   const drawCalibrators = (ctx: CanvasRenderingContext2D): void => {
@@ -51,14 +49,14 @@ export default function useCalibrators(
     };
 
     for (let calibrator of Object.values(calibrations)) {
-      if (dragging === calibrator.id) continue;
+      if (draggingCalId === calibrator.id) continue;
       const options =
-        current === calibrator.id ? hoverDrawOptions : defaultDrawOptions;
+        hoveringCalId === calibrator.id ? hoverDrawOptions : defaultDrawOptions;
       calibrator.draw(ctx, options);
     }
 
-    if (dragging && mousePoint) {
-      calibrations[dragging]
+    if (draggingCalId && mousePoint) {
+      calibrations[draggingCalId]
         .copyToPoint(mousePoint)
         .draw(ctx, hoverDrawOptions);
     }
@@ -73,12 +71,12 @@ export default function useCalibrators(
       ctx.font = `${12 / scale}px Courier`;
       ctx.fillStyle = "red";
       ctx.fillText(
-        `dragging ID: ${dragging}`,
+        `dragging ID: ${draggingCalId}`,
         origin.x + 10 / scale,
         origin.y + 20 / scale,
       );
       ctx.fillText(
-        `current ID: ${current}`,
+        `current ID: ${hoveringCalId}`,
         origin.x + 10 / scale,
         origin.y + 35 / scale,
       );
@@ -92,27 +90,27 @@ export default function useCalibrators(
   const mouseDownCalibrators: React.MouseEventHandler<HTMLCanvasElement> = (
     event,
   ) => {
-    if (current && event.button === 0) {
+    if (hoveringCalId && event.button === 0) {
       event.preventDefault();
       event.nativeEvent.stopImmediatePropagation();
-      setDragging(current);
+      setDraggingCalId(hoveringCalId);
     }
   };
 
   const MouseUpCalibrators: React.MouseEventHandler<HTMLCanvasElement> = (
     event,
   ) => {
-    if (dragging && mousePoint) {
+    if (draggingCalId && mousePoint) {
       event.preventDefault();
-      updateCalibrator(dragging, mousePoint);
-      setDragging(undefined);
+      updateCalibrator(draggingCalId, mousePoint);
+      setDraggingCalId(undefined);
     }
   };
 
   // determine current calibrator
   React.useEffect(() => {
     if (!ctx || !mousePoint) {
-      setCurrent(undefined);
+      setHoveringCalId(undefined);
       return;
     }
 
@@ -125,16 +123,16 @@ export default function useCalibrators(
     // console.log(nearest)
 
     if (nearest.distPoint(mousePoint) <= distance) {
-      setCurrent(nearest.id as keyof Calibrations);
+      setHoveringCalId(nearest.id as keyof Calibrations);
       return;
     }
 
-    setCurrent(undefined);
+    setHoveringCalId(undefined);
   }, [mousePoint, calibrations]);
 
   React.useEffect(() => {
-    if (debug) console.log("current", current);
-  }, [current]);
+    if (debug) console.log("current", hoveringCalId);
+  }, [hoveringCalId]);
 
   return {
     drawCalibrators,
@@ -143,6 +141,6 @@ export default function useCalibrators(
     calibrations,
     setCalibrations,
     coordsConverter,
-    markerDragging: current,
+    markerDragging: hoveringCalId,
   };
 }
