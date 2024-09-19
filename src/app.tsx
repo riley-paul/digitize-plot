@@ -59,7 +59,7 @@ function App() {
 
   React.useEffect(() => {
     if (image) centerImage(image);
-    clearPoints();
+    if (points.length) clearPoints();
   }, [image, canvasRef.current]);
 
   return (
