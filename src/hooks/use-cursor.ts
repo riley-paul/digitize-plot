@@ -2,20 +2,24 @@ import {
   draggingCalIdAtom,
   draggingPointIdAtom,
   hoveringCalIdAtom,
+  hoveringPointIdAtom,
 } from "@/lib/store";
 import { useAtomValue } from "jotai";
 
 export default function useCursor(): React.CSSProperties["cursor"] {
   const draggingPointId = useAtomValue(draggingPointIdAtom);
+  const hoveringPointId = useAtomValue(hoveringPointIdAtom);
 
   const draggingCalId = useAtomValue(draggingCalIdAtom);
   const hoveringCalId = useAtomValue(hoveringCalIdAtom);
-  const calIds = [draggingCalId, hoveringCalId];
 
-  if (calIds.some((i) => i?.startsWith("x"))) return "ew-resize";
-  if (calIds.some((i) => i?.startsWith("y"))) return "ns-resize";
+  if (draggingCalId?.startsWith("x")) return "ew-resize";
+  if (hoveringCalId?.startsWith("x")) return "ew-resize";
+  if (draggingCalId?.startsWith("y")) return "ns-resize";
+  if (hoveringCalId?.startsWith("y")) return "ns-resize";
 
-  if (draggingPointId) return "move";
+  if (draggingPointId) return "grabbing";
+  if (hoveringPointId) return "grab";
 
-  return "default";
+  return "crosshair";
 }
