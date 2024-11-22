@@ -1,7 +1,7 @@
 import type Point from "@/geometry/point";
 import { atom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
-import type { Calibrations } from "./interpolators/types";
+import { intialCalibrations, type Calibrations } from "./interpolators/types";
 
 export const showHelpAtom = atomWithStorage("showHelp", false);
 export const debugAtom = atom(false);
@@ -13,3 +13,6 @@ export const draggingPointIdAtom = atom<string>("");
 
 export const hoveringCalIdAtom = atom<keyof Calibrations | undefined>();
 export const draggingCalIdAtom = atom<keyof Calibrations | undefined>();
+
+export const imageAtom = atom<HTMLImageElement | undefined>();
+export const calibrationsAtom = atom<Calibrations>(intialCalibrations);

@@ -21,7 +21,13 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useAtom, useAtomValue } from "jotai/react";
-import { debugAtom, pointsAtom, showHelpAtom } from "@/lib/store";
+import {
+  calibrationsAtom,
+  debugAtom,
+  imageAtom,
+  pointsAtom,
+  showHelpAtom,
+} from "@/lib/store";
 import type Point from "@/geometry/point";
 import Canvas from "@/components/canvas";
 import {
@@ -34,12 +40,15 @@ import useCenterImage from "./hooks/use-center-image";
 import useCursor from "./hooks/use-cursor";
 
 function App() {
-  const [image, setImage] = React.useState<HTMLImageElement | undefined>();
+  const [image, setImage] = useAtom(imageAtom);
   const [mousePoint, setMousePoint] = React.useState<Point | undefined>(
     undefined,
   );
-  const [calibrations, setCalibrations] =
-    React.useState<Calibrations>(intialCalibrations);
+  const [calibrations, setCalibrations] = useAtom(calibrationsAtom);
+
+  React.useEffect(() => {
+    console.log(JSON.stringify(calibrations, null, 2));
+  }, [calibrations]);
 
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
 
@@ -98,7 +107,6 @@ function App() {
             <>
               <Canvas
                 canvasRef={canvasRef}
-                image={image}
                 mousePoint={mousePoint}
                 setMousePoint={setMousePoint}
               />

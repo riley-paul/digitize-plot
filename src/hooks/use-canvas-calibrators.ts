@@ -5,7 +5,12 @@ import Calibrator, {
 } from "src/geometry/calibrator";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
 import { useAtom, useAtomValue } from "jotai";
-import { debugAtom, draggingCalIdAtom, hoveringCalIdAtom } from "@/lib/store";
+import {
+  calibrationsAtom,
+  debugAtom,
+  draggingCalIdAtom,
+  hoveringCalIdAtom,
+} from "@/lib/store";
 import {
   intialCalibrations,
   type Calibrations,
@@ -29,8 +34,7 @@ export default function useCalibrators(
     });
   }, [image]);
 
-  const [calibrations, setCalibrations] =
-    React.useState<Calibrations>(intialCalibrations);
+  const [calibrations, setCalibrations] = useAtom(calibrationsAtom);
 
   const coordsConverter = linearCoordsConverterGenerator(calibrations);
 

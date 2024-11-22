@@ -4,25 +4,20 @@ import usePanZoom from "@/hooks/use-canvas-pan-zoom";
 import useCalibrators from "@/hooks/use-canvas-calibrators";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
 import { useAtomValue } from "jotai";
-import { debugAtom } from "@/lib/store";
+import { debugAtom, imageAtom } from "@/lib/store";
 import Point from "@/geometry/point";
 import getPointFromEvent from "@/lib/helpers/get-point-from-event";
 
 type Props = {
   canvasRef: React.RefObject<HTMLCanvasElement>;
-  image: HTMLImageElement | undefined;
   mousePoint: Point | undefined;
   setMousePoint: React.Dispatch<React.SetStateAction<Point | undefined>>;
 };
 
-const Canvas: React.FC<Props> = ({
-  canvasRef,
-  image,
-  mousePoint,
-  setMousePoint,
-}) => {
+const Canvas: React.FC<Props> = ({ canvasRef, mousePoint, setMousePoint }) => {
   const ctx = get2dCanvasContext(canvasRef);
 
+  const image = useAtomValue(imageAtom);
   const debug = useAtomValue(debugAtom);
 
   const { drawPoints, mouseDownPoints, mouseUpPoints, points } =
