@@ -13,17 +13,22 @@ import { useAtom, useAtomValue } from "jotai";
 import { hoveringPointIdAtom, pointsAtom } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import React from "react";
+import usePoints from "@/hooks/use-points";
 
 export type Props = {
   coordsConverter: (coords: Point) => Point;
 };
 
 const DataTable: React.FC<Props> = ({ coordsConverter }: Props) => {
-  const points = useAtomValue(pointsAtom);
+  const { points } = usePoints(pointsAtom);
   const [hoveredPointId, setHoveredPointId] = useAtom(hoveringPointIdAtom);
 
   const toString = (num: number) =>
     num.toLocaleString(undefined, { minimumFractionDigits: 2 });
+
+  React.useEffect(() => {
+    console.log(hoveredPointId);
+  }, [hoveredPointId]);
 
   return (
     <Table>

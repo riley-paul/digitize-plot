@@ -22,8 +22,7 @@ export default function useCanvasPoints({ canvasRef, mousePoint }: Props) {
   const quadtree = React.useRef<QuadTree | null>(null);
   const ctx = get2dCanvasContext(canvasRef);
 
-  const points = useAtomValue(pointsAtom);
-  const { createPoint, deletePoint, movePoint, clearPoints } =
+  const { createPoint, deletePoint, movePoint, clearPoints, points } =
     usePoints(pointsAtom);
 
   const [hoveringPointId, setHoveringPointId] = useAtom(hoveringPointIdAtom);

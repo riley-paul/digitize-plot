@@ -42,10 +42,6 @@ function App() {
   );
   const [calibrations, setCalibrations] = useAtom(calibrationsAtom);
 
-  React.useEffect(() => {
-    console.log(JSON.stringify(calibrations, null, 2));
-  }, [calibrations]);
-
   const canvasRef = React.useRef<HTMLCanvasElement>(null);
 
   const coordsConverter = linearCoordsConverterGenerator(calibrations);
@@ -56,8 +52,7 @@ function App() {
   const { listRef: leftSideRef, isScrolled: isLeftSideScrolled } =
     useScrollShadow();
 
-  const points = useAtomValue(pointsAtom);
-  const { clearPoints } = usePoints(pointsAtom);
+  const { clearPoints, points } = usePoints(pointsAtom);
 
   const centerImage = useCenterImage(canvasRef);
   const cursor = useCursor();

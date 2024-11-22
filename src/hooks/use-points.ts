@@ -36,5 +36,6 @@ export default function usePoints(atom: PrimitiveAtom<Point[]>) {
     deletePoint,
     movePoint,
     clearPoints,
+    points,
   };
 }
