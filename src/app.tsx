@@ -30,10 +30,6 @@ import {
 } from "@/lib/store";
 import type Point from "@/geometry/point";
 import Canvas from "@/components/canvas";
-import {
-  type Calibrations,
-  intialCalibrations,
-} from "@/lib/interpolators/types";
 import { linearCoordsConverterGenerator } from "./lib/interpolators/linear";
 import usePoints from "./hooks/use-points";
 import useCenterImage from "./hooks/use-center-image";

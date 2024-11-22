@@ -116,7 +116,7 @@ const Canvas: React.FC<Props> = ({ canvasRef, mousePoint, setMousePoint }) => {
       onWheel={(event) => {
         wheelPanZoom(event);
       }}
-      onMouseLeave={(event) => {
+      onMouseLeave={() => {
         setMousePoint(undefined);
       }}
     />

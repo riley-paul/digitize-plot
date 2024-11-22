@@ -11,10 +11,7 @@ import {
   draggingCalIdAtom,
   hoveringCalIdAtom,
 } from "@/lib/store";
-import {
-  intialCalibrations,
-  type Calibrations,
-} from "@/lib/interpolators/types";
+import { type Calibrations } from "@/lib/interpolators/types";
 import { linearCoordsConverterGenerator } from "@/lib/interpolators/linear";
 
 export default function useCalibrators(
