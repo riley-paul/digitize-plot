@@ -10,9 +10,9 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.3",
-    "@astrojs/react": "^3.6.2",
-    "@astrojs/tailwind": "^5.1.0",
+    "@astrojs/check": "^0.9.4",
+    "@astrojs/react": "^3.6.3",
+    "@astrojs/tailwind": "^5.1.2",
     "@fontsource-variable/roboto-mono": "^5.0.21",
     "@fontsource/space-mono": "^5.0.21",
     "@radix-ui/react-label": "^2.1.0",
@@ -22,7 +22,7 @@
     "@radix-ui/react-tooltip": "^1.1.2",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
-    "astro": "^4.15.4",
+    "astro": "^4.16.14",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "jotai": "^2.9.3",
