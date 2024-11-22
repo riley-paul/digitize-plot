@@ -33,5 +33,5 @@ export const linearCoordsConverterGenerator: CoordsConverterGenerator =
       y1: calibrations.y2.value,
     };
 
-    return new Point(linearInterp(xValues), linearInterp(yValues));
+    return new Point(linearInterp(xValues), linearInterp(yValues), coords.id);
   };

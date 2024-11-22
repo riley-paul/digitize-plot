@@ -26,10 +26,6 @@ const DataTable: React.FC<Props> = ({ coordsConverter }: Props) => {
   const toString = (num: number) =>
     num.toLocaleString(undefined, { minimumFractionDigits: 2 });
 
-  React.useEffect(() => {
-    console.log(hoveredPointId);
-  }, [hoveredPointId]);
-
   return (
     <Table>
       {points.length === 0 && (
@@ -45,7 +41,7 @@ const DataTable: React.FC<Props> = ({ coordsConverter }: Props) => {
         {points.map(coordsConverter).map((pt) => (
           <TableRow
             key={pt.id}
-            className={cn(hoveredPointId === pt.id && "bg-red-500")}
+            className={cn(hoveredPointId === pt.id && "bg-muted/50")}
             onMouseEnter={() => setHoveredPointId(pt.id)}
             onMouseLeave={() => setHoveredPointId("")}
           >
