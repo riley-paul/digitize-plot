@@ -34,6 +34,7 @@ import { linearCoordsConverterGenerator } from "./lib/interpolators/linear";
 import usePoints from "./hooks/use-points";
 import useCenterImage from "./hooks/use-center-image";
 import useCursor from "./hooks/use-cursor";
+import useCopyPoints from "./hooks/use-copy-points";
 
 function App() {
   const [image, setImage] = useAtom(imageAtom);
@@ -62,6 +63,8 @@ function App() {
     if (points.length) clearPoints();
   }, [image, canvasRef.current]);
 
+  const { copyPoints, isCopied } = useCopyPoints(coordsConverter);
+
   return (
     <TooltipProvider>
       <div className="flex h-screen w-full">
@@ -87,8 +90,21 @@ function App() {
               variant="secondary"
               onClick={clearPoints}
             >
-              <i className="fa-solid fa-broom mr-2" />
+              <i className="fa-solid fa-eraser mr-2" />
               Clear Points
+            </Button>
+            <Button
+              disabled={points.length === 0}
+              className="w-full"
+              variant="secondary"
+              onClick={copyPoints}
+            >
+              {isCopied ? (
+                <i className="fa-solid fa-check mr-2 text-green-500" />
+              ) : (
+                <i className="fa-solid fa-copy mr-2" />
+              )}
+              Copy Points
             </Button>
             <Download coordsConverter={coordsConverter} />
           </footer>
