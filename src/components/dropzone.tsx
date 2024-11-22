@@ -50,7 +50,8 @@ const Dropzone: React.FC<Props> = ({ onImageLoad }) => {
   };
 
   const useSample: React.MouseEventHandler = (_) => {
-    const url = `BPL220K 24ft.png`;
+    // const url = `BPL220K 24ft.png`;
+    const url = "beam-in-tension.png";
     createImage(url);
   };
 

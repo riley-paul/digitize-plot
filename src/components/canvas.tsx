@@ -41,9 +41,6 @@ const Canvas: React.FC<Props> = ({
     mouseDownCalibrators,
     MouseUpCalibrators,
     markerDragging,
-    calibrations,
-    setCalibrations,
-    coordsConverter,
   } = useCalibrators(canvasRef, mousePoint, image);
 
   // Draw everything to canvas
