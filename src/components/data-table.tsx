@@ -1,6 +1,6 @@
 import Point from "src/geometry/point";
 
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom } from "jotai";
 import { hoveringPointIdAtom, pointsAtom } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import React from "react";

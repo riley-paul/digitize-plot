@@ -11,7 +11,6 @@ import Help from "src/components/help";
 import {
   Button,
   IconButton,
-  Separator,
   Theme,
   Tooltip,
 } from "@radix-ui/themes";
@@ -19,7 +18,7 @@ import {
 import Logo from "src/components/logo";
 import useScrollShadow from "./hooks/use-scroll-shadow";
 import { cn } from "./lib/utils";
-import { useAtom, useAtomValue } from "jotai/react";
+import { useAtom } from "jotai/react";
 import {
   calibrationsAtom,
   debugAtom,
@@ -65,7 +64,7 @@ function App() {
   const { copyPoints, isCopied } = useCopyPoints(coordsConverter);
 
   return (
-    <Theme accentColor="gray" className="bg-gray-1">
+    <Theme accentColor="gray" grayColor="slate" className="bg-gray-1">
       <div className="flex h-screen w-full">
         <aside
           ref={leftSideRef}

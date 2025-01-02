@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Card, Heading, Text, TextField } from "@radix-ui/themes";
+import { Button, Card, Heading, Text } from "@radix-ui/themes";
 
 export type Props = {
   onImageLoad: (image: HTMLImageElement) => void;
