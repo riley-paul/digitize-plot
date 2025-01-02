@@ -1,9 +1,9 @@
 import { CSVLink } from "react-csv";
 import Point from "src/geometry/point";
-import { Button } from "./ui/button";
 import { toast } from "sonner";
 import { pointsAtom } from "@/lib/store";
 import usePoints from "@/hooks/use-points";
+import { Button } from "@radix-ui/themes";
 
 export type Props = {
   coordsConverter: (coords: Point) => Point;

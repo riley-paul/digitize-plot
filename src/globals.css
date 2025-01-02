@@ -11,21 +11,20 @@ body {
 }
 
 .radix-themes {
-  --default-font-family: monospace;
-	--cursor-button: pointer;
-	--cursor-checkbox: pointer;
-	--cursor-disabled: default;
-	--cursor-link: pointer;
-	--cursor-menu-item: pointer;
-	--cursor-radio: pointer;
-	--cursor-slider-thumb: grab;
-	--cursor-slider-thumb-active: grabbing;
-	--cursor-switch: pointer;
+  --default-font-family: "Roboto Mono Variable", monospace;
+  --cursor-button: pointer;
+  --cursor-checkbox: pointer;
+  --cursor-disabled: default;
+  --cursor-link: pointer;
+  --cursor-menu-item: pointer;
+  --cursor-radio: pointer;
+  --cursor-slider-thumb: grab;
+  --cursor-slider-thumb-active: grabbing;
+  --cursor-switch: pointer;
 }
-
 
 @layer base {
   * {
-    @apply border-gray-7;
+    @apply border-gray-5;
   }
 }

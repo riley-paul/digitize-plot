@@ -1,6 +1,5 @@
 import React from "react";
-import { Label } from "./ui/label";
-import { Switch } from "./ui/switch";
+import { Switch, Text } from "@radix-ui/themes";
 
 export type Props = {
   id: string;
@@ -15,7 +14,9 @@ export default function Toggle(props: Props) {
   return (
     <div className="flex items-center space-x-2 pt-0">
       <Switch id={props.id} checked={props.state} onCheckedChange={flip} />
-      <Label htmlFor={props.id}>{props.name}</Label>
+      <Text size="2" weight="medium" htmlFor={props.id}>
+        {props.name}
+      </Text>
     </div>
   );
 }

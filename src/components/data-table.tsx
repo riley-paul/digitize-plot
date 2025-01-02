@@ -1,19 +1,11 @@
 import Point from "src/geometry/point";
 
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "src/components/ui/table";
 import { useAtom, useAtomValue } from "jotai";
 import { hoveringPointIdAtom, pointsAtom } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import React from "react";
 import usePoints from "@/hooks/use-points";
+import { Table } from "@radix-ui/themes";
 
 export type Props = {
   coordsConverter: (coords: Point) => Point;
@@ -27,30 +19,32 @@ const DataTable: React.FC<Props> = ({ coordsConverter }: Props) => {
     num.toLocaleString(undefined, { minimumFractionDigits: 2 });
 
   return (
-    <Table>
-      {points.length === 0 && (
-        <TableCaption>Points placed will be listed here</TableCaption>
-      )}
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-1/2 text-center">X</TableHead>
-          <TableHead className="w-1/2 text-center">Y</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
+    <Table.Root>
+      <Table.Header>
+        <Table.Row>
+          <Table.ColumnHeaderCell className="w-1/2 text-center">
+            X
+          </Table.ColumnHeaderCell>
+          <Table.ColumnHeaderCell className="w-1/2 text-center">
+            Y
+          </Table.ColumnHeaderCell>
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
         {points.map(coordsConverter).map((pt) => (
-          <TableRow
+          <Table.Row
             key={pt.id}
             className={cn(hoveredPointId === pt.id && "bg-muted/50")}
             onMouseEnter={() => setHoveredPointId(pt.id)}
             onMouseLeave={() => setHoveredPointId("")}
           >
-            <TableCell className="text-center">{toString(pt.x)}</TableCell>
-            <TableCell className="text-center">{toString(pt.y)}</TableCell>
-          </TableRow>
+            <Table.Cell className="text-center">{toString(pt.x)}</Table.Cell>
+            <Table.Cell className="text-center">{toString(pt.y)}</Table.Cell>
+          </Table.Row>
         ))}
-      </TableBody>
-    </Table>
+      </Table.Body>
+      {/* {points.length === 0 && <caption>No points placed</caption>} */}
+    </Table.Root>
   );
 };
 

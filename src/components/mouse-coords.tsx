@@ -1,5 +1,5 @@
+import { DataList, Heading } from "@radix-ui/themes";
 import Point from "src/geometry/point";
-import { CardHeader, CardTitle } from "src/components/ui/card";
 
 export type Props = {
   mousePoint: Point | undefined;
@@ -12,12 +12,20 @@ export default function MouseCoords(props: Props) {
   const { x, y } = coordsConverter(point);
 
   return (
-    <CardHeader>
-      <CardTitle>Mouse Coordinates</CardTitle>
-      <div className="text-sm text-muted-foreground">
-        <p>X: {x.toLocaleString()}</p>
-        <p>Y: {y.toLocaleString()}</p>
-      </div>
-    </CardHeader>
+    <div className="grid gap-2 p-4">
+      <Heading as="h3" size="3">
+        Mouse Coordinates
+      </Heading>
+      <DataList.Root className="gap-y-1.5 pl-2">
+        <DataList.Item align="center">
+          <DataList.Label minWidth="1rem">X</DataList.Label>
+          <DataList.Value>{x.toLocaleString()}</DataList.Value>
+        </DataList.Item>
+        <DataList.Item align="center">
+          <DataList.Label minWidth="1rem">Y</DataList.Label>
+          <DataList.Value>{y.toLocaleString()}</DataList.Value>
+        </DataList.Item>
+      </DataList.Root>
+    </div>
   );
 }
