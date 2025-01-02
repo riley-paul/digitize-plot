@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Button, Card, Heading, Text } from "@radix-ui/themes";
+import FilePicker from "./file-picker";
 
 export type Props = {
   onImageLoad: (image: HTMLImageElement) => void;
@@ -69,23 +70,19 @@ const Dropzone: React.FC<Props> = ({ onImageLoad }) => {
             </Text>
           </header>
           <form action="" className="grid gap-3" onSubmit={onSubmit}>
-            <input
-              type="file"
-              accept="image/*"
-              placeholder="Select plot image to digitized"
-              onChange={onFileChange}
-            />
+            <FilePicker selectedFile={file} setSelectedFile={setFile} />
             {error && (
               <Text color="red" size="1">
                 {error}
               </Text>
             )}
             <div className="grid grid-cols-2 gap-2">
-              <Button className="w-full" type="submit" disabled={!file}>
-                Let's go
-              </Button>
               <Button variant="soft" className="w-full" onClick={useSample}>
                 Use Sample Image
+              </Button>
+              <Button className="w-full" type="submit" disabled={!file}>
+                Let's go
+                <i className="fa-solid fa-arrow-right"></i>
               </Button>
             </div>
             <input type="submit" hidden />
