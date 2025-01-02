@@ -12,11 +12,11 @@ export default function MouseCoords(props: Props) {
   const { x, y } = coordsConverter(point);
 
   return (
-    <div className="grid gap-2 p-4">
+    <div className="grid gap-3 p-4">
       <Heading as="h3" size="3">
         Mouse Coordinates
       </Heading>
-      <DataList.Root className="gap-y-1.5 pl-2">
+      <DataList.Root className="gap-y-2 pl-2">
         <DataList.Item align="center">
           <DataList.Label minWidth="1rem">X</DataList.Label>
           <DataList.Value>{x.toLocaleString()}</DataList.Value>

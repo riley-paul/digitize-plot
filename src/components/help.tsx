@@ -1,15 +1,9 @@
-import { Button } from "src/components/ui/button";
 import { useStep } from "usehooks-ts";
 
-import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "src/components/ui/card";
 import { useSetAtom } from "jotai/react";
 import { showHelpAtom } from "@/lib/store";
+import { Button, Card, Heading, Text } from "@radix-ui/themes";
+import { cn } from "@/lib/utils";
 
 type Step = { title: string; content: string; coords: string };
 
@@ -48,19 +42,23 @@ const Help: React.FC = () => {
     helpers;
 
   return (
-    <Card className={"absolute m-4 w-96 " + currentStep.coords}>
-      <CardHeader className="relative">
-        <CardTitle>
-          <span>? - {currentStep.title}</span>
-        </CardTitle>
-        <CardDescription>{currentStep.content}</CardDescription>
-      </CardHeader>
-      <CardFooter className="flex gap-2">
+    <Card
+      className={cn("absolute m-4 grid w-96 gap-6", currentStep.coords)}
+      size="3"
+    >
+      <header className="grid gap-3">
+        <Heading size="4">? - {currentStep.title}</Heading>
+        <Text color="gray" size="2">
+          {currentStep.content}
+        </Text>
+      </header>
+      <footer className="grid grid-cols-3 gap-2">
         <Button
           className="w-full"
           disabled={!canGoToPrevStep}
           onClick={goToPrevStep}
         >
+          <i className="fa-solid fa-arrow-left"></i>
           Prev
         </Button>
         <Button
@@ -69,15 +67,16 @@ const Help: React.FC = () => {
           onClick={goToNextStep}
         >
           Next
+          <i className="fa-solid fa-arrow-right"></i>
         </Button>
         <Button
           className="w-full"
-          variant={"secondary"}
+          variant="soft"
           onClick={() => setShowHelp(false)}
         >
-          Go Away
+          Go away
         </Button>
-      </CardFooter>
+      </footer>
     </Card>
   );
 };

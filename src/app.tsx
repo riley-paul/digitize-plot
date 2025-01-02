@@ -8,12 +8,17 @@ import Dropzone from "src/components/dropzone";
 import Calibrate from "src/components/calibrate";
 import Toggle from "src/components/toggle";
 import Help from "src/components/help";
-import { Button, IconButton, Theme, Tooltip } from "@radix-ui/themes";
+import {
+  Button,
+  IconButton,
+  Separator,
+  Theme,
+  Tooltip,
+} from "@radix-ui/themes";
 
 import Logo from "src/components/logo";
 import useScrollShadow from "./hooks/use-scroll-shadow";
 import { cn } from "./lib/utils";
-import { Separator } from "./components/ui/separator";
 import { useAtom, useAtomValue } from "jotai/react";
 import {
   calibrationsAtom,
@@ -64,11 +69,11 @@ function App() {
       <div className="flex h-screen w-full">
         <aside
           ref={leftSideRef}
-          className="bg-surface flex w-60 flex-col gap-2 overflow-y-auto border-r"
+          className="flex w-60 flex-col gap-2 overflow-y-auto border-r bg-surface"
         >
           <header
             className={cn(
-              "bg-surface backdrop-blur sticky top-0 z-50 p-4 pb-6",
+              "sticky top-0 z-50 bg-surface p-4 pb-6 backdrop-blur",
               isLeftSideScrolled && "shadow",
             )}
           >
@@ -77,7 +82,7 @@ function App() {
           <section className="flex-1 px-4">
             <DataTable coordsConverter={coordsConverter} />
           </section>
-          <footer className="bg-card sticky bottom-0 z-50 grid gap-2 border-t p-4">
+          <footer className="sticky bottom-0 z-50 grid gap-2 border-t bg-surface p-4 backdrop-blur">
             <Button
               disabled={points.length === 0}
               className="w-full"
@@ -132,10 +137,9 @@ function App() {
           )}
           {image && showHelp && <Help />}
         </main>
-        <aside className="bg-surface flex w-60 flex-col justify-between overflow-y-auto border-l">
-          <div>
+        <aside className="flex w-60 flex-col justify-between divide-y overflow-y-auto border-l bg-surface">
+          <div className="divide-y">
             <Bullseye canvasRef={canvasRef} mousePoint={mousePoint} />
-            <Separator />
             <MouseCoords
               coordsConverter={coordsConverter}
               mousePoint={mousePoint}

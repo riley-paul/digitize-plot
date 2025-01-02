@@ -1,14 +1,6 @@
 import React from "react";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "src/components/ui/card";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
+import { Button, Card, Heading, Text, TextField } from "@radix-ui/themes";
 
 export type Props = {
   onImageLoad: (image: HTMLImageElement) => void;
@@ -57,42 +49,48 @@ const Dropzone: React.FC<Props> = ({ onImageLoad }) => {
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center p-4">
-      <Card className="max-w-lg">
-        <CardHeader>
-          <CardTitle>Welcome to Digitize Plot</CardTitle>
-          <CardDescription>
-            A tool to quickly and painlessly convert images of plotted data into
-            raw points.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-2">
-          <CardDescription>
-            To get started, choose an image of a plot to be digitized. Or if you
-            just want to try out the app, start with a sample image.
-          </CardDescription>
-          <form action="" className="mt-2 grid gap-2" onSubmit={onSubmit}>
-            <Input
+      <Card className="max-w-lg" size="3">
+        <div className="grid gap-5">
+          <header>
+            <Heading as="h2" size="4" mb="2">
+              Welcome to Digitize Plot
+            </Heading>
+            <Text color="gray" size="2" mb="4" asChild>
+              <p>
+                A tool to quickly and painlessly convert images of plotted data
+                into raw points.
+              </p>
+            </Text>
+            <Text color="gray" size="2" mb="1" asChild>
+              <p>
+                To get started, choose an image of a plot to be digitized. Or if
+                you just want to try out the app, start with a sample image.
+              </p>
+            </Text>
+          </header>
+          <form action="" className="grid gap-3" onSubmit={onSubmit}>
+            <input
               type="file"
               accept="image/*"
               placeholder="Select plot image to digitized"
               onChange={onFileChange}
             />
-            {error && <small className="text-destructive">{error}</small>}
-            <div className="flex flex-col gap-2 lg:flex-row">
+            {error && (
+              <Text color="red" size="1">
+                {error}
+              </Text>
+            )}
+            <div className="grid grid-cols-2 gap-2">
               <Button className="w-full" type="submit" disabled={!file}>
                 Let's go
               </Button>
-              <Button
-                variant="secondary"
-                className="w-full"
-                onClick={useSample}
-              >
+              <Button variant="soft" className="w-full" onClick={useSample}>
                 Use Sample Image
               </Button>
             </div>
             <input type="submit" hidden />
           </form>
-        </CardContent>
+        </div>
       </Card>
     </div>
   );
