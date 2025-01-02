@@ -8,6 +8,7 @@ import Dropzone from "src/components/dropzone";
 import Calibrate from "src/components/calibrate";
 import Toggle from "src/components/toggle";
 import Help from "src/components/help";
+import { Theme } from "@radix-ui/themes";
 
 import { Button } from "src/components/ui/button";
 import Logo from "src/components/logo";
@@ -66,112 +67,114 @@ function App() {
   const { copyPoints, isCopied } = useCopyPoints(coordsConverter);
 
   return (
-    <TooltipProvider>
-      <div className="flex h-screen w-full">
-        <aside
-          ref={leftSideRef}
-          className="flex w-60 flex-col gap-2 overflow-y-auto border-r bg-card"
-        >
-          <header
-            className={cn(
-              "sticky top-0 z-50 bg-card p-4 pb-6",
-              isLeftSideScrolled && "shadow",
-            )}
+    <Theme>
+      <TooltipProvider>
+        <div className="flex h-screen w-full">
+          <aside
+            ref={leftSideRef}
+            className="bg-card flex w-60 flex-col gap-2 overflow-y-auto border-r"
           >
-            <Logo />
-          </header>
-          <section className="flex-1 px-4">
-            <DataTable coordsConverter={coordsConverter} />
-          </section>
-          <footer className="sticky bottom-0 z-50 grid gap-2 border-t bg-card p-4">
-            <Button
-              disabled={points.length === 0}
-              className="w-full"
-              variant="secondary"
-              onClick={clearPoints}
-            >
-              <i className="fa-solid fa-eraser mr-2" />
-              Clear Points
-            </Button>
-            <Button
-              disabled={points.length === 0}
-              className="w-full"
-              variant="secondary"
-              onClick={copyPoints}
-            >
-              {isCopied ? (
-                <i className="fa-solid fa-check mr-2 text-green-500" />
-              ) : (
-                <i className="fa-solid fa-copy mr-2" />
+            <header
+              className={cn(
+                "bg-card sticky top-0 z-50 p-4 pb-6",
+                isLeftSideScrolled && "shadow",
               )}
-              Copy Points
-            </Button>
-            <Download coordsConverter={coordsConverter} />
-          </footer>
-        </aside>
-        <main className="relative flex-1" style={{ cursor }}>
-          {image ? (
-            <>
-              <Canvas
-                canvasRef={canvasRef}
-                mousePoint={mousePoint}
-                setMousePoint={setMousePoint}
-              />
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    className="absolute bottom-4 right-4 rounded-full"
-                    size="icon"
-                    onClick={() => centerImage(image)}
-                  >
-                    <i className="fa-solid fa-expand" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="left">Center Image</TooltipContent>
-              </Tooltip>
-            </>
-          ) : (
-            <Dropzone
-              onImageLoad={(img) => {
-                setImage(img);
-                centerImage(img);
-              }}
-            />
-          )}
-          {image && showHelp && <Help />}
-        </main>
-        <aside className="flex w-60 flex-col justify-between overflow-y-auto border-l bg-card">
-          <div>
-            <Bullseye canvasRef={canvasRef} mousePoint={mousePoint} />
-            <Separator />
-            <MouseCoords
-              coordsConverter={coordsConverter}
-              mousePoint={mousePoint}
-            />
-            <Calibrate
-              calibrations={calibrations}
-              setCalibrations={setCalibrations}
-            />
-          </div>
-          <div className="flex w-full justify-between gap-4 p-6">
-            <Toggle
-              id="debug"
-              name="Debug Mode"
-              state={debug}
-              setState={setDebug}
-            />
-            <Button
-              className="rounded-full"
-              size="icon"
-              variant={showHelp ? "default" : "secondary"}
-              onClick={() => setShowHelp(!showHelp)}
             >
-              ?
-            </Button>
-          </div>
-        </aside>
-      </div>
-    </TooltipProvider>
+              <Logo />
+            </header>
+            <section className="flex-1 px-4">
+              <DataTable coordsConverter={coordsConverter} />
+            </section>
+            <footer className="bg-card sticky bottom-0 z-50 grid gap-2 border-t p-4">
+              <Button
+                disabled={points.length === 0}
+                className="w-full"
+                variant="secondary"
+                onClick={clearPoints}
+              >
+                <i className="fa-solid fa-eraser mr-2" />
+                Clear Points
+              </Button>
+              <Button
+                disabled={points.length === 0}
+                className="w-full"
+                variant="secondary"
+                onClick={copyPoints}
+              >
+                {isCopied ? (
+                  <i className="fa-solid fa-check text-green-500 mr-2" />
+                ) : (
+                  <i className="fa-solid fa-copy mr-2" />
+                )}
+                Copy Points
+              </Button>
+              <Download coordsConverter={coordsConverter} />
+            </footer>
+          </aside>
+          <main className="relative flex-1" style={{ cursor }}>
+            {image ? (
+              <>
+                <Canvas
+                  canvasRef={canvasRef}
+                  mousePoint={mousePoint}
+                  setMousePoint={setMousePoint}
+                />
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      className="absolute bottom-4 right-4 rounded-full"
+                      size="icon"
+                      onClick={() => centerImage(image)}
+                    >
+                      <i className="fa-solid fa-expand" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="left">Center Image</TooltipContent>
+                </Tooltip>
+              </>
+            ) : (
+              <Dropzone
+                onImageLoad={(img) => {
+                  setImage(img);
+                  centerImage(img);
+                }}
+              />
+            )}
+            {image && showHelp && <Help />}
+          </main>
+          <aside className="bg-card flex w-60 flex-col justify-between overflow-y-auto border-l">
+            <div>
+              <Bullseye canvasRef={canvasRef} mousePoint={mousePoint} />
+              <Separator />
+              <MouseCoords
+                coordsConverter={coordsConverter}
+                mousePoint={mousePoint}
+              />
+              <Calibrate
+                calibrations={calibrations}
+                setCalibrations={setCalibrations}
+              />
+            </div>
+            <div className="flex w-full justify-between gap-4 p-6">
+              <Toggle
+                id="debug"
+                name="Debug Mode"
+                state={debug}
+                setState={setDebug}
+              />
+              <Button
+                className="rounded-full"
+                size="icon"
+                variant={showHelp ? "default" : "secondary"}
+                onClick={() => setShowHelp(!showHelp)}
+              >
+                ?
+              </Button>
+            </div>
+          </aside>
+        </div>
+      </TooltipProvider>
+    </Theme>
   );
 }
 
