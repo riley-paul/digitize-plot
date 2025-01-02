@@ -23,6 +23,7 @@ export default function usePoints(atom: PrimitiveAtom<Point[]>) {
   const clearPoints = () => {
     const prevPoints = [...points];
     setPoints([]);
+    if (!prevPoints.length) return;
     toast(`${prevPoints.length} points cleared`, {
       action: {
         label: "Undo",

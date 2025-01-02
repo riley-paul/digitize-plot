@@ -22,7 +22,7 @@ export default function Download({ coordsConverter }: Props) {
       onClick={() => toast.success("CSV downloaded")}
     >
       <Button disabled={points.length === 0} className="w-full">
-        <i className="fa-solid fa-download mr-2" />
+        <i className="fa-solid fa-download" />
         Download CSV
       </Button>
     </CSVLink>

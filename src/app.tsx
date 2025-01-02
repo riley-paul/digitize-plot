@@ -89,7 +89,7 @@ function App() {
               variant="soft"
               onClick={clearPoints}
             >
-              <i className="fa-solid fa-eraser mr-2" />
+              <i className="fa-solid fa-eraser" />
               Clear Points
             </Button>
             <Button
@@ -99,9 +99,9 @@ function App() {
               onClick={copyPoints}
             >
               {isCopied ? (
-                <i className="fa-solid fa-check text-green-500 mr-2" />
+                <i className="fa-solid fa-check text-green-500" />
               ) : (
-                <i className="fa-solid fa-copy mr-2" />
+                <i className="fa-solid fa-copy" />
               )}
               Copy Points
             </Button>
@@ -116,16 +116,29 @@ function App() {
                 mousePoint={mousePoint}
                 setMousePoint={setMousePoint}
               />
-              <Tooltip side="left" content="Center Image">
-                <IconButton
-                  size="3"
-                  radius="full"
-                  className="absolute bottom-4 right-4"
-                  onClick={() => centerImage(image)}
-                >
-                  <i className="fa-solid fa-expand" />
-                </IconButton>
-              </Tooltip>
+              <div className="absolute bottom-4 right-4 grid gap-3">
+                <Tooltip side="left" content="Clear Image">
+                  <IconButton
+                    size="3"
+                    radius="full"
+                    onClick={() => {
+                      setImage(undefined);
+                      clearPoints();
+                    }}
+                  >
+                    <i className="fa-solid fa-xmark" />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip side="left" content="Center Image">
+                  <IconButton
+                    size="3"
+                    radius="full"
+                    onClick={() => centerImage(image)}
+                  >
+                    <i className="fa-solid fa-expand" />
+                  </IconButton>
+                </Tooltip>
+              </div>
             </>
           ) : (
             <Dropzone
