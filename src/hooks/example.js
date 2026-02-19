@@ -16,7 +16,7 @@ function draw() {
   ctx.scale(cameraZoom, cameraZoom);
   ctx.translate(
     -window.innerWidth / 2 + cameraOffset.x,
-    -window.innerHeight / 2 + cameraOffset.y
+    -window.innerHeight / 2 + cameraOffset.y,
   );
   ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
   ctx.fillStyle = "#991111";
@@ -69,7 +69,7 @@ function onPointerDown(e) {
   dragStart.y = getEventLocation(e).y / cameraZoom - cameraOffset.y;
 }
 
-function onPointerUp(e) {
+function onPointerUp() {
   isDragging = false;
   initialPinchDistance = null;
   lastZoom = cameraZoom;
@@ -133,7 +133,7 @@ canvas.addEventListener("touchend", (e) => handleTouch(e, onPointerUp));
 canvas.addEventListener("mousemove", onPointerMove);
 canvas.addEventListener("touchmove", (e) => handleTouch(e, onPointerMove));
 canvas.addEventListener("wheel", (e) =>
-  adjustZoom(e.deltaY * SCROLL_SENSITIVITY)
+  adjustZoom(e.deltaY * SCROLL_SENSITIVITY),
 );
 
 // Ready, set, go

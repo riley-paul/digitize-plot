@@ -21,14 +21,6 @@ const Dropzone: React.FC<Props> = ({ onImageLoad }) => {
     };
   };
 
-  const onFileChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
-    if (!event.target.files) {
-      setFile(null);
-      return;
-    }
-    setFile(event.target.files[0]);
-  };
-
   const onSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
 
