@@ -8,12 +8,7 @@ import Dropzone from "src/components/dropzone";
 import Calibrate from "src/components/calibrate";
 import Toggle from "src/components/toggle";
 import Help from "src/components/help";
-import {
-  Button,
-  IconButton,
-  Theme,
-  Tooltip,
-} from "@radix-ui/themes";
+import { Button, IconButton, Theme, Tooltip } from "@radix-ui/themes";
 
 import Logo from "src/components/logo";
 import useScrollShadow from "./hooks/use-scroll-shadow";
@@ -33,6 +28,7 @@ import usePoints from "./hooks/use-points";
 import useCenterImage from "./hooks/use-center-image";
 import useCursor from "./hooks/use-cursor";
 import useCopyPoints from "./hooks/use-copy-points";
+import { Provider } from "./components/ui/provider";
 
 function App() {
   const [image, setImage] = useAtom(imageAtom);
@@ -64,7 +60,7 @@ function App() {
   const { copyPoints, isCopied } = useCopyPoints(coordsConverter);
 
   return (
-    <Theme accentColor="gray" grayColor="slate" className="bg-gray-1">
+    <Provider>
       <div className="flex h-screen w-full">
         <aside
           ref={leftSideRef}
@@ -178,7 +174,7 @@ function App() {
           </div>
         </aside>
       </div>
-    </Theme>
+    </Provider>
   );
 }
 
