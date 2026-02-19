@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Button, Card, Heading, Text } from "@radix-ui/themes";
 import FilePicker from "./file-picker";
+import { Button, Card, Heading, Text } from "@chakra-ui/react";
 
 export type Props = {
   onImageLoad: (image: HTMLImageElement) => void;
@@ -42,19 +42,19 @@ const Dropzone: React.FC<Props> = ({ onImageLoad }) => {
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center p-4">
-      <Card className="max-w-lg" size="3">
+      <Card.Root className="max-w-lg" >
         <div className="grid gap-5">
           <header>
-            <Heading as="h2" size="4" mb="2">
+            <Heading as="h2"  mb="2">
               Welcome to Digitize Plot
             </Heading>
-            <Text color="gray" size="2" mb="4" asChild>
+            <Text color="gray" mb="4" asChild>
               <p>
                 A tool to quickly and painlessly convert images of plotted data
                 into raw points.
               </p>
             </Text>
-            <Text color="gray" size="2" mb="1" asChild>
+            <Text color="gray"  mb="1" asChild>
               <p>
                 To get started, choose an image of a plot to be digitized. Or if
                 you just want to try out the app, start with a sample image.
@@ -63,13 +63,9 @@ const Dropzone: React.FC<Props> = ({ onImageLoad }) => {
           </header>
           <form action="" className="grid gap-3" onSubmit={onSubmit}>
             <FilePicker selectedFile={file} setSelectedFile={setFile} />
-            {error && (
-              <Text color="red" size="1">
-                {error}
-              </Text>
-            )}
+            {error && <Text color="red">{error}</Text>}
             <div className="grid grid-cols-2 gap-2">
-              <Button variant="soft" className="w-full" onClick={useSample}>
+              <Button variant="subtle" className="w-full" onClick={useSample}>
                 Use Sample Image
               </Button>
               <Button className="w-full" type="submit" disabled={!file}>
@@ -80,7 +76,7 @@ const Dropzone: React.FC<Props> = ({ onImageLoad }) => {
             <input type="submit" hidden />
           </form>
         </div>
-      </Card>
+      </Card.Root>
     </div>
   );
 };
