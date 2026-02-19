@@ -8,7 +8,6 @@ import Dropzone from "src/components/dropzone";
 import Calibrate from "src/components/calibrate";
 import Toggle from "src/components/toggle";
 import Help from "src/components/help";
-import { Button, IconButton, Theme, Tooltip } from "@radix-ui/themes";
 
 import Logo from "src/components/logo";
 import useScrollShadow from "./hooks/use-scroll-shadow";
@@ -29,6 +28,18 @@ import useCenterImage from "./hooks/use-center-image";
 import useCursor from "./hooks/use-cursor";
 import useCopyPoints from "./hooks/use-copy-points";
 import { Provider } from "./components/ui/provider";
+import {
+  Box,
+  Button,
+  Flex,
+  HStack,
+  IconButton,
+  Separator,
+  Spacer,
+  Switch,
+  VStack,
+} from "@chakra-ui/react";
+import { Tooltip } from "./components/ui/tooltip";
 
 function App() {
   const [image, setImage] = useAtom(imageAtom);
@@ -61,7 +72,7 @@ function App() {
 
   return (
     <Provider>
-      <div className="flex h-screen w-full">
+      <HStack height="100vh" width="100vw">
         <aside
           ref={leftSideRef}
           className="flex w-60 flex-col gap-2 overflow-y-auto border-r bg-surface"
@@ -81,7 +92,7 @@ function App() {
             <Button
               disabled={points.length === 0}
               className="w-full"
-              variant="soft"
+              variant="subtle"
               onClick={clearPoints}
             >
               <i className="fa-solid fa-eraser" />
@@ -90,7 +101,7 @@ function App() {
             <Button
               disabled={points.length === 0}
               className="w-full"
-              variant="soft"
+              variant="subtle"
               onClick={copyPoints}
             >
               {isCopied ? (
@@ -112,10 +123,10 @@ function App() {
                 setMousePoint={setMousePoint}
               />
               <div className="absolute bottom-4 right-4 grid gap-3">
-                <Tooltip side="left" content="Clear Image">
+                <Tooltip content="Clear Image">
                   <IconButton
-                    size="3"
-                    radius="full"
+                    size="sm"
+                    rounded="full"
                     onClick={() => {
                       setImage(undefined);
                       clearPoints();
@@ -124,10 +135,10 @@ function App() {
                     <i className="fa-solid fa-xmark" />
                   </IconButton>
                 </Tooltip>
-                <Tooltip side="left" content="Center Image">
+                <Tooltip content="Center Image">
                   <IconButton
-                    size="3"
-                    radius="full"
+                    size="sm"
+                    rounded="full"
                     onClick={() => centerImage(image)}
                   >
                     <i className="fa-solid fa-expand" />
@@ -145,8 +156,8 @@ function App() {
           )}
           {image && showHelp && <Help />}
         </main>
-        <aside className="flex w-60 flex-col justify-between divide-y overflow-y-auto border-l bg-surface">
-          <div className="divide-y">
+        <VStack bg="bg.panel" w="60" p="4" flexShrink="0" height="vh">
+          <Box flexGrow="1">
             <Bullseye canvasRef={canvasRef} mousePoint={mousePoint} />
             <MouseCoords
               coordsConverter={coordsConverter}
@@ -156,24 +167,29 @@ function App() {
               calibrations={calibrations}
               setCalibrations={setCalibrations}
             />
-          </div>
-          <div className="flex w-full justify-between gap-4 p-6">
-            <Toggle
-              id="debug"
-              name="Debug Mode"
-              state={debug}
-              setState={setDebug}
-            />
+          </Box>
+          <Separator />
+          <Flex w="full" py="2">
+            <Switch.Root
+              checked={debug}
+              onCheckedChange={({ checked }) => setDebug(checked)}
+            >
+              <Switch.HiddenInput id="debug" name="Debug Mode" />
+              <Switch.Control />
+              <Switch.Label>Debug Mode</Switch.Label>
+            </Switch.Root>
+            <Spacer />
             <IconButton
-              radius="full"
-              variant={showHelp ? "solid" : "soft"}
+              rounded="full"
+              size="xs"
+              variant={showHelp ? "solid" : "subtle"}
               onClick={() => setShowHelp(!showHelp)}
             >
               ?
             </IconButton>
-          </div>
-        </aside>
-      </div>
+          </Flex>
+        </VStack>
+      </HStack>
     </Provider>
   );
 }
