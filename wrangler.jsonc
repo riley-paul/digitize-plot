@@ -1,6 +1,6 @@
 {
 	"main": "dist/_worker.js/index.js",
-	"name": "astro",
+	"name": "digitize-plot",
   "compatibility_date": "2026-03-05",
   "compatibility_flags": [
     "nodejs_compat",
