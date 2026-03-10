@@ -21,7 +21,7 @@ const Dropzone: React.FC<Props> = ({ onImageLoad }) => {
     };
   };
 
-  const onSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
+  const onSubmit: React.EventHandler = (event) => {
     event.preventDefault();
 
     if (!file) {

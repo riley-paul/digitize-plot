@@ -11,7 +11,6 @@ import Help from "src/components/help";
 import {
   Button,
   IconButton,
-  Theme,
   Tooltip,
 } from "@radix-ui/themes";
 
@@ -64,7 +63,6 @@ function App() {
   const { copyPoints, isCopied } = useCopyPoints(coordsConverter);
 
   return (
-    <Theme accentColor="gray" grayColor="slate" className="bg-gray-1">
       <div className="flex h-screen w-full">
         <aside
           ref={leftSideRef}
@@ -178,7 +176,6 @@ function App() {
           </div>
         </aside>
       </div>
-    </Theme>
   );
 }
 

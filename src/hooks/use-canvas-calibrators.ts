@@ -13,9 +13,10 @@ import {
 } from "@/lib/store";
 import { type Calibrations } from "@/lib/interpolators/types";
 import { linearCoordsConverterGenerator } from "@/lib/interpolators/linear";
+import type { CanvasRef } from "@/types";
 
 export default function useCalibrators(
-  canvasRef: React.RefObject<HTMLCanvasElement>,
+  canvasRef: CanvasRef,
   mousePoint: Point | undefined,
   image: HTMLImageElement | undefined,
 ) {

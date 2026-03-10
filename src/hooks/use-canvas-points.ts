@@ -10,10 +10,11 @@ import {
   pointsAtom,
 } from "@/lib/store";
 import usePoints from "./use-points";
+import type { CanvasRef } from "@/types";
 
 type Props = {
   mousePoint: Point | undefined;
-  canvasRef: React.RefObject<HTMLCanvasElement>;
+  canvasRef: CanvasRef;
 };
 
 export default function useCanvasPoints({ canvasRef, mousePoint }: Props) {
