@@ -11,6 +11,7 @@ export default defineConfig({
   adapter: cloudflare(),
   integrations: [react()],
   vite: {
+    // @ts-ignore
     plugins: [tailwindcss()],
   },
 });
