@@ -49,6 +49,7 @@
     "zustand": "^4.5.5"
   },
   "devDependencies": {
+    "@types/node": "^25.4.0",
     "@types/react-csv": "^1.1.10",
     "@types/uuid": "^10.0.0",
     "vitest": "^2.1.5"
