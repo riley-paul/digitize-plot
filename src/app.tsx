@@ -6,9 +6,7 @@ import Download from "src/components/download";
 import MouseCoords from "src/components/mouse-coords";
 import Dropzone from "src/components/dropzone";
 import Calibrate from "src/components/calibrate";
-import Toggle from "src/components/toggle";
 import Help from "src/components/help";
-import { Button, IconButton, Tooltip } from "@radix-ui/themes";
 
 import Logo from "src/components/logo";
 import useScrollShadow from "./hooks/use-scroll-shadow";
@@ -16,7 +14,6 @@ import { cn } from "./lib/utils";
 import { useAtom } from "jotai/react";
 import {
   calibrationsAtom,
-  debugAtom,
   imageAtom,
   pointsAtom,
   showHelpAtom,
@@ -28,7 +25,15 @@ import usePoints from "./hooks/use-points";
 import useCenterImage from "./hooks/use-center-image";
 import useCursor from "./hooks/use-cursor";
 import useCopyPoints from "./hooks/use-copy-points";
-import { TooltipProvider } from "./components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./components/ui/tooltip";
+import { Button } from "./components/ui/button";
+import DebugToggle from "./components/controls/debug-toggle";
+import HelpToggle from "./components/controls/help-toggle";
 
 function App() {
   const [image, setImage] = useAtom(imageAtom);
@@ -41,8 +46,7 @@ function App() {
 
   const coordsConverter = linearCoordsConverterGenerator(calibrations);
 
-  const [debug, setDebug] = useAtom(debugAtom);
-  const [showHelp, setShowHelp] = useAtom(showHelpAtom);
+  const [showHelp] = useAtom(showHelpAtom);
 
   const { listRef: leftSideRef, isScrolled: isLeftSideScrolled } =
     useScrollShadow();
@@ -81,7 +85,6 @@ function App() {
             <Button
               disabled={points.length === 0}
               className="w-full"
-              variant="soft"
               onClick={clearPoints}
             >
               <i className="fa-solid fa-eraser" />
@@ -90,7 +93,6 @@ function App() {
             <Button
               disabled={points.length === 0}
               className="w-full"
-              variant="soft"
               onClick={copyPoints}
             >
               {isCopied ? (
@@ -112,26 +114,27 @@ function App() {
                 setMousePoint={setMousePoint}
               />
               <div className="absolute right-4 bottom-4 grid gap-3">
-                <Tooltip side="left" content="Clear Image">
-                  <IconButton
-                    size="3"
-                    radius="full"
-                    onClick={() => {
-                      setImage(undefined);
-                      clearPoints();
-                    }}
-                  >
-                    <i className="fa-solid fa-xmark" />
-                  </IconButton>
+                <Tooltip>
+                  <TooltipContent side="left">Clear image</TooltipContent>
+                  <TooltipTrigger>
+                    <Button
+                      size="icon"
+                      onClick={() => {
+                        setImage(undefined);
+                        clearPoints();
+                      }}
+                    >
+                      <i className="fa-solid fa-xmark" />
+                    </Button>
+                  </TooltipTrigger>
                 </Tooltip>
-                <Tooltip side="left" content="Center Image">
-                  <IconButton
-                    size="3"
-                    radius="full"
-                    onClick={() => centerImage(image)}
-                  >
-                    <i className="fa-solid fa-expand" />
-                  </IconButton>
+                <Tooltip>
+                  <TooltipContent side="left">Center image</TooltipContent>
+                  <TooltipTrigger>
+                    <Button size="icon" onClick={() => centerImage(image)}>
+                      <i className="fa-solid fa-expand" />
+                    </Button>
+                  </TooltipTrigger>
                 </Tooltip>
               </div>
             </>
@@ -158,19 +161,8 @@ function App() {
             />
           </div>
           <div className="flex w-full justify-between gap-4 p-6">
-            <Toggle
-              id="debug"
-              name="Debug Mode"
-              state={debug}
-              setState={setDebug}
-            />
-            <IconButton
-              radius="full"
-              variant={showHelp ? "solid" : "soft"}
-              onClick={() => setShowHelp(!showHelp)}
-            >
-              ?
-            </IconButton>
+            <DebugToggle />
+            <HelpToggle />
           </div>
         </aside>
       </div>
