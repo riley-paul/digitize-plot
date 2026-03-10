@@ -1,9 +1,10 @@
 import Point from "@/geometry/point";
 import { matrixAtom } from "@/lib/store";
+import type { CanvasRef } from "@/types";
 import { useSetAtom } from "jotai";
 
 export default function useCenterImage(
-  canvasRef: React.RefObject<HTMLCanvasElement>,
+  canvasRef: CanvasRef,
 ) {
   const setMatrix = useSetAtom(matrixAtom);
   const centerImage = (image: HTMLImageElement) => {

@@ -1,0 +1,1 @@
+export type CanvasRef = React.RefObject<HTMLCanvasElement | null>;

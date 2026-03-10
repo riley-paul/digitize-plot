@@ -1,5 +1,5 @@
-import { Button, Strong, Text } from "@radix-ui/themes";
 import React from "react";
+import { Button } from "./ui/button";
 
 type Props = {
   selectedFile: File | null;
@@ -22,10 +22,8 @@ const FilePicker: React.FC<Props> = (props) => {
   return (
     <div className="grid gap-2">
       <Button
-        size="3"
         type="button"
         onClick={handleFileClick}
-        className="bg-blue-500 text-white rounded shadow hover:bg-blue-600 px-4 py-2"
       >
         <i className="fa-solid fa-file"></i>
         {selectedFile ? "Change Image" : "Upload Image"}
@@ -33,13 +31,14 @@ const FilePicker: React.FC<Props> = (props) => {
       <input
         ref={ref}
         type="file"
+        accept="image/*"
         onChange={handleFileChange}
         className="hidden"
       />
       {selectedFile && (
-        <Text color="gray" size="1">
-          Selected file: <Strong>{selectedFile.name}</Strong>
-        </Text>
+        <span >
+          Selected file: <span className="font-bold">{selectedFile.name}</span>
+        </span>
       )}
     </div>
   );

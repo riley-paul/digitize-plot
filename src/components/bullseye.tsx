@@ -2,9 +2,10 @@ import React from "react";
 import Point from "src/geometry/point";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
 import { useInterval } from "usehooks-ts";
+import type { CanvasRef } from "@/types";
 
 export type Props = {
-  canvasRef: React.RefObject<HTMLCanvasElement>;
+  canvasRef: CanvasRef;
   mousePoint: Point | undefined;
 };
 
@@ -19,7 +20,7 @@ export default function Bullseye(props: Props) {
 
   if (!mousePoint || !context) {
     return (
-      <div className="relative aspect-square overflow-hidden bg-gray-1"></div>
+      <div className="bg-background relative aspect-square overflow-hidden"></div>
     );
   }
 
@@ -35,7 +36,7 @@ export default function Bullseye(props: Props) {
   return (
     <div
       ref={ref}
-      className="relative aspect-square overflow-hidden bg-gray-1"
+      className="relative aspect-square overflow-hidden bg-white"
       style={{
         backgroundImage: `url(${imgUrl})`,
         backgroundRepeat: "no-repeat",
@@ -43,9 +44,9 @@ export default function Bullseye(props: Props) {
         backgroundPosition: `${w / 2 - x * zoom}px ${h / 2 - y * zoom}px`,
       }}
     >
-      <div className="absolute top-1/2 h-px w-full -translate-y-1/2 bg-gray-10 opacity-50" />
-      <div className="absolute left-1/2 h-full w-px -translate-x-1/2 bg-gray-10 opacity-50" />
-      <div className="absolute left-1/2 top-1/2 h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gray-12" />
+      <div className="absolute top-1/2 h-px w-full -translate-y-1/2 bg-black/50" />
+      <div className="absolute left-1/2 h-full w-px -translate-x-1/2 bg-black/50" />
+      <div className="absolute top-1/2 left-1/2 h-1 w-1 -translate-x-1/2 -translate-y-1/2 rounded-full bg-black" />
     </div>
   );
 }

@@ -4,9 +4,10 @@ import getPointFromEvent from "@/lib/helpers/get-point-from-event";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
 import { useAtom } from "jotai";
 import { matrixAtom } from "@/lib/store";
+import type { CanvasRef } from "@/types";
 
 export default function usePanZoom(
-  canvasRef: React.RefObject<HTMLCanvasElement>,
+  canvasRef: CanvasRef,
 ) {
   const [matrix, setMatrix] = useAtom(matrixAtom);
   const [isPanning, setIsPanning] = React.useState<boolean>(false);

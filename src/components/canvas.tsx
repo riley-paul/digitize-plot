@@ -7,9 +7,10 @@ import { useAtomValue } from "jotai";
 import { debugAtom, imageAtom } from "@/lib/store";
 import Point from "@/geometry/point";
 import getPointFromEvent from "@/lib/helpers/get-point-from-event";
+import type { CanvasRef } from "@/types";
 
 type Props = {
-  canvasRef: React.RefObject<HTMLCanvasElement>;
+  canvasRef: CanvasRef;
   mousePoint: Point | undefined;
   setMousePoint: React.Dispatch<React.SetStateAction<Point | undefined>>;
 };

@@ -1,4 +1,3 @@
-import { DataList, Heading } from "@radix-ui/themes";
 import Point from "src/geometry/point";
 
 export type Props = {
@@ -13,19 +12,15 @@ export default function MouseCoords(props: Props) {
 
   return (
     <div className="grid gap-3 p-4">
-      <Heading as="h3" size="3">
+      <h3 className="text-muted-foreground text-sm font-semibold uppercase">
         Mouse Coordinates
-      </Heading>
-      <DataList.Root className="gap-y-2 pl-2">
-        <DataList.Item align="center">
-          <DataList.Label minWidth="1rem">X</DataList.Label>
-          <DataList.Value>{x.toLocaleString()}</DataList.Value>
-        </DataList.Item>
-        <DataList.Item align="center">
-          <DataList.Label minWidth="1rem">Y</DataList.Label>
-          <DataList.Value>{y.toLocaleString()}</DataList.Value>
-        </DataList.Item>
-      </DataList.Root>
+      </h3>
+      <div className="grid grid-cols-[auto_1fr] items-center gap-2">
+        <div className="text-muted-foreground">X</div>
+        <div className="font-medium">{x.toLocaleString()}</div>
+        <div className="text-muted-foreground">Y</div>
+        <div className="font-medium">{y.toLocaleString()}</div>
+      </div>
     </div>
   );
 }
