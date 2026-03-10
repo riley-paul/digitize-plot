@@ -90,7 +90,7 @@ const Canvas: React.FC<Props> = ({ canvasRef, mousePoint, setMousePoint }) => {
 
   return (
     <canvas
-      className="h-full w-full"
+      className="h-full w-full bg-white"
       ref={canvasRef}
       onMouseMove={(event) => {
         if (ctx) {

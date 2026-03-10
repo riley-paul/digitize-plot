@@ -2,7 +2,7 @@ import React from "react";
 
 import Bullseye from "src/components/bullseye";
 import DataTable from "src/components/data-table";
-import Download from "src/components/download";
+import DownloadLink from "src/components/download";
 import MouseCoords from "src/components/mouse-coords";
 import Dropzone from "src/components/dropzone";
 import Calibrate from "src/components/calibrate";
@@ -30,6 +30,7 @@ import { Button } from "./components/ui/button";
 import DebugToggle from "./components/controls/debug-toggle";
 import HelpToggle from "./components/controls/help-toggle";
 import CanvasControls from "./components/controls/canvas-controls";
+import { IconDownload } from "@tabler/icons-react";
 
 function App() {
   const [image, setImage] = useAtom(imageAtom);
@@ -77,20 +78,12 @@ function App() {
           <section className="flex-1 px-4">
             <DataTable coordsConverter={coordsConverter} />
           </section>
-          <footer className="bg-surface sticky bottom-0 z-50 grid gap-2 border-t p-4 backdrop-blur">
-            <Button
-              disabled={points.length === 0}
-              className="w-full"
-              onClick={clearPoints}
-            >
+          <footer className="sticky bottom-0 z-50 grid gap-2 border-t p-4 backdrop-blur">
+            <Button disabled={points.length === 0} onClick={clearPoints}>
               <i className="fa-solid fa-eraser" />
               Clear Points
             </Button>
-            <Button
-              disabled={points.length === 0}
-              className="w-full"
-              onClick={copyPoints}
-            >
+            <Button disabled={points.length === 0} onClick={copyPoints}>
               {isCopied ? (
                 <i className="fa-solid fa-check text-green-500" />
               ) : (
@@ -98,7 +91,12 @@ function App() {
               )}
               Copy Points
             </Button>
-            <Download coordsConverter={coordsConverter} />
+            <DownloadLink coordsConverter={coordsConverter}>
+              <Button disabled={points.length === 0} className="w-full">
+                <IconDownload />
+                Download CSV
+              </Button>
+            </DownloadLink>
           </footer>
         </aside>
         <main className="relative flex-1" style={{ cursor }}>

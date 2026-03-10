@@ -3,13 +3,12 @@ import Point from "src/geometry/point";
 import { toast } from "sonner";
 import { pointsAtom } from "@/lib/store";
 import usePoints from "@/hooks/use-points";
-import { Button } from "@radix-ui/themes";
 
-export type Props = {
+export type Props = React.PropsWithChildren<{
   coordsConverter: (coords: Point) => Point;
-};
+}>;
 
-export default function Download({ coordsConverter }: Props) {
+const DownloadLink: React.FC<Props> = ({ coordsConverter, children }) => {
   const { points } = usePoints(pointsAtom);
   const csvData = points
     .map(coordsConverter)
@@ -21,10 +20,9 @@ export default function Download({ coordsConverter }: Props) {
       filename="digitize-plot.csv"
       onClick={() => toast.success("CSV downloaded")}
     >
-      <Button disabled={points.length === 0} className="w-full">
-        <i className="fa-solid fa-download" />
-        Download CSV
-      </Button>
+      {children}
     </CSVLink>
   );
-}
+};
+
+export default DownloadLink;

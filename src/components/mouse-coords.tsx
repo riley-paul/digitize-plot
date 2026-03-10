@@ -1,4 +1,10 @@
 import Point from "src/geometry/point";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText,
+} from "./ui/input-group";
 
 export type Props = {
   mousePoint: Point | undefined;
@@ -15,11 +21,19 @@ export default function MouseCoords(props: Props) {
       <h3 className="text-muted-foreground text-sm font-semibold uppercase">
         Mouse Coordinates
       </h3>
-      <div className="grid grid-cols-[auto_1fr] items-center gap-2">
-        <div className="text-muted-foreground">X</div>
-        <div className="font-medium">{x.toLocaleString()}</div>
-        <div className="text-muted-foreground">Y</div>
-        <div className="font-medium">{y.toLocaleString()}</div>
+      <div className="grid gap-2">
+        <InputGroup>
+          <InputGroupAddon>
+            <InputGroupText>X</InputGroupText>
+          </InputGroupAddon>
+          <InputGroupInput readOnly value={x.toLocaleString()} />
+        </InputGroup>
+        <InputGroup>
+          <InputGroupAddon>
+            <InputGroupText>Y</InputGroupText>
+          </InputGroupAddon>
+          <InputGroupInput readOnly value={y.toLocaleString()} />
+        </InputGroup>
       </div>
     </div>
   );

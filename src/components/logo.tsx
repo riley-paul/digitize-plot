@@ -1,19 +1,25 @@
-import { Heading, Link, Text } from "@radix-ui/themes";
+import { IconChartCovariate } from "@tabler/icons-react";
 import React from "react";
 
 const Logo: React.FC = () => {
   return (
     <div className="flex flex-col gap-1">
-      <Heading size="5" className="flex items-center gap-3">
-        <i className="fa-solid fa-chart-line text-accent-10" />
-        Digitize Plot
-      </Heading>
-      <Text size="1" color="gray">
+      <h1 className="flex items-center gap-2">
+        <div className="bg-primary text-primary-foreground rounded-md p-1">
+          <IconChartCovariate className="size-4" />
+        </div>
+        <span className="text-lg font-bold">Digitize Plot</span>
+      </h1>
+      <span className="text-muted-foreground text-xs">
         An app by{" "}
-        <Link href="https://rileypaul.ca" target="_blank">
+        <a
+          className="hover:text-primary text-muted-foreground/80 underline-offset-2 hover:underline"
+          href="https://rileypaul.ca"
+          target="_blank"
+        >
           Riley Paul
-        </Link>
-      </Text>
+        </a>
+      </span>
     </div>
   );
 };
