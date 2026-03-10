@@ -4,7 +4,7 @@ import Bullseye from "src/components/bullseye";
 import DataTable from "src/components/data-table";
 import DownloadLink from "src/components/download";
 import MouseCoords from "src/components/mouse-coords";
-import Dropzone from "src/components/dropzone";
+import Welcome from "@/components/welcome";
 import Calibrate from "src/components/calibrate";
 import Help from "src/components/help";
 
@@ -73,11 +73,19 @@ function App() {
             <DataTable coordsConverter={coordsConverter} />
           </section>
           <footer className="bg-sidebar sticky bottom-0 z-50 grid gap-2 border-t p-4">
-            <Button disabled={points.length === 0} onClick={clearPoints}>
+            <Button
+              variant="secondary"
+              disabled={points.length === 0}
+              onClick={clearPoints}
+            >
               <IconEraser />
               Clear Points
             </Button>
-            <Button disabled={points.length === 0} onClick={copyPoints}>
+            <Button
+              variant="secondary"
+              disabled={points.length === 0}
+              onClick={copyPoints}
+            >
               {isCopied ? (
                 <IconCopyCheck className="text-green-500" />
               ) : (
@@ -86,7 +94,11 @@ function App() {
               Copy Points
             </Button>
             <DownloadLink coordsConverter={coordsConverter}>
-              <Button disabled={points.length === 0} className="w-full">
+              <Button
+                variant="default"
+                disabled={points.length === 0}
+                className="w-full"
+              >
                 <IconDownload />
                 Download CSV
               </Button>
@@ -106,7 +118,7 @@ function App() {
               </div>
             </>
           ) : (
-            <Dropzone
+            <Welcome
               onImageLoad={(img) => {
                 setImage(img);
                 centerImage(img);

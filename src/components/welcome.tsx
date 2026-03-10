@@ -11,13 +11,14 @@ import {
 } from "./ui/card";
 import { Button } from "./ui/button";
 import { IconArrowRight } from "@tabler/icons-react";
+import ImageDropzone from "./image-dropzone";
 
 export type Props = {
   onImageLoad: (image: HTMLImageElement) => void;
 };
 
-const Dropzone: React.FC<Props> = ({ onImageLoad }) => {
-  const [file, setFile] = React.useState<File | null>(null);
+const Welcome: React.FC<Props> = ({ onImageLoad }) => {
+  const [file, setFile] = React.useState<File | undefined>();
 
   const createImage = (url: string) => {
     const img = new Image();
@@ -53,7 +54,7 @@ const Dropzone: React.FC<Props> = ({ onImageLoad }) => {
         </CardHeader>
 
         <CardContent>
-          <FilePicker selectedFile={file} setSelectedFile={setFile} />
+          <ImageDropzone file={file} setFile={setFile} />
         </CardContent>
 
         <CardFooter className="grid grid-cols-2 gap-3 border-t">
@@ -75,4 +76,4 @@ const Dropzone: React.FC<Props> = ({ onImageLoad }) => {
   );
 };
 
-export default Dropzone;
+export default Welcome;
