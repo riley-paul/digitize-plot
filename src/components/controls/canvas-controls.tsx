@@ -26,7 +26,7 @@ const CanvasControls: React.FC<Props> = ({ canvasRef }) => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col items-center gap-3">
       <Tooltip>
         <TooltipContent side="left">Clear image</TooltipContent>
         <TooltipTrigger>
@@ -43,7 +43,6 @@ const CanvasControls: React.FC<Props> = ({ canvasRef }) => {
           </Button>
         </TooltipTrigger>
       </Tooltip>
-      ;
     </div>
   );
 };
