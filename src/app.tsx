@@ -30,7 +30,12 @@ import { Button } from "./components/ui/button";
 import DebugToggle from "./components/controls/debug-toggle";
 import HelpToggle from "./components/controls/help-toggle";
 import CanvasControls from "./components/controls/canvas-controls";
-import { IconDownload } from "@tabler/icons-react";
+import {
+  IconCopy,
+  IconCopyCheck,
+  IconDownload,
+  IconEraser,
+} from "@tabler/icons-react";
 
 function App() {
   const [image, setImage] = useAtom(imageAtom);
@@ -80,14 +85,14 @@ function App() {
           </section>
           <footer className="sticky bottom-0 z-50 grid gap-2 border-t p-4 backdrop-blur">
             <Button disabled={points.length === 0} onClick={clearPoints}>
-              <i className="fa-solid fa-eraser" />
+              <IconEraser />
               Clear Points
             </Button>
             <Button disabled={points.length === 0} onClick={copyPoints}>
               {isCopied ? (
-                <i className="fa-solid fa-check text-green-500" />
+                <IconCopyCheck className="text-green-500" />
               ) : (
-                <i className="fa-solid fa-copy" />
+                <IconCopy />
               )}
               Copy Points
             </Button>
