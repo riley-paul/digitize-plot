@@ -50,9 +50,6 @@ function App() {
 
   const [showHelp] = useAtom(showHelpAtom);
 
-  const { listRef: leftSideRef, isScrolled: isLeftSideScrolled } =
-    useScrollShadow();
-
   const { clearPoints, points } = usePoints(pointsAtom);
 
   const centerImage = useCenterImage(canvasRef);
@@ -68,22 +65,14 @@ function App() {
   return (
     <TooltipProvider>
       <div className="flex h-screen w-full">
-        <aside
-          ref={leftSideRef}
-          className="bg-sidebar flex w-60 flex-col gap-2 overflow-y-auto border-r"
-        >
-          <header
-            className={cn(
-              "sticky top-0 z-50 p-4 pb-6 backdrop-blur",
-              isLeftSideScrolled && "shadow",
-            )}
-          >
+        <aside className="bg-sidebar flex w-60 flex-col gap-2 overflow-y-auto border-r">
+          <header className="bg-sidebar sticky top-0 z-50 border-b p-4 pb-6">
             <Logo />
           </header>
           <section className="flex-1 px-4">
             <DataTable coordsConverter={coordsConverter} />
           </section>
-          <footer className="sticky bottom-0 z-50 grid gap-2 border-t p-4 backdrop-blur">
+          <footer className="bg-sidebar sticky bottom-0 z-50 grid gap-2 border-t p-4">
             <Button disabled={points.length === 0} onClick={clearPoints}>
               <IconEraser />
               Clear Points

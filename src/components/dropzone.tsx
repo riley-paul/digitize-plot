@@ -56,8 +56,8 @@ const Dropzone: React.FC<Props> = ({ onImageLoad }) => {
           <FilePicker selectedFile={file} setSelectedFile={setFile} />
         </CardContent>
 
-        <CardFooter className="grid grid-cols-2 gap-3">
-          <Button onClick={useSample}>Use Sample Image</Button>
+        <CardFooter className="grid grid-cols-2 gap-3 border-t">
+          <Button onClick={useSample}>Use sample image</Button>
           <Button
             onClick={() => {
               if (!file) return;
