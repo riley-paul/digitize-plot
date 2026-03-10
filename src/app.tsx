@@ -25,15 +25,11 @@ import usePoints from "./hooks/use-points";
 import useCenterImage from "./hooks/use-center-image";
 import useCursor from "./hooks/use-cursor";
 import useCopyPoints from "./hooks/use-copy-points";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "./components/ui/tooltip";
+import { TooltipProvider } from "./components/ui/tooltip";
 import { Button } from "./components/ui/button";
 import DebugToggle from "./components/controls/debug-toggle";
 import HelpToggle from "./components/controls/help-toggle";
+import CanvasControls from "./components/controls/canvas-controls";
 
 function App() {
   const [image, setImage] = useAtom(imageAtom);
@@ -113,29 +109,8 @@ function App() {
                 mousePoint={mousePoint}
                 setMousePoint={setMousePoint}
               />
-              <div className="absolute right-4 bottom-4 grid gap-3">
-                <Tooltip>
-                  <TooltipContent side="left">Clear image</TooltipContent>
-                  <TooltipTrigger>
-                    <Button
-                      size="icon"
-                      onClick={() => {
-                        setImage(undefined);
-                        clearPoints();
-                      }}
-                    >
-                      <i className="fa-solid fa-xmark" />
-                    </Button>
-                  </TooltipTrigger>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipContent side="left">Center image</TooltipContent>
-                  <TooltipTrigger>
-                    <Button size="icon" onClick={() => centerImage(image)}>
-                      <i className="fa-solid fa-expand" />
-                    </Button>
-                  </TooltipTrigger>
-                </Tooltip>
+              <div className="absolute right-4 bottom-4">
+                <CanvasControls canvasRef={canvasRef} />
               </div>
             </>
           ) : (
@@ -148,7 +123,7 @@ function App() {
           )}
           {image && showHelp && <Help />}
         </main>
-        <aside className="bg-surface flex w-60 flex-col justify-between divide-y overflow-y-auto border-l">
+        <aside className="bg-sidebar flex w-60 flex-col justify-between divide-y overflow-y-auto border-l">
           <div className="divide-y">
             <Bullseye canvasRef={canvasRef} mousePoint={mousePoint} />
             <MouseCoords
