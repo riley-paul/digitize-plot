@@ -65,11 +65,11 @@ function App() {
       <div className="flex h-screen w-full">
         <aside
           ref={leftSideRef}
-          className="bg-surface flex w-60 flex-col gap-2 overflow-y-auto border-r"
+          className="bg-sidebar flex w-60 flex-col gap-2 overflow-y-auto border-r"
         >
           <header
             className={cn(
-              "bg-surface sticky top-0 z-50 p-4 pb-6 backdrop-blur",
+              "sticky top-0 z-50 p-4 pb-6 backdrop-blur",
               isLeftSideScrolled && "shadow",
             )}
           >
