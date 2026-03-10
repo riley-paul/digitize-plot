@@ -1,14 +1,22 @@
 import React from "react";
 
-import { Button, Card, Heading, Text } from "@radix-ui/themes";
 import FilePicker from "./file-picker";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import { Button } from "./ui/button";
+import { IconArrowRight } from "@tabler/icons-react";
 
 export type Props = {
   onImageLoad: (image: HTMLImageElement) => void;
 };
 
 const Dropzone: React.FC<Props> = ({ onImageLoad }) => {
-  const [error, setError] = React.useState("");
   const [file, setFile] = React.useState<File | null>(null);
 
   const createImage = (url: string) => {
@@ -21,19 +29,6 @@ const Dropzone: React.FC<Props> = ({ onImageLoad }) => {
     };
   };
 
-  const onSubmit: React.EventHandler = (event) => {
-    event.preventDefault();
-
-    if (!file) {
-      setError("Must select an image file");
-      return;
-    }
-
-    setError("");
-    const url = URL.createObjectURL(file);
-    createImage(url);
-  };
-
   const useSample: React.MouseEventHandler = (_) => {
     // const url = `BPL220K 24ft.png`;
     const url = "beam-in-tension.png";
@@ -42,44 +37,39 @@ const Dropzone: React.FC<Props> = ({ onImageLoad }) => {
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center p-4">
-      <Card className="max-w-lg" size="3">
-        <div className="grid gap-5">
-          <header>
-            <Heading as="h2" size="4" mb="2">
-              Welcome to Digitize Plot
-            </Heading>
-            <Text color="gray" size="2" mb="4" asChild>
-              <p>
-                A tool to quickly and painlessly convert images of plotted data
-                into raw points.
-              </p>
-            </Text>
-            <Text color="gray" size="2" mb="1" asChild>
-              <p>
-                To get started, choose an image of a plot to be digitized. Or if
-                you just want to try out the app, start with a sample image.
-              </p>
-            </Text>
-          </header>
-          <form action="" className="grid gap-3" onSubmit={onSubmit}>
-            <FilePicker selectedFile={file} setSelectedFile={setFile} />
-            {error && (
-              <Text color="red" size="1">
-                {error}
-              </Text>
-            )}
-            <div className="grid grid-cols-2 gap-2">
-              <Button variant="soft" className="w-full" onClick={useSample}>
-                Use Sample Image
-              </Button>
-              <Button className="w-full" type="submit" disabled={!file}>
-                Let's go
-                <i className="fa-solid fa-arrow-right"></i>
-              </Button>
-            </div>
-            <input type="submit" hidden />
-          </form>
-        </div>
+      <Card className="w-full max-w-lg">
+        <CardHeader>
+          <CardTitle>Welcome to Digitize Plot</CardTitle>
+
+          <CardDescription>
+            A tool to quickly and painlessly convert images of plotted data into
+            raw points.
+          </CardDescription>
+
+          <CardDescription>
+            To get started, choose an image of a plot to be digitized. Or if you
+            just want to try out the app, start with a sample image.
+          </CardDescription>
+        </CardHeader>
+
+        <CardContent>
+          <FilePicker selectedFile={file} setSelectedFile={setFile} />
+        </CardContent>
+
+        <CardFooter className="grid grid-cols-2 gap-3">
+          <Button onClick={useSample}>Use Sample Image</Button>
+          <Button
+            onClick={() => {
+              if (!file) return;
+              const url = URL.createObjectURL(file);
+              createImage(url);
+            }}
+            disabled={!file}
+          >
+            Let's go
+            <IconArrowRight />
+          </Button>
+        </CardFooter>
       </Card>
     </div>
   );

@@ -8,11 +8,7 @@ import Dropzone from "src/components/dropzone";
 import Calibrate from "src/components/calibrate";
 import Toggle from "src/components/toggle";
 import Help from "src/components/help";
-import {
-  Button,
-  IconButton,
-  Tooltip,
-} from "@radix-ui/themes";
+import { Button, IconButton, Tooltip } from "@radix-ui/themes";
 
 import Logo from "src/components/logo";
 import useScrollShadow from "./hooks/use-scroll-shadow";
@@ -32,6 +28,7 @@ import usePoints from "./hooks/use-points";
 import useCenterImage from "./hooks/use-center-image";
 import useCursor from "./hooks/use-cursor";
 import useCopyPoints from "./hooks/use-copy-points";
+import { TooltipProvider } from "./components/ui/tooltip";
 
 function App() {
   const [image, setImage] = useAtom(imageAtom);
@@ -63,14 +60,15 @@ function App() {
   const { copyPoints, isCopied } = useCopyPoints(coordsConverter);
 
   return (
+    <TooltipProvider>
       <div className="flex h-screen w-full">
         <aside
           ref={leftSideRef}
-          className="flex w-60 flex-col gap-2 overflow-y-auto border-r bg-surface"
+          className="bg-surface flex w-60 flex-col gap-2 overflow-y-auto border-r"
         >
           <header
             className={cn(
-              "sticky top-0 z-50 bg-surface p-4 pb-6 backdrop-blur",
+              "bg-surface sticky top-0 z-50 p-4 pb-6 backdrop-blur",
               isLeftSideScrolled && "shadow",
             )}
           >
@@ -79,7 +77,7 @@ function App() {
           <section className="flex-1 px-4">
             <DataTable coordsConverter={coordsConverter} />
           </section>
-          <footer className="sticky bottom-0 z-50 grid gap-2 border-t bg-surface p-4 backdrop-blur">
+          <footer className="bg-surface sticky bottom-0 z-50 grid gap-2 border-t p-4 backdrop-blur">
             <Button
               disabled={points.length === 0}
               className="w-full"
@@ -113,7 +111,7 @@ function App() {
                 mousePoint={mousePoint}
                 setMousePoint={setMousePoint}
               />
-              <div className="absolute bottom-4 right-4 grid gap-3">
+              <div className="absolute right-4 bottom-4 grid gap-3">
                 <Tooltip side="left" content="Clear Image">
                   <IconButton
                     size="3"
@@ -147,7 +145,7 @@ function App() {
           )}
           {image && showHelp && <Help />}
         </main>
-        <aside className="flex w-60 flex-col justify-between divide-y overflow-y-auto border-l bg-surface">
+        <aside className="bg-surface flex w-60 flex-col justify-between divide-y overflow-y-auto border-l">
           <div className="divide-y">
             <Bullseye canvasRef={canvasRef} mousePoint={mousePoint} />
             <MouseCoords
@@ -176,6 +174,7 @@ function App() {
           </div>
         </aside>
       </div>
+    </TooltipProvider>
   );
 }
 
