@@ -1,6 +1,5 @@
 import React from "react";
 
-import FilePicker from "./file-picker";
 import {
   Card,
   CardContent,

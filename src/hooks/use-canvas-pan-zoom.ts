@@ -3,14 +3,12 @@ import React from "react";
 import getPointFromEvent from "@/lib/helpers/get-point-from-event";
 import get2dCanvasContext from "@/lib/helpers/get-2d-canvas-context";
 import { useAtom } from "jotai";
-import { matrixAtom } from "@/lib/store";
+import { isPanningAtom, matrixAtom } from "@/lib/store";
 import type { CanvasRef } from "@/types";
 
-export default function usePanZoom(
-  canvasRef: CanvasRef,
-) {
+export default function usePanZoom(canvasRef: CanvasRef) {
   const [matrix, setMatrix] = useAtom(matrixAtom);
-  const [isPanning, setIsPanning] = React.useState<boolean>(false);
+  const [isPanning, setIsPanning] = useAtom(isPanningAtom);
   const [panStart, setPanStart] = React.useState<Point>(new Point(0, 0));
 
   const mouseDownPanZoom: React.MouseEventHandler<HTMLCanvasElement> = (

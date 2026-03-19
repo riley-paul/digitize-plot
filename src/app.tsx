@@ -9,8 +9,6 @@ import Calibrate from "src/components/calibrate";
 import Help from "src/components/help";
 
 import Logo from "src/components/logo";
-import useScrollShadow from "./hooks/use-scroll-shadow";
-import { cn } from "./lib/utils";
 import { useAtom } from "jotai/react";
 import {
   calibrationsAtom,

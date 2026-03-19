@@ -3,6 +3,7 @@ import {
   draggingPointIdAtom,
   hoveringCalIdAtom,
   hoveringPointIdAtom,
+  isPanningAtom,
 } from "@/lib/store";
 import { useAtomValue } from "jotai";
 
@@ -12,6 +13,9 @@ export default function useCursor(): React.CSSProperties["cursor"] {
 
   const draggingCalId = useAtomValue(draggingCalIdAtom);
   const hoveringCalId = useAtomValue(hoveringCalIdAtom);
+
+  const isPanning = useAtomValue(isPanningAtom);
+  if (isPanning) return "grabbing";
 
   if (draggingCalId?.startsWith("x")) return "ew-resize";
   if (hoveringCalId?.startsWith("x")) return "ew-resize";
